@@ -1,0 +1,56 @@
+priority 10
+
+global !p
+from snippets import JS, capitalise
+endglobal
+
+# Require/Export {{{
+snippet re "require" b
+const ${2:`!p
+snip.rv = JS.varname(t[2])
+`} = require('${1:path}');
+endsnippet
+
+snippet rec "require class" b
+const ${2:`!p
+snip.rv = JS.varname(capitalise(t[1]))
+`} = require('${1:path}');
+endsnippet
+
+snippet re. "require object" b
+import {${2:module}} from '${1:path}';
+endsnippet
+
+snippet mex "module.exports" b
+module.exports = ${0:`!p snip.rv = snip.basename`};
+endsnippet
+# }}}
+
+# HTTP request {{{
+snippet reqg "GET"
+${1:request}.get(${2:url}, ${3:options})
+endsnippet
+
+snippet reqp "POST"
+${1:request}.post(${2:url}, ${3:options})
+endsnippet
+
+snippet requ "PUT"
+${1:request}.post(${2:url}, ${3:options})
+endsnippet
+
+snippet reqa "PATCH"
+${1:request}.patch(${2:url}, ${3:options})
+endsnippet
+
+snippet reqd "DELETE"
+${1:request}.delete(${2:url}, ${3:options})
+endsnippet
+# }}}
+
+# Misc {{{
+snippet #! "shebang"
+#!/usr/bin/env node
+endsnippet
+# }}}
+

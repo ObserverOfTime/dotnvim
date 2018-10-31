@@ -1,0 +1,317 @@
+priority 10
+
+global !p
+from snippets import Java, titlify
+endglobal
+
+# Types {{{
+snippet /([Ii])/ "new int" br
+`!p snip.rv = Java.complete(match)
+` ${1:i} = ${2:1};
+${0}
+endsnippet
+
+snippet /([Dd])/ "new double" br
+`!p snip.rv = Java.complete(match)
+` ${1:d} = ${2:0.1};
+${0}
+endsnippet
+
+snippet /([Bb])(t|f)?/ "new boolean" br
+`!p snip.rv = Java.complete(match)
+` ${1:b} = ${2:`!p
+snip.rv = Java.complete(match, 2)`};
+${0}
+endsnippet
+
+snippet /[Ss]/ "new String" br
+String ${1:s} = ${2:""};
+${0}
+endsnippet
+
+snippet /[Ee]/ "new enum" br
+enum ${1:E} {${2}}
+endsnippet
+
+snippet /[Oo]/ "new Object" br
+${1:Object} ${2:${1/.+/\l$0/}} = new $1(${3});
+${0}
+endsnippet
+
+snippet /[Ll]/ "list" br
+${4:$3}List<${1:String}> ${2:list} = new ${3:Array}List<>();
+${0}
+endsnippet
+
+snippet /[Mm]/ "map" br
+${5:$4}Map<${1:String}, ${2:String}> ${3:map} = new ${4:Hash}Map<>();
+${0}
+endsnippet
+# }}}
+
+# Access modifiers {{{
+snippet pri "private" b
+private ${1}
+endsnippet
+
+snippet pro "protected" b
+protected ${1}
+endsnippet
+
+snippet pub "public" b
+public ${1}
+endsnippet
+
+snippet sta "static" b
+static ${1}
+endsnippet
+
+snippet fin "final" b
+final ${1}
+endsnippet
+
+snippet abs "abstract" b
+abstract ${1}
+endsnippet
+# }}}
+
+# Methods {{{
+snippet me  "method" b
+${1:private} ${2:void} ${3:method}(${4:args}) {
+	${VISUAL}${0}
+}
+endsnippet
+
+snippet mt  "method with throws" b
+${1:private} ${2:void} ${3:method}(${4:args}) throws ${5} {
+	${VISUAL}${0}
+}
+endsnippet
+
+snippet md "method with javadoc" b
+/**
+`!v " "`* ${7:Short Description}`!p
+for i in Java.arguments(t[4]):
+	snip.rv += "\n\t * @param " + i[1] + " usage..."`
+`!v " "`*`!p
+if "throws" in t[5]:
+	snip.rv = "\n\t * @throws " + t[6]
+else:
+	snip.rv = ""``!p
+if not "void" in t[2]:
+	snip.rv = "\n\t * @return object"
+else:
+	snip.rv = ""`
+`!v " "`**/
+${1:public} ${2:void} ${3:method}($4) ${5:throws ${6} }{
+	${VISUAL}${0}
+}
+endsnippet
+
+snippet main "main method" b
+public static void main(String args[]) {
+	${VISUAL}${0}
+}
+endsnippet
+
+snippet pr "System.out.print" b
+System.out.print(${1});
+endsnippet
+
+snippet prn "System.out.println"  b
+System.out.println(${1});
+endsnippet
+
+snippet prf "System.out.printf" b
+System.out.printf(${1}, ${2});
+endsnippet
+# }}}
+
+# Conditions {{{
+snippet if "if statement"
+if(${1}) {
+	${VISUAL}${0}
+}
+endsnippet
+
+snippet ife "if ... else"
+if(${1}) {
+	${VISUAL}${2}
+} else {
+	${0}
+}
+endsnippet
+
+snippet elif "else if"
+else if(${1}) {
+	${VISUAL}${0}
+}
+endsnippet
+
+snippet sw "switch"
+switch(${1}) {
+	case ${2}:
+		${VISUAL}${0}
+		${3:break};
+}
+endsnippet
+
+snippet ca "case"
+case ${1}:
+	${VISUAL}${0}
+	${2:break};
+endsnippet
+# }}}
+
+# Loops {{{
+snippet wh "while"
+while(${1:true}) {
+	${VISUAL}${0}
+}
+endsnippet
+
+snippet do "do ... while"
+do {
+	${VISUAL}${0}
+} while(${1:true});
+endsnippet
+
+snippet for "for"
+for(${1:int} ${2:i} = ${3:0}; $1 ${2:< 10}; ${4:++}$1) {
+	${VISUAL}${0}
+}
+endsnippet
+
+snippet fori "for (in)"
+for(${1:Object} ${2:`!p
+snip.rv = t[1][:1].lower()`} : ${2}) {
+	${VISUAL}${0}
+}
+endsnippet
+
+snippet /\.fe(r?)/ ".forEach(a->{})" ir
+.forEach`!p if match.group(1):
+	snip.rv = "Remaining"`(${1:k} -> {
+	${VISUAL}${2}
+})
+endsnippet
+
+snippet /\.fi(r?)/ ".forEach(a->b)" ir
+.forEach`!p if match.group(1):
+	snip.rv = "Remaining"`(${1:k} -> ${2:${VISUAL}})
+endsnippet
+
+snippet /:fe(r?)/ ".forEach(X::y)" ir
+.forEach`!p if match.group(1):
+	snip.rv = "Remaining"`(${1:System.out}::${2:println})
+endsnippet
+# }}}
+
+# Class {{{
+snippet cls "class" b
+public class `!p snip.rv = titlify(snip.basename)`${1} {
+	${VISUAL}${0}
+}
+endsnippet
+
+snippet int "interface" b
+interface ${1:`!p snip.rv = titlify(snip.basename)
+`} ${2:extends ${3:Parent} }{
+	${VISUAL}${0}
+}
+endsnippet
+
+snippet con "constructor" b
+public `!p snip.rv = titlify(snip.basename)`() {
+	${VISUAL}${0}
+}
+endsnippet
+
+snippet get "getter" b
+public ${1:String} get${2:Name}() {
+	${3:return ${2/.+/\l$0/}};
+}
+endsnippet
+
+snippet set "setter" b
+public void set${2:Name}(${3:String} ${4:${2/.+/\l$0/}}) {
+	${5:this.${2/.+/\l$0/} = $4};
+}
+endsnippet
+
+snippet ext "extends" b
+extends ${0}
+endsnippet
+
+snippet imp "implements" b
+implements ${0}
+endsnippet
+# }}}
+
+# Errors {{{
+snippet try "try ... catch" b
+try {
+	${VISUAL}${1}
+} catch(${2:Exception} ${3:e}) {
+	${4:$3.printStackTrace()};
+}
+endsnippet
+
+snippet tryf "try ... catch ... finally" b
+try {
+	${VISUAL}${1}
+} catch(${2:Exception} ${3:e}) {
+	${4:$3.printStackTrace()};
+} finally {
+	${0}
+}
+endsnippet
+
+snippet cat "catch" b
+catch(${1:Exception} ${2:ex}) {
+	${VISUAL:$2.printStackTrace()}${0};
+}
+endsnippet
+
+snippet th "throw" b
+throw new ${0}
+endsnippet
+
+snippet nn "assert non-null" b
+assert ${1:var} != null;
+endsnippet
+# }}}
+
+# Misc {{{
+snippet pa "package" b
+package ${1:`!p snip.rv = Java.package()`};
+endsnippet
+
+snippet . "this." b
+this.
+endsnippet
+
+snippet @ov "@Override" b
+@Override
+${0}
+endsnippet
+
+snippet scan "new Scanner" b
+new Scanner(${1:System.in}, ${2:"UTF-8"});
+endsnippet
+
+snippet sleep "Thread.sleep" b
+try {
+	Thread.sleep(${1:1000});${0}
+} catch(InterruptedException e) {
+	${2:e.printStackTrace()};
+}
+endsnippet
+
+snippet fold "vim fold" b
+// ${1} {{{
+${VISUAL}${0}
+// }}}
+endsnippet
+# }}}
+

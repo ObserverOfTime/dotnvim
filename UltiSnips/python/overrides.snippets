@@ -1,0 +1,168 @@
+priority 10
+
+global !p
+def space(ph):
+	if not ph: return ""
+	return "\n\n" + snip.indent
+endglobal
+
+snippet o:att "attribute access methods" bm
+${1:def __getattr__(self, name):
+	${2:pass}}`!p snip.rv = space(t[1])
+`${3:def __setattr__(self, name, value):
+	${4:pass}}`!p snip.rv = space(t[3])
+`${5:def __delattr__(self, name):
+	${6:pass}}
+endsnippet
+
+snippet o:des "descriptor methods" bm
+${1:def __get__(self, obj, obj_type):
+	${2:pass}}`!p snip.rv = space(t[1])
+`${3:def __set__(self, obj, value):
+	${4:pass}}`!p snip.rv = space(t[3])
+`${5:def __delete__(self, obj):
+	${6:pass}}
+endsnippet
+
+snippet o:rep "representation methods" bm
+${1:def __str__(self):
+	${2:pass}}`!p snip.rv = space(t[1])
+`${3:def __unicode__(self):
+	${4:pass}}`!p snip.rv = space(t[3])
+`${5:def __format__(self, formatstr):
+	${6:pass}}`!p snip.rv = space(t[5])
+`${7:def __hash__(self):
+	${8:pass}}`!p snip.rv = space(t[7])
+`${9:def __${10:bool}__(self):
+	${11:pass}}`!p snip.rv = space(t[9])
+`${12:def __dir__(self):
+	${13:pass}}`!p snip.rv = space(t[12])
+`${14:def __repr__(self):
+	${15:pass}}
+endsnippet
+
+snippet o:cmp "comparison methods" bm
+${1:def __eq__(self, other):
+	${2:pass}}`!p snip.rv = space(t[1])
+`${3:def __ne__(self, other):
+	${4:pass}}`!p snip.rv = space(t[3])
+`${5:def __lt__(self, other):
+	${6:pass}}`!p snip.rv = space(t[5])
+`${7:def __le__(self, other):
+	${8:pass}}`!p snip.rv = space(t[7])
+`${9:def __gt__(self, other):
+	${10:pass}}`!p snip.rv = space(t[9])
+`${11:def __ge__(self, other):
+	${12:pass}}`!p snip.rv = space(t[11])
+`${13:def __cmp__(self, other):
+	${14:pass}}
+endsnippet
+
+snippet o:cnt "container type methods" bm
+${1:def __len__(self):
+	${2:pass}}`!p snip.rv = space(t[1])
+`${3:def __getitem__(self, key):
+	${4:pass}}`!p snip.rv = space(t[3])
+`${5:def __setitem__(self, key, value):
+	${6:pass}}`!p snip.rv = space(t[5])
+`${7:def __delitem__(self, key):
+	${8:pass}}`!p snip.rv = space(t[7])
+`${9:def __iter__(self):
+	${10:pass}}`!p snip.rv = space(t[9])
+`${11:def __reversed__(self):
+	${12:pass}}`!p snip.rv = space(t[11])
+`${13:def __contains__(self, item):
+	${14:pass}}`!p snip.rv = space(t[13])
+`${15:def __missing__(self, key):
+	${16:pass}}
+endsnippet
+
+snippet o:ctx "context manager methods" bm
+${1:def __enter__(self):
+	${2:pass}}`!p snip.rv = space(t[1])
+`${3:def __exit__(self, exc_type, exc_value, traceback):
+	${4:pass}}
+endsnippet
+
+snippet o:bit "bitwise operator methods" bm
+${1:def __and__(self, other):
+	${2:pass}}`!p snip.rv = space(t[1])
+`${3:def __or__(self, other):
+	${4:pass}}`!p snip.rv = space(t[3])
+`${5:def __lshift__(self, other):
+	${6:pass}}`!p snip.rv = space(t[5])
+`${7:def __rshift__(self, other):
+	${8:pass}}`!p snip.rv = space(t[7])
+`${9:def __xor__(self, other):
+	${10:pass}}
+endsnippet
+
+snippet o:num "numeric type methods" bm
+${1:def __int__(self):
+	${2:pass}}`!p snip.rv = space(t[1])
+`${3:def __hex__(self):
+	${4:pass}}`!p snip.rv = space(t[3])
+`${5:def __float__(self):
+	${6:pass}}`!p snip.rv = space(t[5])
+`${7:def __complex__(self):
+	${8:pass}}`!p snip.rv = space(t[7])
+`${9:def __long__(self):
+	${10:pass}}`!p snip.rv = space(t[9])
+`${11:def __oct__(self):
+	${12:pass}}`!p snip.rv = space(t[11])
+`${13:def __index__(self):
+	${14:pass}}`!p snip.rv = space(t[13])
+`${15:def __coerce__(self, other):
+	${16:pass}}
+endsnippet
+
+snippet o:uop "unary operator methods" bm
+${1:def __neg__(self):
+	${2:pass}}`!p snip.rv = space(t[1])
+`${3:def __pos__(self):
+	${4:pass}}`!p snip.rv = space(t[3])
+`${5:def __abs__(self):
+	${6:pass}}`!p snip.rv = space(t[5])
+`${7:def __invert__(self):
+	${8:pass}}
+endsnippet
+
+snippet o:mop "math operator methods" bm
+${1:def __add__(self, other):
+	${2:pass}}`!p snip.rv = space(t[1])
+`${3:def __sub__(self, other):
+	${4:pass}}`!p snip.rv = space(t[3])
+`${5:def __mul__(self, other):
+	${6:pass}}`!p snip.rv = space(t[5])
+`${7:def __div__(self, other):
+	${8:pass}}`!p snip.rv = space(t[7])
+`${9:def __floordiv__(self, other):
+	${10:pass}}`!p snip.rv = space(t[9])
+`${11:def __truediv__(self, other):
+	${12:pass}}`!p snip.rv = space(t[11])
+`${13:def __mod__(self, other):
+	${14:pass}}`!p snip.rv = space(t[13])
+`${15:def __divmod__(self, other):
+	${16:pass}}`!p snip.rv = space(t[15])
+`${17:def __pow__(self, other):
+	${18:pass}}
+endsnippet
+
+snippet o:mcv "math conversion methods" bm
+${1:def __round__(self, n):
+	${2:pass}}`!p snip.rv = space(t[1])
+`${3:def __floor__(self):
+	${4:pass}}`!p snip.rv = space(t[3])
+`${5:def __ceil__(self):
+	${6:pass}}`!p snip.rv = space(t[5])
+`${7:def __trunc__(self):
+	${8:pass}}
+endsnippet
+
+snippet o:obj "object methods" bm
+${1:def __new__(cls${2/.+/, /}${2:args}):
+	${3:pass}}`!p snip.rv = space(t[1])
+`${4:def __del__(self):
+	${5:pass}}
+endsnippet
+

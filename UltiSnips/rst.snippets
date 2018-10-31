@@ -1,0 +1,257 @@
+priority 10
+
+# TODO more sphinx
+# https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html
+
+global !p
+from snippets import RST
+def expand_list(snip, ordered=False):
+	num = int(snip.buffer[snip.line].strip()[2:])
+	ph = "${%d:#} " if ordered else "* "
+	body = ""
+	snip.buffer[snip.line] = ""
+	if ordered:
+		for i in range(2, num + 4, 2):
+			body += ph % (i - 1) + ("${%d:%d}\n" % (i, i))
+	else :
+		for i in range(1, num + 1):
+			body += ph + "${%d:item}\n" % i
+	snip.expand_anon(body)
+	snip.cursor.set(snip.line + num - 1, 0)
+endglobal
+
+# Sections {{{
+snippet /sec(=|-|\^|~)/ "section" br
+${1:${VISUAL:Section}}
+`!p snip.rv = match.group(1)*vim.strwidth(t[1])`
+
+${0}
+endsnippet
+
+snippet para "paragraph" b
+${1:${VISUAL:Paragraph}}
+`!p snip.rv = '"'*vim.strwidth(t[1])`
+
+${0}
+endsnippet
+
+snippet part "part" b
+`!p snip.rv = "#"*vim.strwidth(t[1])`
+${1:${VISUAL:Part}}
+`!p snip.rv = "#"*vim.strwidth(t[1])`
+
+${0}
+endsnippet
+
+snippet chap "chapter" b
+`!p snip.rv = "*"*vim.strwidth(t[1])`
+${1:${VISUAL:Chapter}}
+`!p snip.rv = "*"*vim.strwidth(t[1])`
+
+${0}
+endsnippet
+
+snippet top "topic" b
+.. topic:: ${1:Title}
+
+	${VISUAL}${0}
+endsnippet
+# }}}
+
+# Markup {{{
+snippet * "italic"
+*${VISUAL}${1}*
+endsnippet
+
+snippet ** "bold"
+**${VISUAL}${1}**
+endsnippet
+
+snippet *** "bold italic"
+***${VISUAL}${1}***
+endsnippet
+
+snippet ver "verbatim"
+\`\`${VISUAL}${1}\`\`
+endsnippet
+
+snippet /su(p|b)/ "super/subscript" r
+:`!p snip.rv = match.group()`:\`${VISUAL}${1}\`
+endsnippet
+# }}}
+
+# Links {{{
+snippet link "external link" b
+\`${1:Text}${1/.+/ /}<${2:${VISUAL:URL}}>\`_
+endsnippet
+
+snippet l: "label" b
+.. ${1:label}:
+${VISUAL}${0}
+endsnippet
+
+snippet ref "reference" b
+:ref:\`${1:${VISUAL:reference}}\`
+endsnippet
+
+snippet fnt "footnote" b
+[${1:#}]_
+${VISUAL}${0}
+
+.. [$1] ${2:footnote}
+endsnippet
+# }}}
+
+# Images {{{
+snippet img "image" bm
+.. image:: ${1:image.jpg}
+	:alt: ${2:alternate text}${3:
+	:align: ${4:center}}${5:
+	:width: ${6:32px}}${7:
+	:height: ${8:32px}}${9:
+	:scale: ${10:100}}${11:
+	:target: ${12:link}}
+
+${0}
+endsnippet
+
+snippet fig "figure" bm
+.. image:: ${1:image.jpg}
+	:alt: ${2:alternate text}${3:
+	:align: ${4:center}}${5:
+	:width: ${6:32px}}${7:
+	:height: ${8:32px}}${9:
+	:scale: ${10:100}}${11:
+	:target: ${12:link}}${13:
+	:figwidth: ${14:100px}}${15:
+	:figclass: ${16:align-center}}
+
+	${VISUAL}${0}
+endsnippet
+# }}}
+
+# Code {{{
+snippet /c:([^\s]+)?/ "code block" bmr
+.. ${1:s}`!p
+if t[1] == "s":
+	snip.rv = "ourcecode::"
+elif t[1] == "c":
+	snip.rv = "ode-block::"
+else : snip.rv = "::"
+m = match.group(1)
+lang = (" " + m) if m else ""
+snip.rv += lang`${2:
+	:linenos:}
+
+	${VISUAL}${0}
+endsnippet
+
+snippet linc "literal include" bm
+.. literalinclude:: ${1:file}
+	:language: ${2:python}${3:
+	:linenos:}${4:
+	:emphasize-lines: ${5:1, 3-5}}${6:
+	:start-${7:after}: ${8:3}}${9:
+	:end-${10:before}: ${11:5}}
+
+${0}
+endsnippet
+# }}}
+
+# Include {{{
+snippet inc "include" bm
+.. include:: ${1:include}.rst${1:
+	:start-${2:line}: ${3:1}}${4:
+	:end-${5:line}: ${6:10}}${7:
+	:tab-width: ${8:3}}
+
+${0}
+endsnippet
+
+snippet raw "raw" bm
+.. raw:: ${1:html}${2:
+	:${3:file}: ${4:file.html}}${5:
+	:encoding: ${6:UTF-8}}
+
+	${VISUAL}${0}
+endsnippet
+
+snippet toc "table of contents" bm
+.. contents::${1/.+/ /}${1:Table of Contents}${2:
+	:local:}${3:
+	:depth: ${4:2}}${5:
+	:backlinks: ${6:entry|top|none}}
+endsnippet
+
+snippet tree "toctree" bm
+.. toctree::
+	:maxdepth: ${1:2}${2:
+	:titlesonly:}${3:
+	:numbered:}${4:
+	:glob:}${5:
+	:hidden:}
+
+	${VISUAL}${0}
+endsnippet
+# }}}
+
+# TODO more table types
+# Tables {{{
+snippet tbl "list-table" bm
+.. list-table::
+	:align: ${1:center}
+	:header-rows: ${2:1}${3:
+	:stub-columns: ${4:1}}${5:
+	:width: ${6:100%}}${7:
+	:widths: ${8:auto}}
+
+	${VISUAL}${0}
+endsnippet
+# }}}
+
+# Lists {{{
+pre_expand "expand_list(snip)"
+snippet /li(\d+)/ "unordered list" br
+endsnippet
+
+pre_expand "expand_list(snip, True)"
+snippet /ol(\d+)/ "ordered list" br
+endsnippet
+# }}}
+
+# Misc {{{
+snippet side "sidebar" bm
+.. sidebar:: ${1:Title}${2:
+	:subtitle: ${3:subtitle}}
+
+	${VISUAL}${0}
+endsnippet
+
+snippet rep "replace" b
+.. |${1:original}| ${2:replace:: ${VISUAL}${3}}
+endsnippet
+
+snippet /a:([acdehintw])?/ "admonition" bmr
+.. `!p snip.rv = RST.admonition(match)`::
+
+	${VISUAL}${0}
+endsnippet
+
+snippet :: "other directive" b
+.. ${1:rubric}::
+	${VISUAL}${0}
+endsnippet
+
+snippet /h:(\w+)/ "HTML element" r
+<`!p snip.rv = match.group(1)
+`${1: class="${2}"}>${VISUAL}${0}${3:</`!p
+snip.rv = match.group(1)`>}
+endsnippet
+
+snippet vml "vim modeline" b
+.. ${1:description} {{{
+${VISUAL}${0}
+.. }}}
+endsnippet
+# }}}
+

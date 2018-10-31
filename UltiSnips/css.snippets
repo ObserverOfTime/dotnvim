@@ -1,0 +1,90 @@
+priority 10
+
+# Selectors {{{
+snippet :r ":root selector"
+:root {
+	${VISUAL}${0}
+}
+endsnippet
+
+snippet # "ID selector" b
+#${1:id} {
+	${VISUAL}${0}
+}
+endsnippet
+
+snippet . "class selector" b
+.${1:class} {
+	${VISUAL}${0}
+}
+endsnippet
+
+snippet t "tag selector" b
+${1:tag} {
+	${VISUAL}${0}
+}
+endsnippet
+
+snippet /::(a|b)/ "::(after|before)" irA
+`!p
+m = match.group(1)
+if m == "a": m = "after"
+else : m = "before"
+snip.rv = "::" + m`
+endsnippet
+# }}}
+
+# Functions {{{
+snippet var "variable value"
+var(--${1:name});
+endsnippet
+
+snippet rgb "rgb color"
+rgb(${1:255}, ${2:255}, ${3:255})
+endsnippet
+
+snippet rgba "rgba color"
+rgba(${1:255}, ${2:255}, ${3:255}, ${4:0.5})
+endsnippet
+
+snippet hsl "hsl color"
+hsl(${1:360}, ${2:100}%, ${3:100}%)
+endsnippet
+
+snippet hsla "hsla color"
+hsla(${1:360}, ${2:100}%, ${3:100}%, ${4:0.5})
+endsnippet
+# }}}
+
+# Misc {{{
+snippet utf8 "UTF-8" b
+@charset "UTF-8";
+${0}
+endsnippet
+
+snippet media "media-query"
+@media ${1:screen} {
+	${VISUAL}${0}
+}
+endsnippet
+
+snippet size "width & height"
+width: ${1:auto};
+height: ${2:$1};
+endsnippet
+
+snippet -- "variable declaration"
+--${1:name}: ${2};
+endsnippet
+
+snippet ! "!important"
+!important
+endsnippet
+
+snippet fold "vim fold"
+/* ${1:description} {{{ */
+${VISUAL}${0}
+/* }}} */
+endsnippet
+# }}}
+

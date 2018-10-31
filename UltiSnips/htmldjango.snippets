@@ -1,0 +1,172 @@
+priority 10
+
+clearsnippets lorem
+
+extends html
+
+global !p
+from snippets import Django
+endglobal
+
+# Inline tags {{{
+snippet % "inline tag"
+{% ${1:debug} %}
+endsnippet
+
+snippet ex "extends"
+{% extends '${1:skeleton.html}' %}
+endsnippet
+
+snippet in "include"
+{% include '${1}' %}
+endsnippet
+
+snippet load "load"
+{% load ${1:static} %}
+endsnippet
+
+snippet stat "static"
+{% static '${1:style.css}' %}
+endsnippet
+
+snippet reg "regroup"
+{% regroup ${1} by ${2} as ${3} %}
+endsnippet
+
+snippet now "now"
+{% now '${1:jS F Y H:i}' %}
+endsnippet
+
+snippet lorem "lorem"
+{% lorem ${1} %}
+endsnippet
+
+snippet width "widthratio"
+{% widthratio ${1:this_value} ${2:max_value} ${3:100} %}
+endsnippet
+
+snippet # "inline comment"
+{# ${1:comment} #}
+endsnippet
+# }}}
+
+# Multiline tags {{{
+snippet /%([^\s]+)/ "multiline tag" r
+{% $1`!p t[1] = match.group(1)` ${2} %}
+	${VISUAL}${0}
+{% end$1 %}
+endsnippet
+
+snippet esc "autoescape"
+{% autoescape ${1:off} %}
+	${VISUAL}${0}
+{% endautoescape %}
+endsnippet
+
+snippet with "with"
+{% with ${1:var}=${2:value} %}
+	${VISUAL}${0}
+{% endwith %}
+endsnippet
+
+snippet spl "spaceless"
+{% spaceless %}
+	${VISUAL}${0}
+{% endspaceless %}
+endsnippet
+
+snippet ver "verbatim"
+{% verbatim ${1:block}`!p snip.rv = " " if t[1] else ""`%}
+	${VISUAL}${0}
+{% endverbatim $1`!p snip.rv = " " if t[1] else ""`%}
+endsnippet
+
+snippet btr "blocktrans"
+{% blocktrans %}
+	${VISUAL}${0}
+{% endblocktrans %}
+endsnippet
+
+snippet com "multiline comment"
+{% comment %}
+	${VISUAL}${0}
+{% endcomment %}
+endsnippet
+# }}}
+
+# Loops {{{
+snippet for "for loop"
+{% for ${1} in ${2} %}
+	${VISUAL}${0}
+{% endfor %}
+endsnippet
+
+snippet fore "for ... empty"
+{% for ${1} in ${2} %}
+	${VISUAL}${3}
+{% empty %}
+	${4}
+{% endfor %}
+endsnippet
+
+snippet /for\.([flp]|[cr]0?)/ "forloop.variable" r
+forloop.`!p snip.rv = Django.forloop(match.group(1))`
+endsnippet
+
+snippet cycle "cycle"
+{% cycle ${1:val1} ${2:val2} ${3:as ${4}} %}
+endsnippet
+# }}}
+
+# Conditions {{{
+snippet ifi "inline if"
+{% if ${1} %}${VISUAL}${2}{% endif %}
+endsnippet
+
+snippet if "if ..."
+{% if ${1} %}
+	${VISUAL}${0}
+{% endif %}
+endsnippet
+
+snippet ife "if ... else"
+{% if ${1} %}
+	${VISUAL}${2}
+{% else %}
+	${3}
+{% endif %}
+endsnippet
+
+snippet else "else"
+{% else %}
+	${VISUAL}${0}
+endsnippet
+
+snippet elif "elif"
+{% elif ${1} %}
+	${VISUAL}${0}
+endsnippet
+
+snippet ifc "ifchanged"
+{% ifchanged %}
+	${VISUAL}${0}
+{% endifchanged %}
+endsnippet
+
+snippet ifci "inline ifchanged"
+{% ifchanged %}${VISUAL}${1}{% endifchanged %}
+endsnippet
+# }}}
+
+# Misc {{{
+snippet /v:([^\s]*)/ "value" r
+{{ $1`!p t[1] = match.group(1) or ""`${2} }}
+endsnippet
+
+snippet fold "vim fold" b
+{# {{{ #}
+${VISUAL}${0}
+{# }}} #}
+endsnippet
+# }}}
+

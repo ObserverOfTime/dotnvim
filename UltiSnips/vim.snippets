@@ -1,0 +1,145 @@
+priority 10
+
+# Functions {{{
+snippet fun "global function"
+function! ${1:Name}(${2})${3/.+/ /}${3:abort}
+	${VISUAL}${0}
+endfunction
+endsnippet
+
+snippet fun: "local function"
+function! s:${1:Name}(${2})${3/.+/ /}${3:abort}
+	${VISUAL}${0}
+endfunction
+endsnippet
+
+snippet fun# "file function"
+function! `!v expand("%:t:r")`#${1:name}(${2})${3/.+/ /}${3:abort}
+	${VISUAL}${0}
+endfunction
+endsnippet
+# }}}
+
+# Variables {{{
+snippet load "script loaded" b
+if exists('${1:g:loaded_`!p snip.rv = snip.basename`}')${2}
+	finish
+endif
+let $1 = 1
+${0}
+endsnippet
+
+snippet gvar "global variable" b
+if !exists('g:${1:variable}')
+	let g:$1 = ${2}
+endif
+${0}
+endsnippet
+
+snippet /l:(g|s|l|w)/ "variable declaration" br
+let `!p snip.rv = match.group(1)`:${2:name} = ${3:value}
+endsnippet
+
+snippet get "get variable value" b
+get(${1:g:}, '${2:name}'${3/.+/, /}${3:default})
+endsnippet
+# }}}
+
+# Conditions {{{
+snippet if "if statement" b
+if ${1:condition}
+	${VISUAL}${0}
+endif
+endsnippet
+
+snippet ifi "inline if" b
+if ${1:condition} | ${VISUAL}${2} | endif
+endsnippet
+
+snippet ife "if ... else" b
+if ${1:condition}
+	${VISUAL}${2}
+else
+	${3}
+endif
+endsnippet
+
+snippet elif "elseif" b
+elseif ${1:condition}
+	${VISUAL}${0}
+endsnippet
+
+snippet ter "ternary" b
+${1:condition} ? ${2:true} : ${3:false}
+endsnippet
+# }}}
+
+# Loops {{{
+snippet for "for loop" b
+for ${1:element} in ${2:list}
+	${VISUAL}${0}
+endfor
+endsnippet
+
+snippet wh "while loop" b
+while ${1:v:true}
+	${VISUAL}${0}
+endwhile
+endsnippet
+# }}}
+
+# Plug {{{
+snippet pl "vim-plug definition"
+Plug '${1}'${2:, {'${3}': '${4}'}}
+endsnippet
+
+snippet plf "vim-plug with for"
+Plug '${1}', {'for': ${2:''}}
+endsnippet
+
+snippet plo "vim-plug with on"
+Plug '${1}', {'on': ${2:''}}
+endsnippet
+
+snippet pld "vim-plug with do"
+Plug '${1}', {'do': ${2:''}}
+endsnippet
+# }}}
+
+# Misc {{{
+snippet header "file header" b
+" File: ${1:`!v expand("%:t")`}
+" Author: ${2:`!v g:snips_author`}
+" License: ${3:MIT}${4:
+" Description: ${5}}${6:
+" Last Modified: `!v strftime("%B %d, %Y")`}
+
+${0}
+endsnippet
+
+snippet map "mapping" b
+${1:nore}map ${2:key} ${3:mapping}
+endsnippet
+
+snippet aug "autogroup" b
+augroup ${1:Name}
+	au!
+	${VISUAL:au }$0
+augroup END
+endsnippet
+
+snippet try "try ... catch" b
+try
+	${VISUAL}${1}
+catch /${2}/
+	${3}
+endtry
+endsnippet
+
+snippet fold "vim fold" b
+" ${1:description} {{{
+${VISUAL}${0}
+" }}}
+endsnippet
+# }}}
+

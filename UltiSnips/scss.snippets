@@ -1,0 +1,94 @@
+priority 10
+
+extends css
+
+# TODO add functions & useful mixins
+
+# At-rules {{{
+snippet imp "@import" b
+@import '${1}';
+endsnippet
+
+snippet inc "@include" b
+@include ${1:mixin}(${2:args});
+endsnippet
+
+snippet ext "@extend" b
+@extend %${1:parent};
+endsnippet
+
+snippet fun "@function"
+@function ${1:name}(${2:args}) {
+	${VISUAL}${0}
+}
+endsnippet
+
+snippet ret "@return"
+@return ${VISUAL}${0};
+endsnippet
+
+snippet mix "@mixin" b
+@mixin ${1:name}(${2:args}) {
+	${VISUAL}${0}
+}
+endsnippet
+# }}}
+
+# Conditions {{{
+snippet if "@if" b
+@if(${1:condition}) {
+	${VISUAL}${0}
+}
+endsnippet
+
+snippet ifi "inline @if" b
+@if(${1:condition}) { ${VISUAL}${1} }
+endsnippet
+
+snippet ife "@if ... @else" b
+@if(${1:condition}) {
+	${VISUAL}${2}
+} @else {
+	${3}
+}
+endsnippet
+
+snippet elif "@else if" b
+@else if(${1:condition}) {
+	${VISUAL}${0}
+}
+endsnippet
+# }}}
+
+# Loops {{{
+snippet for "@for loop" b
+@for ${1:$i} from ${2:1} through ${3:10} {
+	${VISUAL}${0}
+}
+endsnippet
+
+snippet each "@each loop" b
+@each ${2:`!p snip.rv = "$" + (t[1][:1] or "i")`} ${1:items} {
+	${VISUAL}${0}
+}
+endsnippet
+
+snippet wh "@while loop" b
+@while ${1:$i} ${2:<} ${3:10} {
+	${VISUAL}${0}
+}
+endsnippet
+# }}}
+
+# Misc {{{
+snippet $ "variable declaration" b
+$${1:name}: ${2:null};
+endsnippet
+
+snippet fold "vim fold" b
+// ${1:description} {{{
+${VISUAL}${0}
+// }}}
+endsnippet
+# }}}
+

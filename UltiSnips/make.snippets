@@ -1,0 +1,33 @@
+priority 10
+
+snippet base "basic config" bm
+CC=${1:clang}
+CFLAGS=${2:-Wall -Wextra -Wno-unused-parameter}
+
+.PHONY: clean
+
+${0}
+
+clean:
+	rm -f *.o
+endsnippet
+
+snippet : "make rule"
+${1:target}:${2/.+/ /}${2:deps}
+	${VISUAL}${0}
+endsnippet
+
+snippet if "ifeq" b
+ifeq (${1:cond0}, ${2:cond1})
+	${VISUAL}${0}
+endif
+endsnippet
+
+snippet ife "ifeq ... else" b
+ifeq (${1:cond0}, ${2:cond1})
+	${VISUAL}${3}
+else
+	${4}
+endif
+endsnippet
+

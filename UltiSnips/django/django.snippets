@@ -1,0 +1,38 @@
+priority 10
+
+# TODO admin model & inline, methods, ...
+
+snippet model "model" b
+class ${1:Model}(${2:models.Model}):
+	${3:${VISUAL:pass}}${0}
+
+	def __str__(self):
+		return ${4:self.name}
+endsnippet
+
+snippet form "form" b
+class ${1:FormName}(${2:forms.Form}):
+	${3:${VISUAL:pass}}${0}
+endsnippet
+
+snippet meta "model meta" b
+class Meta:${1:
+	abstract = True}${2:
+	verbose_name = '${3:name}'}${4:
+	verbose_name_plural = '${5:$3es}'}${6:
+	get_latest_by = ${7:'date'}}${8:
+	unique_together = (${9})}${10:
+	indexes = (${11})}${12:
+	ordering = (${13})}${14:
+	order_with_respect_to = '${15:fk}'}${16:
+	default_related_name = '${17:$3}'}${18:
+	default_permissions = (${19:`!p snip.rv = \
+		"'add', 'change', 'delete', 'view'"`})}${20:
+	permissions = (${21})}${22:
+	proxy = True}
+endsnippet
+
+snippet field "any field" b
+${1:name} = ${2:models.Char}Field(${3})
+endsnippet
+

@@ -1,0 +1,215 @@
+priority 10
+
+global !p
+from snippets import titlify
+endglobal
+
+# Metatags {{{
+snippet meta "meta"
+<meta name="${1}" content="${2}">
+endsnippet
+
+snippet meta:p "meta: property"
+<meta property="${1}" content="${2}">
+endsnippet
+
+snippet meta:h "meta: http-equiv"
+<meta http-equiv="${1:Content-Type}" content="${2:text/html; charset=UTF-8}">
+endsnippet
+
+snippet meta:re "meta: Refresh"
+<meta http-equiv="refresh" content="${1:5}; url=${2}">
+endsnippet
+
+snippet meta:uac "meta: X-UA-Compatible"
+<meta http-equiv="X-UA-Compatible" content="${1:IE=Edge, chrome=1}">
+endsnippet
+
+snippet meta:view "meta: viewport"
+<meta name="viewport" content="width=device-width${1:, initial-scale=1}">
+endsnippet
+
+snippet meta:key "meta: keywords"
+<meta name="keywords" content="${1}">
+endsnippet
+
+snippet meta:bot "meta: robots"
+<meta name="keywords" content="${1:index, follow}">
+endsnippet
+
+snippet meta:desc "meta: description"
+<meta name="description" content="${1:description}">
+endsnippet
+
+snippet meta:title "meta: title"
+<meta name="title" content="${1:`!p snip.rv = titlify(path)`}">
+endsnippet
+
+snippet meta:url "meta: url"
+<meta name="url" content="${1}">
+endsnippet
+
+snippet meta:gen "meta: generator"
+<meta name="generator" content="${1}">
+endsnippet
+
+snippet meta:res "meta: search results"
+<meta name="totalResults" content="${1:0}">
+endsnippet
+
+snippet meta:twitter "meta: twitter data"
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site_name" content="${1:Name}">
+<meta name="twitter:title" content="${1:`!p snip.rv = titlify(path)`}">
+<meta name="twitter:description" content="${3:Description}">
+<meta name="twitter:image" content="${4:/favicon.ico}">
+<meta name="twitter:image:alt" content="${5:Logo}">
+<meta name="twitter:site" content="@${6:username}">
+endsnippet
+
+snippet meta:og "meta: opengraph data"
+<meta property="og:site_name" content="${1:Name}">
+<meta property="og:title" content="${2:`!p snip.rv = titlify(path)`}">
+<meta property="og:description" content="${3:Description}">
+<meta property="og:image" content="${4:/favicon.ico}">
+<meta property="og:image:alt" content="${5:Logo}">
+<meta property="og:url" content="${6:URL}">
+<meta property="og:type" content="${7:website}">
+<meta property="og:determiner" content="${8}">
+endsnippet
+
+snippet meta:theme "meta: theme colors"
+<meta name="theme-color" content="${1}">
+<meta name="msapplication-navbutton-color" content="${2:$1}">
+<meta name="apple-mobile-web-app-status-bar-style" content="${3:$1}">
+endsnippet
+# }}}
+
+# Links {{{
+snippet link "link"
+<link href="${1}" rel="${2:stylesheet}" type="${3:text/css}">
+endsnippet
+
+snippet link:/ "link: index"
+<link href="${1}" rel="index" title="${2:Title}" type="text/html">
+endsnippet
+
+snippet link:c "link: canonical"
+<link href="${1}" rel="canonical" type="text/html">
+endsnippet
+
+snippet link:i "link: favicon"
+<link href="${1:/favicon.ico}" rel="shortcut icon" type="${2:image/x-icon}">
+endsnippet
+
+snippet link:s "link: stylesheet"
+<link href="${1:/styles/style.css}" rel="stylesheet" type="text/css">
+endsnippet
+
+snippet link:u "link: short URL"
+<link href="${1}" rel="shortlink">
+endsnippet
+
+snippet link:p "link: prev"
+<link href="${1}" rel="prev" title="${2}">
+endsnippet
+
+snippet link:n "link: next"
+<link href="${1}" rel="next" title="${2}">
+endsnippet
+
+snippet link:1 "link: first"
+<link href="${1}" rel="first" title="${2}">
+endsnippet
+
+snippet link:l "link: last"
+<link href="${1}" rel="last" title="${2}">
+endsnippet
+
+snippet link:a "link: alternate"
+<link href="${1}" rel="alternate" type="${2:application/rss+xml}" title="${3:RSS}">
+endsnippet
+
+snippet link:o "link: opensearch"
+<link href="${1:/opensearch.xml}" rel="search" title="${2:Title}"
+`!v "      "`type="application/opensearchdescription+xml">
+endsnippet
+
+snippet link:f "link: fontawesome"
+<link href="https://use.fontawesome.com/releases/v5.2.0/css/all.css"
+`!v "      "`integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ"
+`!v "      "`rel="prefetch stylesheet" as="style" type="text/css" crossorigin="anonymous">
+endsnippet
+# }}}
+
+# Scripts {{{
+snippet script "script"
+<script type="${1:text/javascript}">
+	${VISUAL}${0}
+</script>
+endsnippet
+
+snippet script:s "script: src"
+<script src="${1:/scripts/main.js}" type="${2:text/javascript}"></script>
+endsnippet
+
+snippet script:a "script: async"
+<script src="${1:/scripts/main.js}" type="${2:text/javascript}" async></script>
+endsnippet
+
+snippet script:d "script: defer"
+<script src="${1:/scripts/main.js}" type="${2:text/javascript}" defer></script>
+endsnippet
+
+snippet script:5 "script: HTML5 shiv"
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"
+`!v "        "`integrity="sha384-qFIkRsVO/J5orlMvxK1sgAt2FXT67og+NyFTITYzvbIP1IJavVEKZM7YWczXkwpB"
+`!v "        "`crossorigin="anonymous" type="text/javascript"></script>
+endsnippet
+# }}}
+
+# Comments {{{
+snippet com "comment"
+<!-- ${1} -->
+endsnippet
+
+snippet ie "IE conditional"
+<!--[if ${1:lt }IE${2: 6}]-->
+	${VISUAL}${0}
+<![endif]-->
+endsnippet
+# }}}
+
+# Misc {{{
+snippet html "HTML skeleton" b
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>${1:`!p snip.rv = titlify(path)`}</title>
+	</head>
+	<body>
+		${VISUAL}${0}
+	</body>
+</html>
+endsnippet
+
+snippet style "style"
+<style type="text/css">
+	${VISUAL}${0}
+</style>
+endsnippet
+
+snippet feed "feed link"
+<a href="${1}" rel="alternate" type="${2:application/rss+xml}"${3: class="${4:feed}"}>
+	${0}
+</a>
+endsnippet
+
+snippet fold "vim fold" b
+<!-- ${1:description} {{{ -->
+${VISUAL}${0}
+<!-- }}} -->
+endsnippet
+# }}}
+
