@@ -6,14 +6,15 @@ Plug 'SirVer/ultisnips'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-abolish'
 Plug 'tomtom/tcomment_vim'
-Plug 'brooth/far.vim'
 Plug 'tmsanrinsha/SyntaxRange'
 Plug 'osyo-manga/vim-anzu'
 Plug 'haya14busa/is.vim'
 Plug 'haya14busa/vim-asterisk'
 Plug 'zsrkmyn/auto-pairs'
 Plug 'rcarraretto/vim-surround'
-Plug 'dsummersl/gundo.vim', {'on': 'MundoToggle'}
+Plug 'AndrewRadev/splitjoin.vim'
+Plug 'brooth/far.vim', {'do': ':UpdateRemotePlugins'}
+Plug 'shaggyrogers/vim-mundo', {'on': 'MundoToggle'}
 
 if g:os !=# 'android'
     Plug 'w0rp/ale'
@@ -21,7 +22,6 @@ if g:os !=# 'android'
     Plug 'systemmonkey42/vim-hugefile'
     Plug 'tagno25/hexmode'
     Plug 'romainl/vim-devdocs'
-    Plug 'skywind3000/asyncrun.vim', {'on': 'AsyncRun'}
     Plug 'junegunn/fzf', {'dir': '~/.fzf', 'do': './install --all'}
     Plug 'fszymanski/fzf-quickfix', {'on': '<Plug>(fzf-quickfix)'}
 elseif executable('termux-open')
@@ -67,9 +67,12 @@ Plug 'airblade/vim-gitgutter'
 " }}}
 
 " Web plugins {{{
-Plug 'othree/html5.vim', {'for': ['html', 'htmldjango']}
-Plug 'mattn/emmet-vim', {'for': ['html', 'htmldjango', 'pug', 'php']}
-Plug 'hail2u/vim-css3-syntax', {'for': ['css', 'scss']}
+Plug 'othree/html5.vim', {'for': ['html',
+            \ 'htmldjango', 'pug', 'jsp']}
+Plug 'mattn/emmet-vim', {'for': ['html',
+            \ 'htmldjango', 'pug', 'jsp']}
+Plug 'hail2u/vim-css3-syntax', {'for': ['css', 'scss',
+            \ 'html', 'htmldjango', 'pug', 'jsp']}
 Plug 'iloginow/vim-pug', {'for': 'pug'}
 
 Plug 'redbmk/vim-jsx', {'for': 'javascript'}
@@ -81,24 +84,28 @@ Plug 'vim-scripts/svg.vim', {'for': 'svg'}
 Plug 'jasonshell/vim-svg-indent', {'for': 'svg'}
 
 if g:os !=# 'android'
-    Plug 'kracejic/vCoolor.vim', {'for': ['css', 'scss', 'html',
-                \ 'htmldjango', 'pug', 'svg', 'php', 'javascript']}
+    Plug 'kracejic/vCoolor.vim', {'for': [
+                \ 'css', 'scss', 'html', 'htmldjango',
+                \ 'pug', 'svg', 'jsp', 'javascript']}
 else
-    Plug 'aaron-goshine/colorv.vim', {'for': ['css', 'scss', 'html',
-                \ 'htmldjango', 'pug', 'svg', 'php', 'javascript']}
+    Plug 'aaron-goshine/colorv.vim', {'for': [
+                \ 'css', 'scss', 'html', 'htmldjango',
+                \ 'pug', 'svg', 'jsp', 'javascript']}
 endif
 
 if executable('node') && g:os !=# 'android'
     Plug 'FabioAntunes/vim-node'
-    Plug 'ternjs/tern_for_vim', {'for': ['javascript',
-                \ 'html', 'htmldjango'], 'do': g:npm_cmd}
+    Plug 'ternjs/tern_for_vim', {'for': ['javascript', 'html',
+                \ 'htmldjango', 'jsp'], 'do': g:npm_cmd}
 endif
 
 if exists('g:git_home')
-    Plug 'ObserverOfTime/scss.vim', {'for': 'scss', 'dir':
-                \ g:git_home .'/scss.vim', 'branch': 'refactored'}
+    Plug 'ObserverOfTime/scss.vim', {'for': 'scss',
+                \ 'dir': g:git_home .'/scss.vim',
+                \ 'branch': 'refactored'}
 else
-    Plug 'ObserverOfTime/scss.vim', {'for': 'scss', 'branch': 'refactored'}
+    Plug 'ObserverOfTime/scss.vim', {'for': 'scss',
+                \ 'branch': 'refactored'}
 endif
 " Plug 'nicwest/vim-http', {'for': 'http'}
 " }}}
@@ -118,6 +125,14 @@ if g:os !=# 'android'
     Plug 'idanarye/vim-vebugger', {'for': [
                 \ 'c', 'cpp', 'java', 'python']}
 endif
+" }}}
+
+" Java plugins {{{
+Plug 'AdnoC/jcommenter.vim', {'for': 'java'}
+Plug 'mikelue/vim-maven-plugin', {'for': [
+            \ 'java', 'jsp', 'kotlin']}
+Plug 'gisphm/vim-gradle', {'for': ['java',
+            \ 'kotlin', 'jsp', 'gradle']}
 " }}}
 
 " NERDTree plugins {{{
@@ -147,11 +162,11 @@ if g:os !=# 'android' && v:version >= 800
     endif
 
     if executable('java')
-        Plug 'artur-shaik/vim-javacomplete2', {'for': 'java'}
+        Plug 'artur-shaik/vim-javacomplete2', {'for': ['java', 'jsp']}
         if g:_is_uni
-            Plug 'ObserverOfTime/ncm2-jc2', {'for': 'java'}
+            Plug 'ObserverOfTime/ncm2-jc2', {'for': ['java', 'jsp']}
         else
-            Plug 'ObserverOfTime/ncm2-jc2', {'for': 'java',
+            Plug 'ObserverOfTime/ncm2-jc2', {'for': ['java', 'jsp'],
                         \ 'dir': g:git_home .'/ncm2-jc2'}
         endif
     endif
@@ -170,9 +185,10 @@ if g:os !=# 'android' && v:version >= 800
     endif
 
     Plug 'jsit/sasscomplete.vim', {'for': ['css', 'scss',
-                \ 'html', 'htmldjango', 'pug', 'php']}
+                \ 'html', 'htmldjango', 'jsp', 'pug']}
     Plug 'othree/jspc.vim', {'for': 'javascript'}
-    Plug 'ncm2/ncm2-html-subscope', {'for': ['html', 'htmldjango']}
+    Plug 'ncm2/ncm2-html-subscope', {'for': [
+                \ 'html', 'jsp', 'htmldjango']}
     Plug 'ncm2/ncm2-markdown-subscope', {'for': 'markdown'}
     Plug 'ncm2/ncm2-rst-subscope', {'for': 'rst'}
     Plug 'Shougo/neco-vim', {'for': 'vim'}
@@ -185,9 +201,9 @@ Plug 'chrisbra/csv.vim', {'for': 'csv'}
 Plug 'SidOfc/mkdx', {'for': 'markdown'}
 Plug 'danielyli/vim-log-syntax', {'for': 'log'}
 Plug 'FredDeschenes/httplog', {'for': 'httplog'}
-Plug 'AdnoC/jcommenter.vim', {'for': 'java'}
 Plug 'marshallward/vim-restructuredtext', {'for': 'rst'}
 Plug 'daidodo/DoxygenToolkit.vim', {'for': ['c', 'cpp', 'java']}
+Plug 'tpope/vim-dadbod', {'on': []} " Load via local vimrc
 
 if has('nvim')
     Plug 'arakashic/chromatica.nvim', {'do': ':UpdateRemotePlugins'}
@@ -198,7 +214,7 @@ if executable('pdftotext')
 endif
 
 if executable('sqlplus')
-    Plug 'talek/vorax4', {'for': ['sql', 'plsql']}
+    Plug 'wfriesen/vorax4', {'on': []} " Load via local vimrc
 endif
 
 if executable('pacman')

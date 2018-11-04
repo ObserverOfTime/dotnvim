@@ -13,8 +13,9 @@ set list
 set guicursor=v-sm:block,i-ci-ve:ver25,r-o-n-c-cr:hor25
 set completeopt=noinsert,noselect,preview,menuone
 set switchbuf=useopen,usetab
+set formatoptions=cqn1j
 set shortmess=aoOtTcF
-set undolevels=50
+set undolevels=100
 set shiftwidth=4
 set foldlevel=1
 set tabstop=4
@@ -30,10 +31,12 @@ if !has('nvim')
 endif
 
 if &encoding ==? 'utf-8'
+    set fillchars=vert:┊,fold:–
     set listchars=tab:‣‣,trail:·,nbsp:⍽,precedes:«,extends:»
     set showbreak=↪
 else
-    set listchars=tab:>>,trail:-,nbsp:_,precedes:@,extends:#
+    set fillchars=vert:\|,fold:-
+    set listchars=tab:>>,trail:~,nbsp:_,precedes:@,extends:#
     set showbreak=^
 endif
 

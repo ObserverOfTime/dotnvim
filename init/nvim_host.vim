@@ -1,13 +1,9 @@
 function! s:MergePath(cmd, path) abort
-    let l:out = system(a:cmd)
-    let l:sub = substitute(l:out,
-                \ '\_s$', '', '')
-    return l:sub .'/'. a:path
+    return systemlist(a:cmd)[0] .'/'. a:path
 endfunction
 
 function! s:GetPython(ver)
-    let l:pycmd = system('command -v python'. a:ver)
-    return substitute(l:pycmd, '\n$', '', '')
+    return systemlist('command -v python'. a:ver)[0]
 endfunction
 
 if g:os ==# 'windows' && g:shell !=# 'cygwin'

@@ -3,6 +3,9 @@ if !has('win32') || exists('g:GuiLoaded')
     set fileencoding=utf-8
 endif
 
+" vint: -ProhibitSetNoCompatible
+if &compatible | set nocompatible | endif
+
 " Detect platform {{{
 if has('win32') || has('win32unix')
     let g:os = 'windows'
@@ -34,7 +37,7 @@ function! GetPath(...)
         if g:shell ==# 'msys'
             return substitute(l:path, '\(\w\):', '/\L\1', '')
         elseif g:shell ==# 'cygwin'
-            return system('cygpath '. l:path)
+            return systemlist('cygpath '. l:path)[0]
         endif
         return l:path
     else
@@ -113,6 +116,12 @@ if executable('node')
 endif
 " }}}
 
+" Snippet variables {{{
+let g:snips_author = systemlist('git config user.name')[0]
+let g:snips_email = systemlist('git config user.email')[0]
+let g:snips_github = 'https://github.com/'. g:snips_author
+" }}}
+
 " Source scripts {{{
 function! SourceInitRC(initrc)
     let l:vimrc = resolve(expand('$MYVIMRC'))
@@ -132,8 +141,19 @@ if has('nvim')
 endif
 " }}}
 
+" WARNING: This can be a security vulnerability.
+" When you're editing files from an untrusted
+" source, always check the directories for
+" .lvimrc files and verify their contents.
 " Source local vimrc {{{
 function! s:SourceLocalRC()
+    " Abort if running as root/admin
+    if g:os !=# 'windows'
+        if expand('$EUID') == 0 | return | endif
+    else
+        silent call system('net session')
+        if v:shell_error != 0 | return | endif
+    endif
     let l:lvimrc = fnamemodify(findfile(
                 \ '.lvimrc', '.;'), ':p')
     if !len(l:lvimrc) | return | endif

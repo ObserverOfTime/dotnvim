@@ -8,7 +8,7 @@ map <silent> ,/ :nohlsearch <BAR> :echon<CR>
 
 nmap n <Plug>(is-nohl)<Plug>(anzu-n-with-echo)
 nmap N <Plug>(is-nohl)<Plug>(anzu-N-with-echo)
-nmap f <Plug>(fzf-quickfix)
+nmap Q <Plug>(fzf-quickfix)
 
 noremap <silent> <C-w>] :tab split <BAR> :exec 'tag '.expand('<cword>')<CR>
 noremap <silent> <C-w>v :VertiTab<CR>
@@ -24,7 +24,7 @@ noremap <silent> <C-i>  mzgg=G`z
 
 if g:os ==# 'linux'
     noremap <C-f> :FZFD<CR>
-elseif g:os !=# 'android'
+elseif g:os ==# 'windows'
     noremap <C-f> :FZF<CR>
 endif
 

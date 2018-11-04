@@ -68,6 +68,10 @@ let g:airline_mode_map['v']  = 'V'
 let g:airline_mode_map['V']  = 'VL'
 let g:airline_mode_map[''] = 'VB'
 
+let g:airline_section_c = '%<%<%{&bt=="terminal"?b:term_title:'.
+            \ 'airline#extensions#fugitiveline#bufname()}'.
+            \ '%m %#__accent_red#%{airline#util#wrap('.
+            \ 'airline#parts#readonly(),0)}%#__restore__#'
 if &encoding ==? 'utf-8'
     let g:airline_section_z = '%{&et?"":"↹ "}%3l% /%L%  : %02v'
 else
@@ -86,7 +90,7 @@ let g:airline#extensions#quickfix#location_text = 'L'
 let g:airline#extensions#tabline#tab_min_count = 2
 let g:airline#extensions#tabline#show_buffers = 0
 let g:airline#extensions#tabline#buffer_min_count = 2
-let g:airline#extensions#tabline#formatter = 'unique_tail'
+let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
 let g:airline#extensions#tabline#fnamemod = ':~:.'
 let g:airline#extensions#tabline#fnamecollapse = 1
 let g:airline#extensions#whitespace#trailing_format = 't[%s]'
@@ -154,7 +158,7 @@ if g:os !=# 'android' && (has('nvim') || v:version >= 800)
 
         " Sass {{{
         au User Ncm2Plugin call ncm2#register_source({
-                    \ 'name' : 'sass',
+                    \ 'name': 'sass',
                     \ 'priority': 9,
                     \ 'subscope_enable': 1,
                     \ 'scope': ['css', 'scss'],
@@ -298,11 +302,14 @@ if g:os !=# 'android'
     " Linters {{{
     let g:ale_linters = {
                 \ 'c': ['clang', 'gcc'],
+                \ 'cpp': ['clang++', 'g++'],
+                \ 'cmake': ['cmakelint'],
                 \ 'css': ['stylelint'],
                 \ 'html': ['htmlhint', 'vale'],
                 \ 'java': ['google_java_format'],
                 \ 'javascript': ['eslint'],
                 \ 'json': ['jq', 'jsonlint'],
+                \ 'kotlin': ['kotlinc'],
                 \ 'make': ['checkmake'],
                 \ 'markdown': ['vale'],
                 \ 'pug': ['puglint'],
@@ -318,6 +325,7 @@ if g:os !=# 'android'
     " Fixers {{{
     let g:ale_fixers = {
                 \ 'c': ['clang-format'],
+                \ 'cpp': ['clang-format'],
                 \ 'css': ['stylelint'],
                 \ 'java': ['google_java_format'],
                 \ 'javascript': ['eslint'],
@@ -426,7 +434,7 @@ endif
 
 if g:os ==# 'linux' && !g:_is_uni
     " DevIcons settings {{{
-    let g:webdevicons_enable_airline_tabline = 1
+    let g:webdevicons_enable_airline_tabline = 0
     let g:webdevicons_enable_airline_statusline = 1
     let g:WebDevIconsOS = 'Linux'
     let g:WebDevIconsUnicodeDecorateFolderNodes = 1
@@ -561,6 +569,14 @@ let g:vim_g_query_url = 'https://google.com/?q='
 let g:vim_g_command = 'S'
 " }}}
 
+" Polyglot settings {{{
+let g:polyglot_disabled = ['html', 'scss',
+            \ 'rst', 'markdown', 'pug']
+if has('nvim')
+    let g:polyglot_disabled += ['python', 'c', 'cpp']
+endif
+" }}}
+
 " Autopairs settings {{{
 let g:AutoPairsSmartMode = 1
 let g:AutoPairsShortcutToggle = '<C-p>t'
@@ -576,22 +592,21 @@ let g:csv_no_conceal = 1
 let g:csv_strict_columns = 1
 " }}}
 
-" Polyglot settings {{{
-let g:polyglot_disabled = ['html', 'scss', 'rst', 'markdown', 'pug']
-if has('nvim')
-    let g:polyglot_disabled += ['python', 'c', 'cpp']
-endif
-" }}}
-
 " EditorConfig settings {{{
-let g:EditorConfig_max_line_indicator = 'fill'
+let g:EditorConfig_max_line_indicator = 'exceeding'
 let g:EditorConfig_exclude_patterns = [
             \ '(scp|https\?|s\?ftp)://.*',
             \ '(term|rsync|fugitive)://.*']
 " }}}
 
+" SplitJoin settings {{{
+let g:splitjoin_quiet = 1
+let g:splitjoin_trailing_comma = 0
+let g:splitjoin_curly_brace_padding = 0
+let g:splitjoin_html_attributes_hanging = 1
+" }}}
+
 " JavaComplete2 settings {{{
-let g:JavaComplete_UsePython3 = 1
 let g:JavaComplete_ImportSortType = 'packageName'
 let g:JavaComplete_ImportOrder = ['java.',
             \ 'javax.', 'com.', 'org.', 'net.']

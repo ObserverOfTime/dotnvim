@@ -1,22 +1,9 @@
 " Make script file executable {{{
 function! SetExecBit(...)
-    if getline(1) =~# '^#!'
+    " Pass argument to force change
+    let l:force = len(a:000)
+    if l:force || getline(1) =~# '^#!'
         silent exec '!chmod +x %:p'
-    endif
-endfunction
-" }}}
-
-" Open Java class files {{{
-function! ReadClassFromJar(...)
-    let l:file = escape(getline('.'), '/\')
-    if l:file =~? '.*\.class$'
-        let l:tmpdir = '/tmp/nvim'. system('tr -cd "[:alnum:]" '.
-                    \ '</dev/urandom | fold -w6 | head -1')
-        silent exec '!unzip -qq' expand('%:p') shellescape('*') '-d' l:tmpdir
-        let l:filepath = substitute(l:tmpdir, '\n\+$', '', '') . '/' . l:file
-        silent exec 'split' l:filepath
-    else
-        echoerr 'Not a class file!'
     endif
 endfunction
 " }}}

@@ -1,0 +1,51 @@
+priority 10
+
+extends html, java
+
+# Tags {{{
+snippet %% "scriptlet" b
+<% ${VISUAL}${0} %>
+endsnippet
+
+snippet %= "expression" b
+<%= ${VISUAL}${1} %>
+endsnippet
+
+snippet %@ "directive" b
+<%@ ${1:directive} ${VISUAL}${2} %>
+endsnippet
+
+snippet %! "declaration" b
+<%! ${VISUAL}${1} %>
+endsnippet
+# }}}
+
+# Directives {{{
+snippet @page "page directive" b
+<%@ page contentType="${1:text/html; charset=UTF-8}" language="java" %>
+endsnippet
+
+snippet @c "JSTL core" b
+<%@ taglib uri="https://java.sun.com/jsp/jstl/core" prefix="c" %>
+endsnippet
+
+snippet @fn "JSTL functions" b
+<%@ taglib uri="https://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+endsnippet
+
+snippet @fmt "JSTL formatting" b
+<%@ taglib uri="https://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+endsnippet
+
+snippet @sql "JSTL sql" b
+<%@ taglib uri="https://java.sun.com/jsp/jstl/sql" prefix="sql" %>
+endsnippet
+
+snippet @xml "JSTL xml" b
+<%@ taglib uri="https://java.sun.com/jsp/jstl/xml" prefix="xml" %>
+endsnippet
+# }}}
+
+# TODO add JSTL tags
+# https://www.tutorialspoint.com/jsp/jsp_standard_tag_library.htm
+
