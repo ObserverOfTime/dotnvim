@@ -18,7 +18,7 @@ snip.rv = JS.varname(capitalise(t[1]))
 endsnippet
 
 snippet re. "require object" b
-import {${2:module}} from '${1:path}';
+const {${2:module}} = require('${1:path}');
 endsnippet
 
 snippet mex "module.exports" b

@@ -10,16 +10,22 @@ set number
 set hidden
 set list
 
-set guicursor=v-sm:block,i-ci-ve:ver25,r-o-n-c-cr:hor25
 set completeopt=noinsert,noselect,preview,menuone
 set switchbuf=useopen,usetab
 set formatoptions=cqn1j
 set shortmess=aoOtTcF
-set undolevels=100
+set background=dark
+set undolevels=250
 set shiftwidth=4
 set foldlevel=1
 set tabstop=4
 set mouse=ar
+
+if $TERM !=# 'xfce4-terminal'
+    set guicursor=v-sm:block,i-ci-ve:ver25,r-o-n-c-cr:hor25
+else
+    set guicursor= " Terminal bug workaround (#7722)
+endif
 
 if exists('&inccommand')
     set inccommand=split
@@ -40,19 +46,4 @@ else
     set showbreak=^
 endif
 
-" Gruvbox theme {{{
-if &t_Co == 256
-    try
-        colorscheme gruvbox
-        let g:gruvbox_italic = 1
-    catch /E185/ " Missing colorscheme
-        colorscheme desert
-    endtry
-    set background=dark
-else
-    colorscheme desert
-endif
-" }}}
-
-" vim:fdl=1:
 

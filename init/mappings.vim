@@ -30,7 +30,6 @@ endif
 
 nnoremap <Leader>gm  <Plug>(MakeDigraph)
 nnoremap <Leader>ga  <Plug>(UnicodeGA)
-nnoremap <Leader>r   :AsyncRun<Space>
 nnoremap <Leader>u   :MundoToggle<CR>
 nnoremap <Leader>n   :NERDTreeToggle<CR>
 nnoremap <Leader>F   :FoldLines<CR>

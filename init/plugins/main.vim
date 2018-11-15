@@ -15,6 +15,8 @@ Plug 'rcarraretto/vim-surround'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'brooth/far.vim', {'do': ':UpdateRemotePlugins'}
 Plug 'shaggyrogers/vim-mundo', {'on': 'MundoToggle'}
+Plug 'ObserverOfTime/multiedit.vim', {'dir':
+            \ g:git_home .'/multiedit.vim'}
 
 if g:os !=# 'android'
     Plug 'w0rp/ale'
@@ -49,9 +51,8 @@ endif
 " }}}
 
 " Look and feel plugins {{{
-Plug 'morhetz/gruvbox'
+Plug 'lifepillar/vim-gruvbox8'
 Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
 Plug 'enricobacis/vim-airline-clock'
 Plug 'chrisbra/Colorizer'
 
@@ -99,14 +100,9 @@ if executable('node') && g:os !=# 'android'
                 \ 'htmldjango', 'jsp'], 'do': g:npm_cmd}
 endif
 
-if exists('g:git_home')
-    Plug 'ObserverOfTime/scss.vim', {'for': 'scss',
-                \ 'dir': g:git_home .'/scss.vim',
-                \ 'branch': 'refactored'}
-else
-    Plug 'ObserverOfTime/scss.vim', {'for': 'scss',
-                \ 'branch': 'refactored'}
-endif
+Plug 'ObserverOfTime/scss.vim', {'for': 'scss',
+            \ 'dir': g:git_home .'/scss.vim',
+            \ 'branch': 'refactored'}
 " Plug 'nicwest/vim-http', {'for': 'http'}
 " }}}
 
@@ -121,9 +117,6 @@ endif
 if g:os !=# 'android'
     Plug 'davidhalter/jedi-vim', {'for': 'python'}
     Plug 'tweekmonster/django-plus.vim'
-    " Help: https://vimeo.com/95775461
-    Plug 'idanarye/vim-vebugger', {'for': [
-                \ 'c', 'cpp', 'java', 'python']}
 endif
 " }}}
 
@@ -140,8 +133,9 @@ if g:os !=# 'android' && !g:_is_uni
     Plug 'scrooloose/nerdtree', {'on':  'NERDTreeToggle'}
     Plug 'ladace/nerdtree-git-plugin', {'on': 'NERDTreeToggle'}
     Plug 'mortonfox/nerdtree-clip', {'on': 'NERDTreeToggle'}
-    Plug 'ObserverOfTime/vim-nerdtree-syntax-highlight', {'on': 'NERDTreeToggle',
-                \ 'dir': g:git_home .'/vim-nerdtree-syntax-highlight'}
+    Plug 'ObserverOfTime/vim-nerdtree-syntax-highlight', {
+                \ 'on': 'NERDTreeToggle', 'dir': g:git_home
+                \ .'/vim-nerdtree-syntax-highlight'}
 endif
 " }}}
 
@@ -158,7 +152,7 @@ if g:os !=# 'android' && v:version >= 800
     Plug 'ncm2/ncm2-path'
 
     if has('patch-8.0.1493')
-        Plug 'ncm2/ncm2-ultisnips'
+       Plug 'ncm2/ncm2-ultisnips'
     endif
 
     if executable('java')
@@ -172,7 +166,8 @@ if g:os !=# 'android' && v:version >= 800
     endif
 
     if executable('clang')
-        Plug 'ncm2/ncm2-pyclang', {'for': ['c', 'cpp']}
+        " Plug 'ncm2/ncm2-pyclang', {'for': ['c', 'cpp']}
+        Plug 'DroZ-hun/clang_complete', {'for': ['c', 'cpp']}
     endif
 
     if &spellfile || executable('look')
@@ -207,6 +202,10 @@ Plug 'tpope/vim-dadbod', {'on': []} " Load via local vimrc
 
 if has('nvim')
     Plug 'arakashic/chromatica.nvim', {'do': ':UpdateRemotePlugins'}
+endif
+
+if executable('R')
+    Plug 'jalvesaq/Nvim-R', {'for': 'r'}
 endif
 
 if executable('pdftotext')

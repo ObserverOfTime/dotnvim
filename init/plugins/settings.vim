@@ -42,6 +42,8 @@ endif
 
 " Airline settings {{{
 " Config {{{
+call SourceInitRC('plugins/airline_theme_grayscale')
+let g:airline_theme = 'grayscale'
 let g:airline_skip_empty_sections = 1
 let g:airline_exclude_preview = 1
 let g:airline_mode_map = {} " :h mode()
@@ -67,7 +69,6 @@ let g:airline_mode_map['t']  = 'T'
 let g:airline_mode_map['v']  = 'V'
 let g:airline_mode_map['V']  = 'VL'
 let g:airline_mode_map[''] = 'VB'
-
 let g:airline_section_c = '%<%<%{&bt=="terminal"?b:term_title:'.
             \ 'airline#extensions#fugitiveline#bufname()}'.
             \ '%m %#__accent_red#%{airline#util#wrap('.
@@ -131,9 +132,9 @@ endif
 " }}}
 " }}}
 
-if g:os !=# 'android' && (has('nvim') || v:version >= 800)
+if g:os !=# 'android' && v:version >= 800
     " NCM2 settings {{{
-    let ncm2_pyclang#library_path = s:clang_library_path
+    " let g:ncm2_pyclang#library_path = s:clang_library_path
     let g:ncm2_look_use_spell = !empty(&spellfile)
     let g:ncm2_look_mark = 'dict'
     augroup NCM2
@@ -154,6 +155,20 @@ if g:os !=# 'android' && (has('nvim') || v:version >= 800)
             au FileType c,cpp nnoremap <buffer> <silent> gd
                         \ <C-u>call ncm2_pyclang#goto_declaration()
         endif
+        " }}}
+
+        " Clang {{{
+        au User Ncm2Plugin call ncm2#register_source({
+                    \ 'name': 'clang',
+                    \ 'priority': 9,
+                    \ 'subscope_enable': 1,
+                    \ 'scope': ['c', 'cpp'],
+                    \ 'mark': 'c',
+                    \ 'word_pattern': '\w+',
+                    \ 'complete_pattern': ['->', '\.', '::', '^\s*#'],
+                    \ 'on_complete': ['ncm2#on_complete#omni',
+                    \                 'ClangComplete'],
+                    \ })
         " }}}
 
         " Sass {{{
@@ -284,7 +299,6 @@ if g:os !=# 'android' && (has('nvim') || v:version >= 800)
         " }}}
     augroup END
     " }}}
-    " }}}
 endif
 
 if g:os !=# 'android'
@@ -299,50 +313,84 @@ if g:os !=# 'android'
     let g:ale_list_window_size = 5
     " }}}
 
+    " Symbols {{{
+    if &encoding ==? 'utf-8'
+        let g:ale_sign_info = '❢'
+        let g:ale_sign_error = '✘'
+        let g:ale_sign_warning = '✶'
+        let g:ale_sign_style_error = '✗'
+        let g:ale_sign_style_warning = '⚹'
+    else
+        let g:ale_sign_info = '!!'
+        let g:ale_sign_warning = '>>'
+    endif
+    " }}}
+
     " Linters {{{
-    let g:ale_linters = {
-                \ 'c': ['clang', 'gcc'],
-                \ 'cpp': ['clang++', 'g++'],
-                \ 'cmake': ['cmakelint'],
-                \ 'css': ['stylelint'],
-                \ 'html': ['htmlhint', 'vale'],
-                \ 'java': ['google_java_format'],
-                \ 'javascript': ['eslint'],
-                \ 'json': ['jq', 'jsonlint'],
-                \ 'kotlin': ['kotlinc'],
-                \ 'make': ['checkmake'],
-                \ 'markdown': ['vale'],
-                \ 'pug': ['puglint'],
-                \ 'python': ['flake8', 'pylint'],
-                \ 'rst': ['rstcheck', 'vale'],
-                \ 'scss': ['stylelint'],
-                \ 'sh': ['shellcheck'],
-                \ 'sql': ['sqlint'],
-                \ 'vim': ['vint']
-                \ }
+    let g:ale_linters = {}
+    let g:ale_linters.c = executable('clang') ?
+                \ ['clang', 'clangtidy'] : ['gcc']
+    let g:ale_linters.cpp = g:ale_linters.c
+    let g:ale_linters.cmake = ['cmakelint']
+    let g:ale_linters.css = ['stylelint']
+    let g:ale_linters.html = ['htmlhint', 'vale']
+    let g:ale_linters.java = ['google_java_format']
+    let g:ale_linters.javascript = ['eslint']
+    let g:ale_linters.json = ['jq', 'jsonlint']
+    let g:ale_linters.kotlin = ['kotlinc']
+    let g:ale_linters.make = ['checkmake']
+    let g:ale_linters.markdown = ['vale']
+    let g:ale_linters.pug = ['puglint']
+    let g:ale_linters.python = ['flake8', 'pylint']
+    let g:ale_linters.rst = ['rstcheck', 'vale']
+    let g:ale_linters.scss = ['stylelint']
+    let g:ale_linters.sh = ['shellcheck']
+    let g:ale_linters.sql = ['sqlint']
+    let g:ale_linters.vim = ['vint']
     " }}}
 
     " Fixers {{{
-    let g:ale_fixers = {
-                \ 'c': ['clang-format'],
-                \ 'cpp': ['clang-format'],
-                \ 'css': ['stylelint'],
-                \ 'java': ['google_java_format'],
-                \ 'javascript': ['eslint'],
-                \ 'json': ['jq', 'fixjson'],
-                \ 'python': ['autopep8'],
-                \ 'scss': ['stylelint'],
-                \ 'sh': ['shfmt']
-                \}
+    let g:ale_fixers = {}
+    let g:ale_fixers.c = ['clang-format']
+    let g:ale_fixers.cpp = g:ale_fixers.c
+    let g:ale_fixers.css = ['stylelint']
+    let g:ale_fixers.java = ['google_java_format']
+    let g:ale_fixers.javascript = ['eslint']
+    let g:ale_fixers.json = ['jq', 'fixjson']
+    let g:ale_fixers.python = ['autopep8']
+    let g:ale_fixers.scss = ['stylelint']
+    let g:ale_fixers.sh = ['shfmt']
     " }}}
 
     " Options {{{
     let g:ale_pattern_options = {'.*\.min\..*$':
                 \ {'ale_linters': [], 'ale_fixers': []}}
+    " Python {{{
     let g:ale_python_flake8_options = '--ignore=W391,W504,E704,E731,F403,F405'
     let g:ale_python_autopep8_options = g:ale_python_flake8_options
+    " }}}
+    " Shell {{{
     let g:ale_sh_shellcheck_exclusions = 'SC1090,SC2128,SC2164'
     let g:ale_sh_shfmt_options = '-s -ci -i 2 -bn'
+    " }}}
+    " C {{{
+    let g:ale_c_clang_options = '-std=c99 -Wall -Wextra'
+    let g:ale_c_gcc_options = g:ale_c_clang_options
+    let g:ale_c_clangtidy_checks = [
+                \ 'bugprone-*', 'fuchsia-*', 'google-*', '-google-objc-*',
+                \ '-google-runtime-int', 'llvm-*', 'misc-*', 'performance-*',
+                \ 'readability-*', '-readability-braces-around-statements']
+    " }}}
+    " C++ {{{
+    let g:ale_cpp_clang_options = '-std=c++11 -Wall -Wextra'
+    let g:ale_cpp_gcc_options = g:ale_cpp_clang_options
+    let g:ale_cpp_clangtidy_checks = ['bugprone-*', 'cppcoreguidelines-*',
+                \ 'fuchsia-*', '-fuchsia-default-arguments', 'google-*',
+                \ '-google-objc-*', '-google-runtime-int', 'hicpp-signed-bitwise',
+                \ 'hicpp-multiway-paths-covered', 'hicpp-exception-baseclass',
+                \ 'llvm-*', 'misc-*', 'modernize-*', 'performance-*',
+                \ 'readability-*', '-readability-braces-around-statements']
+    " }}}
     " }}}
 
     " Augroup {{{
@@ -389,7 +437,7 @@ if g:os !=# 'android'
             au StdinReadPre * let s:std_in=1
             au BufEnter * if (winnr('$') == 1 && exists('b:NERDTree')
                         \ && b:NERDTree.isTabTree()) | q | endif
-            au FileType nerdtree setl nolist
+            au FileType nerdtree setl nolist | hi clear MatchParen
         augroup END
         " }}}
     endif
@@ -494,7 +542,7 @@ let g:vim_jsx_pretty_colorful_config = 1
 
 " Markdown settings {{{
 let g:markdown_fenced_languages = ['html', 'sh',
-            \ 'javascript', 'vim', 'python', 'r']
+            \ 'js=javascript', 'vim', 'python', 'r']
 if !exists('g:mkdx#settings')
     let g:mkdx#settings = {
                 \ 'links': {},
@@ -553,9 +601,20 @@ let g:UltiSnipsJumpForwardTrigger = '<C-Space>'
 let g:UltiSnipsJumpBackwardTrigger = '<C-b>'
 let g:UltiSnipsListSnippets = '<C-l>'
 let g:UltiSnipsEditSplit = 'vertical'
+let g:UltiSnipsEnableSnipMate = 0
 let g:UltiSnipsSnippetDirectories = [
             \ expand('<sfile>:p:h:h:h') .'/UltiSnips']
-" let g:UltiSnipsSnippetDirectories += ['UltiSnips']
+" }}}
+
+" ClangComplete settings {{{
+let g:clang_library_path = s:clang_library_path
+let g:clang_complete_complete_auto = 0
+let g:clang_complete_macros = 1
+let g:clang_complete_patterns = 1
+let g:clang_jumpto_back_key = ''
+let g:clang_print_type_key = '<Leader>gp'
+let g:clang_jumpto_declaration_key = '<Leader>gd'
+let g:clang_jumpto_declaration_in_preview_key = '<Leader>gg'
 " }}}
 
 " Vim-G settings {{{
@@ -585,6 +644,13 @@ let g:AutoPairsShortcutFastWrap = '<C-p>w'
 let g:AutoPairsShortcutJump = '<C-p>n'
 " }}}
 
+" GitGutter settings {{{
+let g:gitgutter_max_signs = 2000
+let g:gitgutter_sign_removed = '-'
+let g:gitgutter_sign_removed_first_line = '^'
+let g:gitgutter_sign_modified_removed = '%'
+" }}}
+
 " CSV settings {{{
 let g:csv_delim = ','
 let g:csv_hiGroup = 'IncSearch'
@@ -612,12 +678,6 @@ let g:JavaComplete_ImportOrder = ['java.',
             \ 'javax.', 'com.', 'org.', 'net.']
 " }}}
 
-" Colorizer settings {{{
-let g:colorizer_auto_filetype = 'css,haml,html,htmldjango,'.
-            \ 'javascript,json,jsx,php,pug,scss,svg'
-let g:colorizer_skip_comments = 1
-" }}}
-
 " Mundo settings {{{
 let g:mundo_width = 30
 let g:mundo_close_on_revert = 1
@@ -628,16 +688,16 @@ let g:mundo_close_on_revert = 1
 " let g:vim_http_split_vertically = 1
 " }}}
 
+" Colorizer settings {{{
+let g:colorizer_skip_comments = 1
+" }}}
+
 " Discord settings {{{
 let g:discord_activate_on_enter = 0
 " }}}
 
-" AsyncRun settings {{{
-let g:asyncrun_open = 8
-" }}}
-
-" GitGutter settings {{{
-let g:gitgutter_max_signs = 2000
+" Multiedit settings {{{
+let g:multiedit_command = 'E'
 " }}}
 
 " vim:fdl=0:

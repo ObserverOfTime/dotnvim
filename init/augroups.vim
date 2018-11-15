@@ -2,7 +2,6 @@
 augroup FTGroup
     au!
     au FileType * setl formatoptions-=ro
-    au FileType mail,text setl spell
     au FileType xxd setl noautoindent nocopyindent nosmartindent indentexpr=
     au FileType make setl tabstop=8 shiftwidth=8 softtabstop=0
                 \ noexpandtab nosmartindent
@@ -16,6 +15,9 @@ augroup FTGroup
     au FileType rst setl tabstop=3 shiftwidth=3 foldlevel=2
     au FileType json setl foldmethod=syntax foldlevel=2
     au FileType sh setl tabstop=2 shiftwidth=2
+    au FileType sql setl expandtab
+    au FileType mail,text setl spell
+    au FileType c,cpp let b:load_doxygen_syntax = 1
     au FileType vim setl foldmethod=marker foldlevel=1
     au FileType snippets setl foldmethod=marker foldlevel=0
     au FileType python let b:splitjoin_trailing_comma = 1
@@ -44,26 +46,14 @@ augroup BufGroup
 augroup END
 " }}}
 
-" Syntax augroup {{{
-augroup SyntaxGroup
+" Misc augroup {{{
+augroup MiscGroup
     au!
-    au Syntax c,cpp let b:load_doxygen_syntax = 1
-    au Syntax mail  call SyntaxRange#Include('<html>', '</html>', 'html')
-    au Syntax vim   call SyntaxRange#Include('^\s*py << EOF', 'EOF', 'python')
-    au Syntax vim   call SyntaxRange#Include('^\s*py3 << EOF', 'EOF', 'python')
-    au Syntax vim   call SyntaxRange#Include('^\s*ruby << EOF', 'EOF', 'ruby')
-    au Syntax pug   call SyntaxRange#Include('^\s*-', '$', 'javascript')
-    au Syntax pug   call SyntaxRange#Include('^\z(\s*\)-\s*$',
-                \   '^\%(\z1\s\|\s*$\)\@!', 'javascript')
-    au Syntax pug   call SyntaxRange#Include('\z(`[^`]*\)',
-                \   '\(%\z1`\)\@!', 'javascript')
-    au Syntax iss   call SyntaxRange#Include('\[Code\]', '^\[\w*\]$',
-                \   'pascal', 'issDirective')
-    au Syntax rst   call SyntaxRange#Include('^\s*<', '>$', 'html')
-    " au Syntax http  call SyntaxRange#Include('^\s*<', '>$', 'html')
-    " au Syntax http  call SyntaxRange#Include('^\s*{', '}$', 'json')
+    au Syntax * syn match PreProc "^\%1l#!/.*$" " Shebangs everywhere
+    au InsertLeave * set nopaste " Paste workaround (neovim#7994)
+    au VimLeave * set guicursor= " Reset cursor on exit
 augroup END
-"}}}
+" }}}
 
 " vim:fdl=1:
 

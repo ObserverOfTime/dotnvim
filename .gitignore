@@ -14,8 +14,8 @@ tags
 pythonx/__pycache__/
 pythonx/*.pyc
 
-syntax/
-colors/
-spell/
-doc/
+syntax/*
+colors/*
+spell/*
+doc/*
 

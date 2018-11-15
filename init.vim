@@ -61,6 +61,7 @@ else
     let g:plug_home = expand('~/.vim/plugged')
 endif
 
+let g:git_home = g:plug_home
 if !g:_is_uni
     if g:os ==# 'windows'
         let g:git_home = GetPath($USERPROFILE,
@@ -131,6 +132,7 @@ endfunction
 
 call SourceInitRC('plugins/main')
 call SourceInitRC('settings')
+call SourceInitRC('colors')
 call SourceInitRC('mappings')
 call SourceInitRC('commands')
 call SourceInitRC('functions/main')
@@ -142,9 +144,9 @@ endif
 " }}}
 
 " WARNING: This can be a security vulnerability.
-" When you're editing files from an untrusted
-" source, always check the directories for
-" .lvimrc files and verify their contents.
+" When editing files from an untrusted source,
+" always check the directories for .lvimrc
+" files and verify their contents.
 " Source local vimrc {{{
 function! s:SourceLocalRC()
     " Abort if running as root/admin

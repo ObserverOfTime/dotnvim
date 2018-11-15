@@ -13,7 +13,6 @@ if g:os ==# 'linux' && !g:_is_uni
 endif
 
 com! -complete=file W           :call mkdir(expand("%:p:h"), "p") | w
-com! -complete=file -nargs=* E  :tabedit <args>
 com! -nargs=? ListLangs         :echo getcompletion(<args>, 'filetype')
 com! -nargs=* Grep              :silent VSearch <q-args> %:p
 
