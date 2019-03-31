@@ -11,7 +11,8 @@ from os import path
 def first_letter(string):
     """Returns the first letter of a string"""
     if not len(string): return ''  # noqa: E701
-    return re.search(r'\w', string).group()
+    match = re.search(r'\w', string)
+    return match.group() if match else ''
 
 
 def camel_case(string):
@@ -41,11 +42,13 @@ class Python:
     def all(contents):
         """Returns an __all__ list"""
         pattern = r'|'.join([
-            r'^{0}\s*=\s*lambda.*',
+            r'^{0}\s*=',
             r'^class\s*{0}.*',
-            r'^def\s*{0}.*']).format(r'([\w\d_-]+)')
-        matches = lambda m: re.match(pattern, m)
-        exports = list(filter(matches, list(contents)))
+            r'^def\s*{0}.*'
+        ]).format(r'([^_][\w\d_-]+)')
+        exports = list(filter(
+            lambda m: re.match(pattern, m), list(contents)
+        ))
         return [re.sub(pattern, r'\1\2\3', e) for e in exports]
 
 
@@ -82,7 +85,7 @@ class Java:
     @staticmethod
     def arguments(group):
         """Returns the arguments of a method"""
-        word = re.compile('[a-zA-Z0-9><.]+ \w+')
+        word = re.compile(r'[a-zA-Z0-9><.]+ \w+')
         return [w.split(' ') for w in word.findall(group)]
 
     @staticmethod
@@ -156,6 +159,6 @@ class JS:
             'x': 'dirxml',
             'a': 'assert',
             'g': 'debug',
-            'r': 'trace',
+            's': 'trace',
         }.get(match.group(1), '')
 

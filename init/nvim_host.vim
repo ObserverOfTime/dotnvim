@@ -1,5 +1,5 @@
 function! s:MergePath(cmd, path) abort
-    return systemlist(a:cmd)[0] .'/'. a:path
+    return GetPath(systemlist(a:cmd)[0], a:path)
 endfunction
 
 function! s:GetPython(ver)
@@ -17,7 +17,11 @@ else
     let g:python3_host_prog = s:GetPython(3)
 endif
 
-if get(g:, 'npm_cmd') ==# 'yarn'
+if exists('$NODE_GLOBAL_BIN')
+    let g:node_host_prog = GetPath(
+               \ $NODE_GLOBAL_BIN,
+               \ 'neovim-node-host')
+elseif get(g:, 'npm_cmd') ==# 'yarn'
     let g:node_host_prog = s:MergePath(
                 \ 'yarn global bin',
                 \ 'neovim-node-host')

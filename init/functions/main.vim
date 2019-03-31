@@ -8,7 +8,7 @@ function! SetExecBit(...)
 endfunction
 " }}}
 
-" Open url with qutebrowser {{{
+" Open URL with qutebrowser {{{
 if executable('qutebrowser')
     com! -nargs=? QBrowse :call s:QuteBrowser(<f-args>)
     function! s:QuteBrowser(...)
@@ -21,7 +21,7 @@ if executable('qutebrowser')
 endif
 " }}}
 
-" Open plugin url in browser {{{
+" Open plugin URL in browser {{{
 com! PlugOpen :call s:PlugOpenURL()
 function! s:PlugOpenURL()
     let l:name = matchstr(getline('.'), "'\\zs[^']\\+\\ze'")
@@ -32,13 +32,13 @@ function! s:PlugOpenURL()
 endfunction
 " }}}
 
-" Django + virtual env {{{
+" Activate Django & virtual env {{{
 if g:os !=# 'android'
     call SourceInitRC('functions/djenv')
 endif
 " }}}
 
-" FZF with dev icons {{{
+" Show devicons in fzf window {{{
 if g:os ==# 'linux'
     call SourceInitRC('functions/fzfdev')
 endif

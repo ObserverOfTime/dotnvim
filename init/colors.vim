@@ -4,7 +4,7 @@ try
     let g:gruvbox_filetype_hi_groups = 1
     colorscheme gruvbox8
 catch /E185|Gruvbox 8/
-    colorscheme desert
+    colorscheme desert " Fallback
     finish
 endtry
 " }}}
@@ -44,11 +44,13 @@ hi link NERDTreeDirSlash NERDTreeDir
 " }}}
 
 " Misc {{{
+hi Comment cterm=italic
 hi Folded ctermbg=234 guibg=#1C1C1C
 hi Visual ctermbg=237 guibg=#3A3A3A
 hi MatchParen ctermbg=236 guibg=#303030
-hi Todo ctermfg=179 guibg=#d7af5f gui=bold
-hi link vimCommentTitle Todo
+hi Function cterm=NONE gui=NONE
+hi Todo ctermfg=179 guifg=#d7af5f gui=bold
+hi! link vimCommentTitle Todo
 " }}}
 " }}}
 

@@ -4,27 +4,28 @@ scriptencoding utf-8
 let s:emmet_defaults = {
             \ 'default_attributes': {
             \   'a': {'href': '${cursor}', 'target': '_blank'},
+            \   'button': {'type': 'submit'},
+            \   'footer': {'id': 'footer'},
+            \   'form': {'action': '${cursor}', 'method': 'GET'},
+            \   'header': {'id': 'header'},
             \   'img': {'src': '${cursor}', 'alt': ''},
+            \   'input': {'name': '${cursor}', 'type': 'text'},
+            \   'label': {'for': '${cursor}'},
+            \   'link': {'href': '${cursor}', 'rel': 'stylesheet',
+            \            'type': 'text/css'},
+            \   'main': {'id': '${cursor}'},
             \   'object': {'data': '${cursor}', 'type': ''},
             \   'script': {'src': '${cursor}', 'type': 'text/javascript'},
             \   'style': {'src': '${cursor}', 'type': 'text/css'},
-            \   'link': {'href': '${cursor}', 'rel': 'stylesheet',
-            \            'type': 'text/css'},
-            \   'form': {'action': '${cursor}', 'method': 'GET'},
-            \   'label': {'for': '${cursor}'},
-            \   'input': {'name': '${cursor}', 'type': 'text'},
-            \   'button': {'type': 'submit'},
-            \   'header': {'id': 'header'},
-            \   'footer': {'id': 'footer'}
             \ },
             \ 'aliases': {
-            \   'obj': 'object',
-            \   'in': 'input',
             \   'art': 'article',
-            \   'sec': 'section',
             \   'btn': 'button',
-            \   'he': 'header',
             \   'fo': 'footer',
+            \   'he': 'header',
+            \   'in': 'input',
+            \   'obj': 'object',
+            \   'sec': 'section',
             \ },
             \ 'indentation': '  ',
             \ 'quote_char': '"'
@@ -38,11 +39,12 @@ elseif g:shell ==# 'cygwin'
 else
     let s:clang_library_path = '/usr/lib/libclang.so'
 endif
+
+let s:lexima_except = '\C\v^(\s*)\S.*%#\n%(%(\s*|\1\s.+)\n)*\1'
 " }}}
 
 " Airline settings {{{
 " Config {{{
-call SourceInitRC('plugins/airline_theme_grayscale')
 let g:airline_theme = 'grayscale'
 let g:airline_skip_empty_sections = 1
 let g:airline_exclude_preview = 1
@@ -69,10 +71,12 @@ let g:airline_mode_map['t']  = 'T'
 let g:airline_mode_map['v']  = 'V'
 let g:airline_mode_map['V']  = 'VL'
 let g:airline_mode_map[''] = 'VB'
+" Use b:term_title in terminal
 let g:airline_section_c = '%<%<%{&bt=="terminal"?b:term_title:'.
             \ 'airline#extensions#fugitiveline#bufname()}'.
             \ '%m %#__accent_red#%{airline#util#wrap('.
             \ 'airline#parts#readonly(),0)}%#__restore__#'
+" Show expandtab & line + column numbers
 if &encoding ==? 'utf-8'
     let g:airline_section_z = '%{&et?"":"↹ "}%3l% /%L%  : %02v'
 else
@@ -142,7 +146,7 @@ if g:os !=# 'android' && v:version >= 800
         " Misc {{{
         if !has('nvim')
             au VimEnter * exec get(g:, 'neovim_rpc#py',
-                        \ 'python3') .' import neovim'
+                        \ 'python3') .' import pynvim'
         endif
         au InsertEnter * call ncm2#enable_for_buffer()
         au InsertLeave * if !pumvisible() | pclose | endif
@@ -151,10 +155,10 @@ if g:os !=# 'android' && v:version >= 800
         if executable('node')
             au FileType html,htmldjango call tern#Enable()
         endif
-        if executable('clang')
-            au FileType c,cpp nnoremap <buffer> <silent> gd
-                        \ <C-u>call ncm2_pyclang#goto_declaration()
-        endif
+        " if executable('clang')
+        "     au FileType c,cpp nnoremap <buffer> <silent> <Leader>gd
+        "                 \ <C-u>call ncm2_pyclang#goto_declaration()
+        " endif
         " }}}
 
         " Clang {{{
@@ -223,7 +227,7 @@ if g:os !=# 'android' && v:version >= 800
                     \ 'name': 'emmet',
                     \ 'priority': 8,
                     \ 'subscope_enable': 1,
-                    \ 'scope': ['html', 'htmldjango', 'pug', 'php'],
+                    \ 'scope': ['html', 'htmldjango', 'pug'],
                     \ 'mark': 'emmet',
                     \ 'word_pattern': '[\w_\-]+',
                     \ 'complete_pattern': '[\w:]+',
@@ -243,20 +247,6 @@ if g:os !=# 'android' && v:version >= 800
                     \ 'complete_pattern': '[\w\s]+',
                     \ 'on_complete': ['ncm2#on_complete#omni',
                     \                 'pugcomplete#CompletePug'],
-                    \ })
-        " }}}
-
-        " JSPC {{{
-        au User Ncm2Plugin call ncm2#register_source({
-                    \ 'name': 'jspc',
-                    \ 'priority': 8,
-                    \ 'subscope_enable': 0,
-                    \ 'scope': ['javascript'],
-                    \ 'mark': 'jspc',
-                    \ 'word_pattern': '\w+',
-                    \ 'complete_pattern': "\\('?",
-                    \ 'on_complete': ['ncm2#on_complete#omni',
-                    \                 'jspc#complete']
                     \ })
         " }}}
 
@@ -334,18 +324,18 @@ if g:os !=# 'android'
     let g:ale_linters.cmake = ['cmakelint']
     let g:ale_linters.css = ['stylelint']
     let g:ale_linters.html = ['htmlhint', 'vale']
-    let g:ale_linters.java = ['google_java_format']
     let g:ale_linters.javascript = ['eslint']
     let g:ale_linters.json = ['jq', 'jsonlint']
-    let g:ale_linters.kotlin = ['kotlinc']
     let g:ale_linters.make = ['checkmake']
     let g:ale_linters.markdown = ['vale']
     let g:ale_linters.pug = ['puglint']
     let g:ale_linters.python = ['flake8', 'pylint']
     let g:ale_linters.rst = ['rstcheck', 'vale']
+    let g:ale_linters.rust = ['rustc', 'rustfmt']
     let g:ale_linters.scss = ['stylelint']
     let g:ale_linters.sh = ['shellcheck']
     let g:ale_linters.sql = ['sqlint']
+    let g:ale_linters.verilog = ['iverilog']
     let g:ale_linters.vim = ['vint']
     " }}}
 
@@ -354,10 +344,10 @@ if g:os !=# 'android'
     let g:ale_fixers.c = ['clang-format']
     let g:ale_fixers.cpp = g:ale_fixers.c
     let g:ale_fixers.css = ['stylelint']
-    let g:ale_fixers.java = ['google_java_format']
     let g:ale_fixers.javascript = ['eslint']
     let g:ale_fixers.json = ['jq', 'fixjson']
     let g:ale_fixers.python = ['autopep8']
+    let g:ale_fixers.rust = ['rustfmt']
     let g:ale_fixers.scss = ['stylelint']
     let g:ale_fixers.sh = ['shfmt']
     " }}}
@@ -376,20 +366,12 @@ if g:os !=# 'android'
     " C {{{
     let g:ale_c_clang_options = '-std=c99 -Wall -Wextra'
     let g:ale_c_gcc_options = g:ale_c_clang_options
-    let g:ale_c_clangtidy_checks = [
-                \ 'bugprone-*', 'fuchsia-*', 'google-*', '-google-objc-*',
-                \ '-google-runtime-int', 'llvm-*', 'misc-*', 'performance-*',
-                \ 'readability-*', '-readability-braces-around-statements']
+    let g:ale_c_clangformat_options = '-style=file'
     " }}}
     " C++ {{{
     let g:ale_cpp_clang_options = '-std=c++11 -Wall -Wextra'
     let g:ale_cpp_gcc_options = g:ale_cpp_clang_options
-    let g:ale_cpp_clangtidy_checks = ['bugprone-*', 'cppcoreguidelines-*',
-                \ 'fuchsia-*', '-fuchsia-default-arguments', 'google-*',
-                \ '-google-objc-*', '-google-runtime-int', 'hicpp-signed-bitwise',
-                \ 'hicpp-multiway-paths-covered', 'hicpp-exception-baseclass',
-                \ 'llvm-*', 'misc-*', 'modernize-*', 'performance-*',
-                \ 'readability-*', '-readability-braces-around-statements']
+    let g:ale_cpp_clangformat_options = g:ale_c_clangformat_options
     " }}}
     " }}}
 
@@ -494,16 +476,17 @@ endif
 " Conceal {{{
 let g:javascript_conceal_this = '@'
 let g:javascript_conceal_prototype = '#'
-let g:javascript_conceal_arrow_function = 'λ'
 
 if &encoding ==? 'utf-8'
     let g:javascript_conceal_function = 'ƒ'
+    let g:javascript_conceal_arrow_function = '⇒'
     let g:javascript_conceal_null = 'ø'
     let g:javascript_conceal_undefined = '¿'
     let g:javascript_conceal_NaN = '₦'
     " let g:javascript_conceal_return = '≺' "'↩'
 else
     let g:javascript_conceal_function = 'φ'
+    let g:javascript_conceal_arrow_function = 'λ'
     let g:javascript_conceal_null = 'ν'
     let g:javascript_conceal_undefined = 'υ'
 endif
@@ -516,7 +499,6 @@ let g:jsdoc_allow_input_prompt = 1
 let g:jsdoc_input_description = 1
 let g:jsdoc_enable_es6 = 1
 let g:jsdoc_underscore_private = 1
-let g:jsdoc_param_description_separator = ' - '
 " }}}
 
 " Tagged Template {{{
@@ -538,31 +520,68 @@ let g:vim_json_warnings = 0
 let g:vim_jsx_pretty_enable_jsx_highlight = 1
 let g:vim_jsx_pretty_colorful_config = 1
 " }}}
+
+" Augroup {{{
+augroup JavaScript
+    " Use JS filetype for JSX
+    au FileType javascript.jsx setl ft=javascript
+    " Apply taggedtemplate
+    au FileType javascript call taggedtemplate#applySyntaxMap()
+    " Apply conceal
+    au FileType javascript setl conceallevel=1
+augroup END
+" }}}
 " }}}
 
 " Markdown settings {{{
-let g:markdown_fenced_languages = ['html', 'sh',
-            \ 'js=javascript', 'vim', 'python', 'r']
-if !exists('g:mkdx#settings')
-    let g:mkdx#settings = {
-                \ 'links': {},
-                \ 'checkbox': {},
-                \ 'tokens': {},
-                \ 'toc': {}
-                \ }
-endif
+let g:markdown_fenced_languages = [
+            \ 'bash=sh',
+            \ 'html',
+            \ 'js=javascript',
+            \ 'json',
+            \ 'python',
+            \ 'sh',
+            \ 'vim'
+            \ ]
+let g:mkdx#settings = {}
 let g:mkdx#settings.highlight = {'enable': 1}
 let g:mkdx#settings.fold = {'enable': 1}
 let g:mkdx#settings.enter = {'enable': 0}
-let g:mkdx#settings.map = {'prefix': '<Leader>m'}
-let g:mkdx#settings.links.external = {'enable': 0}
-let g:mkdx#settings.checkbox.toggles = [' ', 'x']
-let g:mkdx#settings.checkbox.update_tree = 0
-let g:mkdx#settings.tokens.list = '*'
-let g:mkdx#settings.tokens.fence = '`'
-let g:mkdx#settings.tokens.strike = '~~'
-let g:mkdx#settings.toc.text = 'Table of Contents'
-let g:mkdx#settings.toc.list_token = '*'
+let g:mkdx#settings.map = {'enable': 0}
+let g:mkdx#settings.links = {
+            \ 'external': {'enable': 0}
+            \ }
+let g:mkdx#settings.checkbox = {
+            \ 'toggles': [' ', 'x'],
+            \ 'update_tree': 0
+            \ }
+let g:mkdx#settings.tokens = {
+            \ 'list': '*',
+            \ 'fence': '`',
+            \ 'strike': '~~'
+            \ }
+" }}}
+
+" Lexima settings {{{
+call lexima#add_rule({
+            \ 'filetype': 'markdown',
+            \ 'input_after': '<CR>',
+            \ 'char': '<CR>', 'at': '```'
+            \ })
+call lexima#add_rule({
+            \ 'filetype': 'verilog',
+            \ 'except': s:lexima_except .'end',
+            \ 'input_after': '<CR>end',
+            \ 'input': '<CR>', 'char': '<CR>',
+            \ 'at': '^.*\%(begin\)\%#'
+            \ })
+call lexima#add_rule({
+            \ 'filetype': 'verilog',
+            \ 'except': s:lexima_except .'endmodule',
+            \ 'input_after': '<CR>endmodule',
+            \ 'input': '<CR>', 'char': '<CR>',
+            \ 'at': '^\%(module\).*(\_.*);\%#'
+            \ })
 " }}}
 
 " Emmet settings {{{
@@ -587,7 +606,7 @@ let g:user_emmet_settings = {
 " RST settings {{{
 let g:rst_use_emphasis_colors = 1
 let g:rst_syntax_code_list = {}
-let g:rst_syntax_code_list.sh = ['sh', 'shell']
+let g:rst_syntax_code_list.sh = ['bash', 'sh']
 let g:rst_syntax_code_list.python = ['python']
 let g:rst_syntax_code_list.html = ['html']
 let g:rst_syntax_code_list.json = ['json']
@@ -629,19 +648,10 @@ let g:vim_g_command = 'S'
 " }}}
 
 " Polyglot settings {{{
-let g:polyglot_disabled = ['html', 'scss',
-            \ 'rst', 'markdown', 'pug']
+let g:polyglot_disabled = ['html', 'scss', 'rst', 'markdown', 'pug']
 if has('nvim')
     let g:polyglot_disabled += ['python', 'c', 'cpp']
 endif
-" }}}
-
-" Autopairs settings {{{
-let g:AutoPairsSmartMode = 1
-let g:AutoPairsShortcutToggle = '<C-p>t'
-let g:AutoPairsShortcutBackInsert = '<C-p>b'
-let g:AutoPairsShortcutFastWrap = '<C-p>w'
-let g:AutoPairsShortcutJump = '<C-p>n'
 " }}}
 
 " GitGutter settings {{{

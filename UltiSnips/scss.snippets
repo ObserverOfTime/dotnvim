@@ -68,7 +68,7 @@ snippet for "@for loop" b
 endsnippet
 
 snippet each "@each loop" b
-@each ${2:`!p snip.rv = "$" + (t[1][:1] or "i")`} ${1:items} {
+@each ${2:`!p snip.rv = "$" + (t[1][1:2] or "i")`} in ${1:items} {
 	${VISUAL}${0}
 }
 endsnippet

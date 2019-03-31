@@ -1,57 +1,65 @@
 " Filetype augroup {{{
 augroup FTGroup
     au!
-    au FileType * setl formatoptions-=ro
-    au FileType xxd setl noautoindent nocopyindent nosmartindent indentexpr=
-    au FileType make setl tabstop=8 shiftwidth=8 softtabstop=0
-                \ noexpandtab nosmartindent
-    au FileType javascript.jsx setl conceallevel=1 ft=javascript
-                \ syn=javascript.jsx | call taggedtemplate#applySyntaxMap()
-    au FileType html,htmldjango,pug,markdown,xml,svg setl tabstop=2 shiftwidth=2
-    au FileType html,htmldjango,pug,jsp call UltiSnips#AddFiletypes('css')
-                \ | call UltiSnips#AddFiletypes('javascript')
+    " Disable autoinsertion of comment leaders
+    au FileType * set formatoptions-=o formatoptions-=r
+    " Enable spellcheck in e-mails
+    au FileType mail setl spell
+    " Wrap lines in manual pages
+    au FileType man setl wrap linebreak
+    " Enable Doxygen syntax in C,C++ files
+    au FileType c,cpp let b:load_doxygen_syntax = 1
+    " Keep trailing commas in Python files
+    au FileType python let b:splitjoin_trailing_comma = 1
+    " Indentation settings {{{
+    au FileType make setl tabstop=8 shiftwidth=8
+                \ softtabstop=0 noexpandtab nosmartindent
+    au FileType html,htmldjango,pug setl tabstop=2 shiftwidth=2
+    au FileType markdown,xml,svg setl tabstop=2 shiftwidth=2
     au FileType json,javascript,coffee setl tabstop=2 shiftwidth=2
     au FileType css,scss setl iskeyword+=- tabstop=2 shiftwidth=2
     au FileType rst setl tabstop=3 shiftwidth=3 foldlevel=2
-    au FileType json setl foldmethod=syntax foldlevel=2
     au FileType sh setl tabstop=2 shiftwidth=2
     au FileType sql setl expandtab
-    au FileType mail,text setl spell
-    au FileType c,cpp let b:load_doxygen_syntax = 1
+    " }}}
+    " Folding settings {{{
     au FileType vim setl foldmethod=marker foldlevel=1
     au FileType snippets setl foldmethod=marker foldlevel=0
-    au FileType python let b:splitjoin_trailing_comma = 1
-    au FileType java setl omnifunc=javacomplete#Complete |
-                \ nmap <buffer> <Leader>jd :call JCommentWriter()<CR>
+    au FileType json setl foldmethod=syntax foldlevel=2
+    " }}}
 augroup END
 " }}}
 
 " Buffer augroup {{{
 augroup BufGroup
     au!
+    " call SetExecBit() on save
     au BufWritePost * call SetExecBit()
-    au BufNewFile,BufRead,BufAdd * hi Comment cterm=italic
-    au BufNewFile,BufRead,BufAdd *.bash* setl ft=sh
-    au BufNewFile,BufRead,BufAdd *.conf setl ft=conf syn=dosini
-    au BufNewFile,BufRead,BufAdd requirements.* setl ft=requirements
-    au BufNewFile,BufRead,BufAdd *nginx*.conf setl ft=nginx
-    au BufNewFile,BufRead,BufAdd .babelrc setl ft=json5
-    au BufNewFile,BufRead,BufAdd .SRCINFO setl ft=SRCINFO syn=dosini
-    if executable('cfr')
-        au BufRead,BufAdd *.class setl ft=java nomodified |
-                    \ silent %!unset _JAVA_OPTIONS; cfr %
-        au BufReadPost,StdinReadPost *.class setl nomodifiable
-                    \ readonly wrap linebreak breakindent nolist
-    endif
+    " Set special filetypes {{{
+    au BufNewFile,BufRead *.bash* setf sh
+    au BufNewFile,BufRead *.conf setf dosini
+    au BufNewFile,BufRead *nginx*.conf setf nginx
+    au BufNewFile,BufRead .babelrc setf json5
+    au BufNewFile,BufRead .SRCINFO setf dosini
+    " }}}
+    if executable('cfr') " Decompile Java class files {{{
+        au BufRead *.class if !&binary | setl ft=java nomodified |
+                    \ silent exec '%!unset _JAVA_OPTIONS; cfr %' | endif
+        au BufReadPost *.class if !&binary | setl nomodifiable
+                    \ readonly wrap linebreak breakindent nolist | endif
+    endif " }}}
 augroup END
 " }}}
 
 " Misc augroup {{{
 augroup MiscGroup
     au!
-    au Syntax * syn match PreProc "^\%1l#!/.*$" " Shebangs everywhere
-    au InsertLeave * set nopaste " Paste workaround (neovim#7994)
-    au VimLeave * set guicursor= " Reset cursor on exit
+    " Shebangs everywhere
+    au Syntax * syn match PreProc "^\%1l#!/.*$"
+    " Paste bug workaround (neovim/neovim#7994)
+    au InsertLeave * set nopaste
+    " Reset cursor on exit
+    au VimLeave * set guicursor=a:hor25
 augroup END
 " }}}
 

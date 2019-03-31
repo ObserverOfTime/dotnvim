@@ -7,7 +7,7 @@ endif
 if &compatible | set nocompatible | endif
 
 " Detect platform {{{
-if has('win32') || has('win32unix')
+if expand('$OS') =~? 'Windows'
     let g:os = 'windows'
     if &shell =~? 'powershell'
         let g:shell = 'pwsh'
@@ -24,6 +24,7 @@ elseif expand('$OSTYPE') ==? 'linux-android'
 else
     let g:os = 'linux'
     let g:shell = 'unix'
+    let $JAVA_HOME = '/usr/lib/jvm/java-8-openjdk/' " Use JDK8
 endif
 
 let g:_is_uni = exists('$UNI_HOST')
@@ -35,11 +36,13 @@ function! GetPath(...)
     if g:os ==# 'windows'
         let l:path = substitute(l:input, '\\', '/', 'g')
         if g:shell ==# 'msys'
-            return substitute(l:path, '\(\w\):', '/\L\1', '')
+            return substitute(shellescape(l:path),
+                        \ '\(\w\):', '/\L\1', '')
         elseif g:shell ==# 'cygwin'
-            return systemlist('cygpath '. l:path)[0]
+            return systemlist('cygpath '.
+                        \ shellescape(l:path))[0]
         endif
-        return l:path
+        return shellescape(l:path)
     else
         return expand(l:input)
     endif
@@ -138,9 +141,7 @@ call SourceInitRC('commands')
 call SourceInitRC('functions/main')
 call SourceInitRC('augroups')
 
-if has('nvim')
-    call SourceInitRC('nvim_host')
-endif
+if has('nvim') | call SourceInitRC('nvim_host') | endif
 " }}}
 
 " WARNING: This can be a security vulnerability.

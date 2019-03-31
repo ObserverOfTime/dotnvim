@@ -1,18 +1,24 @@
+" Delete trailing whitespace
 com! DelTrail  :%s/\s\+$//e
+" Copy file to clipboard
 com! CopyFile  :silent w !xclip -i -sel c
-com! VertiTab  :setl splitright | :vnew
-com! HorizTab  :setl splitbelow | :new
+" Undo git hunk
 com! Gundo     :GitGutterUndoHunk
+" Go to previous git hunk
 com! Gprev     :GitGutterPrevHunk
+" Go to next git hunk
 com! Gnext     :GitGutterNextHunk
+" Highlight lines longers than 80 characters
 com! MaxLength :match ErrorMsg '\%>80v.\+'
 
+" Use suda to edit/save as root
 if g:os ==# 'linux' && !g:_is_uni
     com! SudoEdit  :e suda://%
     com! SudoWrite :w suda://%
 endif
 
-com! -complete=file W           :call mkdir(expand("%:p:h"), "p") | w
-com! -nargs=? ListLangs         :echo getcompletion(<args>, 'filetype')
-com! -nargs=* Grep              :silent VSearch <q-args> %:p
+" Save a file creating parent directories
+com! -complete=file W  :call mkdir(expand("%:p:h"), "p") | w
+" List supported filetypes
+com! -nargs=? ListFT   :echo getcompletion(<q-args>, 'filetype')
 
