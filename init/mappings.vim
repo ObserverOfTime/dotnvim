@@ -50,11 +50,7 @@ nnoremap <silent> <C-s>  :w<CR>
 nnoremap <silent> <C-i>  mzgg=G`z
 
 " Open fzf window
-if g:os ==# 'linux'
-    nnoremap <C-f>       :FZFD<CR>
-elseif g:os ==# 'windows'
-    nnoremap <C-f>       :FZF<CR>
-endif
+nnoremap <C-f>           :FZF<CR>
 " }}}
 
 " Insert mode {{{

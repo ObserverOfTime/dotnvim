@@ -38,11 +38,5 @@ if g:os !=# 'android'
 endif
 " }}}
 
-" Show devicons in fzf window {{{
-if g:os ==# 'linux'
-    call SourceInitRC('functions/fzfdev')
-endif
-" }}}
-
 " vim:fdl=1:
 

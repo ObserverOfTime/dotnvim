@@ -15,8 +15,9 @@ Plug 'rcarraretto/vim-surround'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'brooth/far.vim', {'do': ':UpdateRemotePlugins'}
 Plug 'shaggyrogers/vim-mundo', {'on': 'MundoToggle'}
-Plug 'ObserverOfTime/multiedit.vim', {'dir':
-            \ g:git_home .'/multiedit.vim'}
+Plug 'ObserverOfTime/multiedit.vim', {
+            \ 'dir': g:git_home .'/multiedit.vim'
+            \ }
 
 if g:os !=# 'android'
     Plug 'w0rp/ale'
@@ -43,10 +44,11 @@ if g:os ==# 'linux' && !g:_is_uni
 endif
 
 if has('nvim') && !g:_is_uni
-    Plug 'ObserverOfTime/discord.nvim', {'dir':
-                \ g:git_home .'/discord.nvim',
+    Plug 'ObserverOfTime/discord.nvim', {
+                \ 'dir': g:git_home .'/discord.nvim',
                 \ 'do': ':UpdateRemotePlugins',
-                \ 'branch': 'refactored'}
+                \ 'branch': 'refactored'
+                \ }
 endif
 " }}}
 
@@ -55,10 +57,6 @@ Plug 'lifepillar/vim-gruvbox8'
 Plug 'vim-airline/vim-airline'
 Plug 'enricobacis/vim-airline-clock'
 Plug 'chrisbra/Colorizer'
-
-if g:os ==# 'linux' && !g:_is_uni
-    Plug 'ryanoasis/vim-devicons'
-endif
 " }}}
 
 " Git plugins {{{
@@ -70,35 +68,37 @@ Plug 'airblade/vim-gitgutter'
 " Web plugins {{{
 Plug 'othree/html5.vim', {'for': ['html', 'htmldjango', 'pug']}
 Plug 'mattn/emmet-vim', {'for': ['html', 'htmldjango', 'pug']}
-Plug 'hail2u/vim-css3-syntax', {'for': ['css',
-            \ 'scss', 'html', 'htmldjango', 'pug']}
+Plug 'hail2u/vim-css3-syntax', {
+            \ 'for': ['css', 'scss', 'html', 'htmldjango', 'pug']
+            \ }
 Plug 'iloginow/vim-pug', {'for': 'pug'}
-
+" Plug 'cakebaker/scss-syntax.vim', {'for': 'scss'}
 Plug 'redbmk/vim-jsx', {'for': 'javascript'}
 Plug 'maxmellon/vim-jsx-pretty', {'for': 'javascript'}
 Plug 'heavenshell/vim-jsdoc', {'for': 'javascript'}
 Plug 'cdata/vim-tagged-template', {'for': 'javascript'}
 
+let g:_color_fts = [
+            \ 'css', 'html', 'htmldjango',
+            \ 'javascript', 'pug', 'scss', 'svg'
+            \ ]
 if g:os !=# 'android'
-    Plug 'kracejic/vCoolor.vim', {'for': [
-                \ 'css', 'scss', 'html', 'htmldjango',
-                \ 'pug', 'svg', 'javascript']}
+    Plug 'kracejic/vCoolor.vim', {'for': g:_color_fts}
 else
-    Plug 'aaron-goshine/colorv.vim', {'for': [
-                \ 'css', 'scss', 'html', 'htmldjango',
-                \ 'pug', 'svg', 'javascript']}
+    Plug 'aaron-goshine/colorv.vim', {'for': g:_color_fts}
 endif
 
 if executable('node') && g:os !=# 'android'
-    Plug 'FabioAntunes/vim-node'
-    Plug 'ternjs/tern_for_vim', {'for': ['javascript',
-                \ 'html', 'htmldjango'], 'do': g:npm_cmd}
+    Plug 'FabioAntunes/vim-node', {'for': 'javascript'}
+    Plug 'ternjs/tern_for_vim', {
+                \ 'for': ['javascript', 'html', 'htmldjango'],
+                \ 'do': g:npm_cmd
+                \ }
 endif
 
-Plug 'ObserverOfTime/scss.vim', {'for': 'scss',
-            \ 'dir': g:git_home .'/scss.vim',
-            \ 'branch': 'refactored'}
-" Plug 'nicwest/vim-http', {'for': 'http'}
+Plug 'ObserverOfTime/scss.vim', {
+            \ 'for': 'scss', 'dir': g:git_home .'/scss.vim',
+            \ }
 " }}}
 
 " Python plugins {{{
@@ -108,8 +108,9 @@ endif
 
 if g:os !=# 'android'
     Plug 'davidhalter/jedi-vim', {'for': 'python'}
-    Plug 'tweekmonster/django-plus.vim', {'for':
-                \ ['python', 'html', 'htmldjango']}
+    Plug 'tweekmonster/django-plus.vim', {
+                \ 'for': ['python', 'htmldjango']
+                \ }
 endif
 " }}}
 
@@ -127,9 +128,6 @@ if g:os !=# 'android' && !g:_is_uni
     Plug 'scrooloose/nerdtree', {'on':  'NERDTreeToggle'}
     Plug 'ladace/nerdtree-git-plugin', {'on': 'NERDTreeToggle'}
     Plug 'mortonfox/nerdtree-clip', {'on': 'NERDTreeToggle'}
-    Plug 'ObserverOfTime/vim-nerdtree-syntax-highlight', {
-                \ 'on': 'NERDTreeToggle', 'dir': g:git_home
-                \ .'/vim-nerdtree-syntax-highlight'}
 endif
 " }}}
 
@@ -149,14 +147,11 @@ if g:os !=# 'android' && v:version >= 800
        Plug 'ncm2/ncm2-ultisnips'
     endif
 
-    if executable('java')
+    if executable('java') && !g:_is_uni
         Plug 'artur-shaik/vim-javacomplete2', {'for': 'java'}
-        if g:_is_uni
-            Plug 'ObserverOfTime/ncm2-jc2', {'for': 'java'}
-        else
-            Plug 'ObserverOfTime/ncm2-jc2', {'for': 'java',
-                        \ 'dir': g:git_home .'/ncm2-jc2'}
-        endif
+        Plug 'ObserverOfTime/ncm2-jc2', {
+                    \ 'for': 'java', 'dir': g:git_home .'/ncm2-jc2'
+                    \ }
     endif
 
     if executable('clang')
@@ -169,17 +164,20 @@ if g:os !=# 'android' && v:version >= 800
     endif
 
     if &spellfile || executable('look')
-        Plug 'filipekiss/ncm2-look.vim', {'for': [
-                    \ 'email', 'markdown', 'rst', 'text', 'help']}
+        Plug 'filipekiss/ncm2-look.vim', {
+                    \ 'for': ['email', 'markdown', 'rst', 'text', 'help']
+                    \ }
     endif
 
     if !g:_is_uni
-        Plug 'ncm2/ncm2-github', {'for': [
-                    \ 'rst', 'markdown', 'gitcommit']}
+        Plug 'ncm2/ncm2-github', {
+                    \ 'for': ['rst', 'markdown', 'gitcommit']
+                    \ }
     endif
 
-    Plug 'jsit/sasscomplete.vim', {'for': [
-                \ 'css', 'scss', 'html', 'htmldjango', 'pug']}
+    Plug 'jsit/sasscomplete.vim', {
+                \ 'for': ['css', 'scss', 'html', 'htmldjango', 'pug']
+                \ }
     Plug 'ncm2/ncm2-html-subscope', {'for': ['html', 'htmldjango']}
     Plug 'ncm2/ncm2-markdown-subscope', {'for': 'markdown'}
     Plug 'ncm2/ncm2-rst-subscope', {'for': 'rst'}
@@ -202,14 +200,6 @@ endif
 if executable('pdftotext')
     Plug 'makerj/vim-pdf', {'for': 'pdf'}
 endif
-
-" if executable('dpkg')
-"     Plug 'knatsakis/deb.vim"
-" endif
-"
-" if executable('sqlplus')
-"     Plug 'wfriesen/vorax4', {'on': []} " Loaded via local vimrc
-" endif
 " }}}
 
 call plug#end()

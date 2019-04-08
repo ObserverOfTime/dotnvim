@@ -18,7 +18,7 @@ if g:os ==# 'linux' && !g:_is_uni
 endif
 
 " Save a file creating parent directories
-com! -complete=file W  :call mkdir(expand("%:p:h"), "p") | w
-" List supported filetypes
-com! -nargs=? ListFT   :echo getcompletion(<q-args>, 'filetype')
+com! -complete=file W                 :call mkdir(expand("%:p:h"), "p") | w
+" Open a REPL with the specified command
+com! -complete=shellcmd -nargs=? Repl :botright 15split | terminal <args>
 

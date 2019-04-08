@@ -1,6 +1,8 @@
-priority 10
-
 extends c
+
+clearsnippets fold
+
+priority 20
 
 # Preprocessor {{{
 snippet #in+ "#include c++" b
@@ -34,7 +36,7 @@ std::map<${1:K}, ${2:V}> ${3};
 endsnippet
 
 snippet cout "output"
-std::cout << ${1} << std::endl;
+std::cout << ${1}${2: << std::endl};
 endsnippet
 
 snippet cin "input"

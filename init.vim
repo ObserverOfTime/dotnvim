@@ -27,7 +27,7 @@ else
     let $JAVA_HOME = '/usr/lib/jvm/java-8-openjdk/' " Use JDK8
 endif
 
-let g:_is_uni = exists('$UNI_HOST')
+let g:_is_uni = !empty(glob('~/.unirc.sh'))
 " }}}
 
 " Get path based on platform {{{
@@ -79,9 +79,7 @@ if has('nvim')
     let g:plug_path = g:xdg_data_home
                 \ .'/nvim/site/autoload/plug.vim'
 else
-    let g:plug_path = has('win32') ?
-                \ expand('~/vimfiles/autoload/plug.vim') :
-                \ expand('~/.vim/autoload/plug.vim')
+    let g:plug_path = expand('~/.vim/autoload/plug.vim')
 endif
 " }}}
 

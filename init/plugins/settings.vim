@@ -39,8 +39,6 @@ elseif g:shell ==# 'cygwin'
 else
     let s:clang_library_path = '/usr/lib/libclang.so'
 endif
-
-let s:lexima_except = '\C\v^(\s*)\S.*%#\n%(%(\s*|\1\s.+)\n)*\1'
 " }}}
 
 " Airline settings {{{
@@ -462,16 +460,6 @@ if has('nvim')
     " }}}
 endif
 
-if g:os ==# 'linux' && !g:_is_uni
-    " DevIcons settings {{{
-    let g:webdevicons_enable_airline_tabline = 0
-    let g:webdevicons_enable_airline_statusline = 1
-    let g:WebDevIconsOS = 'Linux'
-    let g:WebDevIconsUnicodeDecorateFolderNodes = 1
-    let g:WebDevIconsNerdTreeGitPluginForceVAlign = 1
-    " }}}
-endif
-
 " Javascript settings {{{
 " Conceal {{{
 let g:javascript_conceal_this = '@'
@@ -563,24 +551,12 @@ let g:mkdx#settings.tokens = {
 " }}}
 
 " Lexima settings {{{
+let g:lexima_enable_endwise_rules = 0
 call lexima#add_rule({
             \ 'filetype': 'markdown',
             \ 'input_after': '<CR>',
-            \ 'char': '<CR>', 'at': '```'
-            \ })
-call lexima#add_rule({
-            \ 'filetype': 'verilog',
-            \ 'except': s:lexima_except .'end',
-            \ 'input_after': '<CR>end',
-            \ 'input': '<CR>', 'char': '<CR>',
-            \ 'at': '^.*\%(begin\)\%#'
-            \ })
-call lexima#add_rule({
-            \ 'filetype': 'verilog',
-            \ 'except': s:lexima_except .'endmodule',
-            \ 'input_after': '<CR>endmodule',
-            \ 'input': '<CR>', 'char': '<CR>',
-            \ 'at': '^\%(module\).*(\_.*);\%#'
+            \ 'char': '<CR>',
+            \ 'at': '```\%#```'
             \ })
 " }}}
 
@@ -693,13 +669,9 @@ let g:mundo_width = 30
 let g:mundo_close_on_revert = 1
 " }}}
 
-" HTTP settings {{{
-" let g:vim_http_additional_curl_args = '-isS4'
-" let g:vim_http_split_vertically = 1
-" }}}
-
 " Colorizer settings {{{
 let g:colorizer_skip_comments = 1
+let g:colorizer_auto_filetype = join(g:_color_fts, ',')
 " }}}
 
 " Discord settings {{{
