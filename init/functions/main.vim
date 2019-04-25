@@ -27,8 +27,7 @@ function! s:PlugOpenURL()
     let l:name = matchstr(getline('.'), "'\\zs[^']\\+\\ze'")
     let l:plug = get(g:plugs, matchstr(l:name, '/\zs.\+$'))
     let l:path = l:name .'/tree/'. l:plug['branch']
-    silent exec '!'. g:vim_g_open_command
-                \ .' https://github.com/'. l:path
+    silent exec '!'. expand('$BROWSER') .' https://github.com/'. l:path
 endfunction
 " }}}
 

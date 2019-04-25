@@ -27,6 +27,8 @@ set switchbuf=useopen,usetab
 set formatoptions=cqn1j
 " Short message options (:h shortmess)
 set shortmess=aoOtTcF
+" Font for GUIs (like gnvim)
+set guifont=Hack:h12
 " Spellcheck languages
 set spelllang=en,el
 " Use dark background

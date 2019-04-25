@@ -7,8 +7,6 @@ augroup FTGroup
     au FileType mail setl spell
     " Wrap lines in manual pages
     au FileType man setl wrap linebreak
-    " Enable Doxygen syntax in C,C++ files
-    au FileType c,cpp let b:load_doxygen_syntax = 1
     " Keep trailing commas in Python files
     au FileType python let b:splitjoin_trailing_comma = 1
     " Indentation settings {{{
@@ -42,11 +40,17 @@ augroup BufGroup
     au BufNewFile,BufRead .babelrc setf json5
     au BufNewFile,BufRead .SRCINFO setf dosini
     " }}}
+    if executable('pdftotext') " Open PDF files as text {{{
+        au BufRead *.pdf silent exec '%!pdftotext -nopgbrk '
+                    \ '-layout '. shellescape(expand(@%)) .' -'
+        au BufReadPost *.pdf setl readonly nowrite | setf text
+        au BufLeave *.pdf setl noreadonly write
+    endif " }}}
     if executable('cfr') " Decompile Java class files {{{
-        au BufRead *.class if !&binary | setl ft=java nomodified |
-                    \ silent exec '%!unset _JAVA_OPTIONS; cfr %' | endif
-        au BufReadPost *.class if !&binary | setl nomodifiable
-                    \ readonly wrap linebreak breakindent nolist | endif
+        au BufRead *.class if !&binary | silent exec
+                    \ '%!unset _JAVA_OPTIONS; cfr %' | set syn=java | endif
+        au BufReadPost *.class if !&binary | setl nowrite readonly | endif
+        au BufLeave *.class if !&binary | setl write noreadonly | endif
     endif " }}}
 augroup END
 " }}}

@@ -6,29 +6,24 @@ Plug 'SirVer/ultisnips'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-abolish'
 Plug 'tomtom/tcomment_vim'
-Plug 'tmsanrinsha/SyntaxRange'
 Plug 'osyo-manga/vim-anzu'
 Plug 'haya14busa/is.vim'
 Plug 'haya14busa/vim-asterisk'
 Plug 'cohama/lexima.vim'
 Plug 'rcarraretto/vim-surround'
 Plug 'AndrewRadev/splitjoin.vim'
-Plug 'brooth/far.vim', {'do': ':UpdateRemotePlugins'}
-Plug 'shaggyrogers/vim-mundo', {'on': 'MundoToggle'}
+Plug 'simnalamburt/vim-mundo', {'on': 'MundoToggle'}
 Plug 'ObserverOfTime/multiedit.vim', {
             \ 'dir': g:git_home .'/multiedit.vim'
             \ }
 
 if g:os !=# 'android'
     Plug 'w0rp/ale'
-    Plug 'haroldjin/vim-g'
     Plug 'systemmonkey42/vim-hugefile'
     if empty(glob('/usr/share/vim/vimfiles/plugin/fzf.vim'))
         Plug 'junegunn/fzf', {'dir': '~/.fzf', 'do': './install --all'}
     endif
     Plug 'fszymanski/fzf-quickfix', {'on': '<Plug>(fzf-quickfix)'}
-elseif executable('termux-open')
-    Plug 'haroldjin/vim-g'
 endif
 
 if executable('editorconfig')
@@ -66,39 +61,28 @@ Plug 'airblade/vim-gitgutter'
 " }}}
 
 " Web plugins {{{
-Plug 'othree/html5.vim', {'for': ['html', 'htmldjango', 'pug']}
 Plug 'mattn/emmet-vim', {'for': ['html', 'htmldjango', 'pug']}
 Plug 'hail2u/vim-css3-syntax', {
             \ 'for': ['css', 'scss', 'html', 'htmldjango', 'pug']
             \ }
-Plug 'iloginow/vim-pug', {'for': 'pug'}
-" Plug 'cakebaker/scss-syntax.vim', {'for': 'scss'}
-Plug 'redbmk/vim-jsx', {'for': 'javascript'}
-Plug 'maxmellon/vim-jsx-pretty', {'for': 'javascript'}
 Plug 'heavenshell/vim-jsdoc', {'for': 'javascript'}
-Plug 'cdata/vim-tagged-template', {'for': 'javascript'}
 
 let g:_color_fts = [
             \ 'css', 'html', 'htmldjango',
             \ 'javascript', 'pug', 'scss', 'svg'
             \ ]
-if g:os !=# 'android'
-    Plug 'kracejic/vCoolor.vim', {'for': g:_color_fts}
+if g:os !=# 'android' && !g:_is_uni
+    Plug 'KabbAmine/vCoolor.vim', {'for': g:_color_fts}
 else
-    Plug 'aaron-goshine/colorv.vim', {'for': g:_color_fts}
+    Plug 'gu-fan/colorv.vim', {'for': g:_color_fts}
 endif
 
 if executable('node') && g:os !=# 'android'
-    Plug 'FabioAntunes/vim-node', {'for': 'javascript'}
     Plug 'ternjs/tern_for_vim', {
                 \ 'for': ['javascript', 'html', 'htmldjango'],
                 \ 'do': g:npm_cmd
                 \ }
 endif
-
-Plug 'ObserverOfTime/scss.vim', {
-            \ 'for': 'scss', 'dir': g:git_home .'/scss.vim',
-            \ }
 " }}}
 
 " Python plugins {{{
@@ -116,18 +100,9 @@ endif
 
 " C Plugins {{{
 Plug 'daidodo/DoxygenToolkit.vim', {'for': ['c', 'cpp', 'java']}
-Plug 'huawenyu/neogdb.vim', {'for': ['c', 'cpp']}
 
 if has('nvim')
     Plug 'arakashic/chromatica.nvim', {'do': ':UpdateRemotePlugins'}
-endif
-" }}}
-
-" NERDTree plugins {{{
-if g:os !=# 'android' && !g:_is_uni
-    Plug 'scrooloose/nerdtree', {'on':  'NERDTreeToggle'}
-    Plug 'ladace/nerdtree-git-plugin', {'on': 'NERDTreeToggle'}
-    Plug 'mortonfox/nerdtree-clip', {'on': 'NERDTreeToggle'}
 endif
 " }}}
 
@@ -144,7 +119,7 @@ if g:os !=# 'android' && v:version >= 800
     Plug 'ncm2/ncm2-path'
 
     if has('patch-8.0.1493')
-       Plug 'ncm2/ncm2-ultisnips'
+        Plug 'ncm2/ncm2-ultisnips'
     endif
 
     if executable('java') && !g:_is_uni
@@ -155,24 +130,11 @@ if g:os !=# 'android' && v:version >= 800
     endif
 
     if executable('clang')
-        " Plug 'ncm2/ncm2-pyclang', {'for': ['c', 'cpp']}
         Plug 'DroZ-hun/clang_complete', {'for': ['c', 'cpp']}
     endif
 
     if executable('R')
         Plug 'gaalcaras/ncm-R', {'for': 'r'}
-    endif
-
-    if &spellfile || executable('look')
-        Plug 'filipekiss/ncm2-look.vim', {
-                    \ 'for': ['email', 'markdown', 'rst', 'text', 'help']
-                    \ }
-    endif
-
-    if !g:_is_uni
-        Plug 'ncm2/ncm2-github', {
-                    \ 'for': ['rst', 'markdown', 'gitcommit']
-                    \ }
     endif
 
     Plug 'jsit/sasscomplete.vim', {
@@ -189,16 +151,11 @@ endif
 " Other filetype plugins {{{
 Plug 'chrisbra/csv.vim', {'for': 'csv'}
 Plug 'SidOfc/mkdx', {'for': 'markdown'}
-Plug 'danielyli/vim-log-syntax', {'for': 'log'}
 Plug 'marshallward/vim-restructuredtext', {'for': 'rst'}
 Plug 'tpope/vim-dadbod', {'on': []} " Loaded via local vimrc
 
 if executable('R')
     Plug 'jalvesaq/Nvim-R', {'for': 'r'}
-endif
-
-if executable('pdftotext')
-    Plug 'makerj/vim-pdf', {'for': 'pdf'}
 endif
 " }}}
 

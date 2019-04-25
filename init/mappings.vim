@@ -1,16 +1,16 @@
 " Normal & visual modes {{{
 " Scroll forward while searching
-map <C-j>                <Plug>(is-scroll-f)
+map <silent> <C-j>       <Plug>(is-scroll-f)
 " Scroll backward while searching
-map <C-k>                <Plug>(is-scroll-b)
+map <silent> <C-k>       <Plug>(is-scroll-b)
 " Search forward while staying in place (with word boundaries)
-map *                    <Plug>(asterisk-z*)<Plug>(is-nohl-1)
+map <silent> *           <Plug>(asterisk-z*)<Plug>(is-nohl-1)
 " Search forward while staying in place
-map g*                   <Plug>(asterisk-gz*)<Plug>(is-nohl-1)
+map <silent> g*          <Plug>(asterisk-gz*)<Plug>(is-nohl-1)
 " Search forward while staying in place
-map #                    <Plug>(asterisk-z#)<Plug>(is-nohl-1)
+map <silent> #           <Plug>(asterisk-z#)<Plug>(is-nohl-1)
 " Search backward while staying in place (with word boundaries)
-map g#                   <Plug>(asterisk-gz#)<Plug>(is-nohl-1)
+map <silent> g#          <Plug>(asterisk-gz#)<Plug>(is-nohl-1)
 
 " Show tag in new tab
 noremap <silent> <C-w>]  :tab split <BAR> :exec 'tag '.expand('<cword>')<CR>
@@ -27,12 +27,14 @@ noremap <silent> <C-l>f  <Plug>(ale_fix)
 " }}}
 
 " Normal mode {{{
+" Toggle relative numbers
+nmap rn                  :set relativenumber!<CR>
 " Clear search highlighting
 nmap <silent> ,/         :nohlsearch <BAR> :echon<CR>
 " Go to next search match
-nmap n                   <Plug>(is-nohl)<Plug>(anzu-n-with-echo)
+nmap <silent> n          <Plug>(is-nohl)<Plug>(anzu-n-with-echo)
 " Go to previous search match
-nmap N                   <Plug>(is-nohl)<Plug>(anzu-N-with-echo)
+nmap <silent> N          <Plug>(is-nohl)<Plug>(anzu-N-with-echo)
 " Open fzf quickfix window
 nmap Q                   <Plug>(fzf-quickfix)
 
@@ -46,11 +48,10 @@ nnoremap <Leader>s       :S<CR>
 nnoremap <silent> <C-q>  :q<CR>
 " Save file
 nnoremap <silent> <C-s>  :w<CR>
-" Fix file indentation
-nnoremap <silent> <C-i>  mzgg=G`z
-
 " Open fzf window
 nnoremap <C-f>           :FZF<CR>
+" Fix file indentation
+nnoremap <silent> <C-i>  mzgg=G`z
 " }}}
 
 " Insert mode {{{
@@ -61,7 +62,7 @@ inoremap <expr> <TAB>    (pumvisible() ? "\<C-y>" : "\<TAB>")
 " }}}
 
 " Visual mode {{{
-" Copy from clipboard
+" Copy to clipboard
 vnoremap <C-c>           "+y
 " Copy to clipboard
 vnoremap <C-Insert>      "+y

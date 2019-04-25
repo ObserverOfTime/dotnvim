@@ -20,5 +20,5 @@ endif
 " Save a file creating parent directories
 com! -complete=file W                 :call mkdir(expand("%:p:h"), "p") | w
 " Open a REPL with the specified command
-com! -complete=shellcmd -nargs=? Repl :botright 15split | terminal <args>
+com! -complete=shellcmd -nargs=* Repl :botright 10split | terminal <args>
 

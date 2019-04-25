@@ -69,11 +69,6 @@ let g:airline_mode_map['t']  = 'T'
 let g:airline_mode_map['v']  = 'V'
 let g:airline_mode_map['V']  = 'VL'
 let g:airline_mode_map[''] = 'VB'
-" Use b:term_title in terminal
-let g:airline_section_c = '%<%<%{&bt=="terminal"?b:term_title:'.
-            \ 'airline#extensions#fugitiveline#bufname()}'.
-            \ '%m %#__accent_red#%{airline#util#wrap('.
-            \ 'airline#parts#readonly(),0)}%#__restore__#'
 " Show expandtab & line + column numbers
 if &encoding ==? 'utf-8'
     let g:airline_section_z = '%{&et?"":"↹ "}%3l% /%L%  : %02v'
@@ -108,37 +103,36 @@ let g:airline#parts#ffenc#skip_expected_string = 'utf-8[unix]'
 if !exists('g:airline_symbols')
     let g:airline_symbols = {}
 endif
-let g:airline_left_sep = ''
-let g:airline_left_alt_sep = ''
-let g:airline_right_sep = ''
-let g:airline_right_alt_sep = ''
-let g:airline_symbols.branch = 'λ'
-let g:airline_symbols.spell = 'ς'
-let g:airline_symbols.paste = 'ρ'
-let g:airline_symbols.readonly = 'ο'
-let g:airline_symbols.whitespace = '!'
-if &encoding ==? 'utf-8'
-    if g:os !=# 'windows' && !g:_is_uni
-        let g:airline_powerline_fonts = 1
-        let g:airline_left_sep = ''
-        let g:airline_left_alt_sep = ''
-        let g:airline_right_sep = ''
-        let g:airline_right_alt_sep = ''
-        let g:airline_symbols.branch = ''
-    endif
+if &encoding ==? 'utf-8' && !g:_is_uni
+    let g:airline_powerline_fonts = 1
+    let g:airline_left_sep = ''
+    let g:airline_left_alt_sep = ''
+    let g:airline_right_sep = ''
+    let g:airline_right_alt_sep = ''
+    let g:airline_symbols.branch = ''
     let g:airline_symbols.spell = '₷'
     let g:airline_symbols.paste = 'Þ'
     let g:airline_symbols.readonly = '⊘'
     let g:airline_symbols.whitespace = '✹'
+    let g:airline_symbols.dirty = ' ×'
+else
+    let g:airline_symbols_ascii = 1
+    let g:airline_left_sep = ''
+    let g:airline_left_alt_sep = ''
+    let g:airline_right_sep = ''
+    let g:airline_right_alt_sep = ''
+    let g:airline_symbols.branch = 'λ'
+    let g:airline_symbols.spell = 'ς'
+    let g:airline_symbols.paste = 'ρ'
+    let g:airline_symbols.readonly = 'ο'
+    let g:airline_symbols.whitespace = '!'
+    let g:airline_symbols.dirty = ' ~'
 endif
 " }}}
 " }}}
 
 if g:os !=# 'android' && v:version >= 800
     " NCM2 settings {{{
-    " let g:ncm2_pyclang#library_path = s:clang_library_path
-    let g:ncm2_look_use_spell = !empty(&spellfile)
-    let g:ncm2_look_mark = 'dict'
     augroup NCM2
         au!
         " Misc {{{
@@ -153,10 +147,6 @@ if g:os !=# 'android' && v:version >= 800
         if executable('node')
             au FileType html,htmldjango call tern#Enable()
         endif
-        " if executable('clang')
-        "     au FileType c,cpp nnoremap <buffer> <silent> <Leader>gd
-        "                 \ <C-u>call ncm2_pyclang#goto_declaration()
-        " endif
         " }}}
 
         " Clang {{{
@@ -167,9 +157,13 @@ if g:os !=# 'android' && v:version >= 800
                     \ 'scope': ['c', 'cpp'],
                     \ 'mark': 'c',
                     \ 'word_pattern': '\w+',
-                    \ 'complete_pattern': ['->', '\.', '::', '^\s*#'],
-                    \ 'on_complete': ['ncm2#on_complete#omni',
-                    \                 'ClangComplete'],
+                    \ 'complete_pattern': [
+                    \   '->', '\.', '::', '^\s*#',
+                    \   '^\s*#include\s+[<"].*'
+                    \ ],
+                    \ 'on_complete': [
+                    \   'ncm2#on_complete#omni', 'ClangComplete'
+                    \ ]
                     \ })
         " }}}
 
@@ -181,12 +175,14 @@ if g:os !=# 'android' && v:version >= 800
                     \ 'scope': ['css', 'scss'],
                     \ 'mark': 'css',
                     \ 'word_pattern': '[\w_-]+',
-                    \ 'complete_pattern': [':\s*', '@[\w-]*\s*',
-                    \                      '@media[\w\s]+\(',
-                    \                      '@supports \(',
-                    \                      "@charset ['\"]"],
-                    \ 'on_complete': ['ncm2#on_complete#omni',
-                    \                 'sasscomplete#CompleteSass'],
+                    \ 'complete_pattern': [
+                    \   ':\s*', '@[\w-]*\s*', '@media[\w\s]+\(',
+                    \   '@supports \(', "@charset ['\"]"
+                    \ ],
+                    \ 'on_complete': [
+                    \   'ncm2#on_complete#omni',
+                    \   'sasscomplete#CompleteSass'
+                    \ ]
                     \ })
         " }}}
 
@@ -198,10 +194,13 @@ if g:os !=# 'android' && v:version >= 800
                     \ 'subscope_enable': 1,
                     \ 'scope': ['python'],
                     \ 'word_pattern': '\w+',
-                    \ 'complete_pattern': ['^\s*(import|from).*\s',
-                    \                      '\.', '\(', ',\s+'],
-                    \ 'on_complete': ['ncm2#on_complete#omni',
-                    \                 'jedi#completions']})
+                    \ 'complete_pattern': [
+                    \   '^\s*(import|from).*\s', '\.', '\(', ',\s+'
+                    \ ],
+                    \ 'on_complete': [
+                    \   'ncm2#on_complete#omni', 'jedi#completions'
+                    \ ]
+                    \ })
         " }}}
 
         " Tern {{{
@@ -211,12 +210,16 @@ if g:os !=# 'android' && v:version >= 800
                         \ 'priority': 9,
                         \ 'mark': 'js',
                         \ 'subscope_enable': 1,
-                        \ 'scope': ['javascript', 'javascript.jsx'],
+                        \ 'scope': ['javascript'],
                         \ 'word_pattern': '[\w/]+',
-                        \ 'complete_pattern': ['\.', "require\\(['\"][^)'\"]*",
-                        \                      "import.*from\\s+['\"][^'\"]*"],
-                        \ 'on_complete': ['ncm2#on_complete#omni',
-                        \                 'tern#Complete']})
+                        \ 'complete_pattern': [
+                        \   '\.', "require\\(['\"][^)'\"]*",
+                        \   "import.*from\\s+['\"][^'\"]*"
+                        \ ],
+                        \ 'on_complete': [
+                        \   'ncm2#on_complete#omni', 'tern#Complete'
+                        \ ]
+                        \ })
         endif
         " }}}
 
@@ -229,22 +232,9 @@ if g:os !=# 'android' && v:version >= 800
                     \ 'mark': 'emmet',
                     \ 'word_pattern': '[\w_\-]+',
                     \ 'complete_pattern': '[\w:]+',
-                    \ 'on_complete': ['ncm2#on_complete#omni',
-                    \                 'emmet#completeTag'],
-                    \ })
-        " }}}
-
-        " Pug {{{
-        au User Ncm2Plugin call ncm2#register_source({
-                    \ 'name': 'pug',
-                    \ 'priority': 9,
-                    \ 'subscope_enable': 0,
-                    \ 'scope': ['pug'],
-                    \ 'mark': 'pug',
-                    \ 'word_pattern': '\w+',
-                    \ 'complete_pattern': '[\w\s]+',
-                    \ 'on_complete': ['ncm2#on_complete#omni',
-                    \                 'pugcomplete#CompletePug'],
+                    \ 'on_complete': [
+                    \   'ncm2#on_complete#omni', 'emmet#completeTag'
+                    \ ]
                     \ })
         " }}}
 
@@ -258,12 +248,13 @@ if g:os !=# 'android' && v:version >= 800
                         \ 'mark': '',
                         \ 'word_pattern': '[\w/_]+',
                         \ 'complete_pattern': [
-                        \     '\|', '\{%\s+\w*\s*%?\}?',
-                        \     "\\{%\\s+include\\s+[\"']",
-                        \     "\\{%\\s+extends\\s+[\"']"
+                        \   '\|', '\{%\s+\w*\s*%?\}?',
+                        \   "\\{%\\s+include\\s+[\"']",
+                        \   "\\{%\\s+extends\\s+[\"']"
                         \ ],
-                        \ 'on_complete': ['ncm2#on_complete#omni',
-                        \                 'djangoplus#complete']
+                        \ 'on_complete': [
+                        \   'ncm2#on_complete#omni', 'djangoplus#complete'
+                        \ ]
                         \ })
             au User Ncm2Plugin call ncm2#register_source({
                         \ 'name': 'pydjango',
@@ -273,15 +264,16 @@ if g:os !=# 'android' && v:version >= 800
                         \ 'mark': '',
                         \ 'word_pattern': '[\w/_]+',
                         \ 'complete_pattern': [
-                        \     '\.objects\.', 'settings\.',
-                        \     "render\\([^,]+,\\s*[\"']",
-                        \     "get_template\\(\\s*[\"']",
-                        \     "render_to_string\\(\\s*[\"']",
-                        \     "render_to_response\\(\\s*[\"']",
-                        \     "template_name\\s*=\\s*[\"']"
+                        \   '\.objects\.', 'settings\.',
+                        \   "render\\([^,]+,\\s*[\"']",
+                        \   "get_template\\(\\s*[\"']",
+                        \   "render_to_string\\(\\s*[\"']",
+                        \   "render_to_response\\(\\s*[\"']",
+                        \   "template_name\\s*=\\s*[\"']"
                         \ ],
-                        \ 'on_complete': ['ncm2#on_complete#omni',
-                        \                 'djangoplus#complete']
+                        \ 'on_complete': [
+                        \   'ncm2#on_complete#omni', 'djangoplus#complete'
+                        \ ]
                         \ })
         endif
         " }}}
@@ -386,43 +378,6 @@ if g:os !=# 'android'
     " }}}
     " }}}
 
-    " NerdTree settings {{{
-    if !g:_is_uni
-        " Config {{{
-        let g:NERDTreeHijackNetrw = 1
-        let g:NERDTreeHighlightFolders = 1
-        let g:NERDTreeIndicatorMapCustom = {
-                    \ 'Modified'  : '~',
-                    \ 'Staged'    : '+',
-                    \ 'Untracked' : '*',
-                    \ 'Renamed'   : '»',
-                    \ 'Unmerged'  : '=',
-                    \ 'Deleted'   : '-',
-                    \ 'Dirty'     : '¤',
-                    \ 'Clean'     : 'ø',
-                    \ 'Ignored'   : '!',
-                    \ 'Unknown'   : '?'}
-
-        if &encoding !~? 'utf-8'
-            let g:NERDTreeHighlightFolders = 0
-            let g:NERDTreeIndicatorMapCustom['Renamed'] = '>'
-            let g:NERDTreeIndicatorMapCustom['Dirty'] = 'x'
-            let g:NERDTreeIndicatorMapCustom['Clean'] = 'o'
-        endif
-        " }}}
-
-        " Augroup {{{
-        augroup NERDTree
-            au!
-            au StdinReadPre * let s:std_in=1
-            au BufEnter * if (winnr('$') == 1 && exists('b:NERDTree')
-                        \ && b:NERDTree.isTabTree()) | q | endif
-            au FileType nerdtree setl nolist | hi clear MatchParen
-        augroup END
-        " }}}
-    endif
-    " }}}
-
     " Jedi settings {{{
     let g:jedi#goto_command = '<Leader>jd'
     let g:jedi#goto_assignments_command = '<Leader>ja'
@@ -489,32 +444,16 @@ let g:jsdoc_enable_es6 = 1
 let g:jsdoc_underscore_private = 1
 " }}}
 
-" Tagged Template {{{
-let g:taggedtemplate#tagSyntaxMap = {
-            \ 'html': 'html',
-            \ 'md':   'markdown',
-            \ 'js':   'javascript',
-            \ 'css':  'css',
-            \ 'scss': 'scss'}
-" }}}
-
 " JSON {{{
 let g:vim_json_syntax_conceal = 1
 let g:vim_json_syntax_concealcursor = ''
 let g:vim_json_warnings = 0
 " }}}
 
-" JSX {{{
-let g:vim_jsx_pretty_enable_jsx_highlight = 1
-let g:vim_jsx_pretty_colorful_config = 1
-" }}}
-
 " Augroup {{{
 augroup JavaScript
     " Use JS filetype for JSX
     au FileType javascript.jsx setl ft=javascript
-    " Apply taggedtemplate
-    au FileType javascript call taggedtemplate#applySyntaxMap()
     " Apply conceal
     au FileType javascript setl conceallevel=1
 augroup END
@@ -548,16 +487,6 @@ let g:mkdx#settings.tokens = {
             \ 'fence': '`',
             \ 'strike': '~~'
             \ }
-" }}}
-
-" Lexima settings {{{
-let g:lexima_enable_endwise_rules = 0
-call lexima#add_rule({
-            \ 'filetype': 'markdown',
-            \ 'input_after': '<CR>',
-            \ 'char': '<CR>',
-            \ 'at': '```\%#```'
-            \ })
 " }}}
 
 " Emmet settings {{{
@@ -612,19 +541,18 @@ let g:clang_jumpto_declaration_key = '<Leader>gd'
 let g:clang_jumpto_declaration_in_preview_key = '<Leader>gg'
 " }}}
 
-" Vim-G settings {{{
-if g:os ==# 'android'
-    let g:vim_g_open_command = 'xdg-open'
-else
-    let g:vim_g_open_command = exists('$BROWSER') ?
-                \ expand('$BROWSER') : 'firefox'
-endif
-let g:vim_g_query_url = 'https://google.com/?q='
-let g:vim_g_command = 'S'
+" Lexima settings {{{
+let g:lexima_enable_endwise_rules = 0
+call lexima#add_rule({
+            \ 'filetype': 'markdown',
+            \ 'input_after': '<CR>',
+            \ 'char': '<CR>',
+            \ 'at': '```\%#```'
+            \ })
 " }}}
 
 " Polyglot settings {{{
-let g:polyglot_disabled = ['html', 'scss', 'rst', 'markdown', 'pug']
+let g:polyglot_disabled = ['rst', 'markdown']
 if has('nvim')
     let g:polyglot_disabled += ['python', 'c', 'cpp']
 endif
@@ -672,6 +600,10 @@ let g:mundo_close_on_revert = 1
 " Colorizer settings {{{
 let g:colorizer_skip_comments = 1
 let g:colorizer_auto_filetype = join(g:_color_fts, ',')
+" }}}
+
+" Doxygen settings {{{
+let g:load_doxygen_syntax = 1
 " }}}
 
 " Discord settings {{{
