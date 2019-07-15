@@ -66,4 +66,3 @@ let s:IA2 = [s:gui04, s:gui01, s:cterm04, s:cterm01]
 let s:IA3 = [s:gui04, s:gui01, s:cterm04, s:cterm01]
 let g:airline#themes#grayscale#palette.inactive =
             \ airline#themes#generate_color_map(s:IA1, s:IA2, s:IA3)
-

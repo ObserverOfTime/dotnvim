@@ -7,4 +7,3 @@ Licence
 -------
 
 Licensed under `MIT No Attribution <LICENSE>`_.
-

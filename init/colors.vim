@@ -3,11 +3,14 @@ try
     let g:gruvbox_italic = 1
     let g:gruvbox_filetype_hi_groups = 1
     colorscheme gruvbox8
-catch /E185|Gruvbox 8/
+catch /E185|Gruvbox/
     colorscheme desert " Fallback
     finish
 endtry
 " }}}
+
+" TODO: Enable truecolor support?
+" if $COLORTERM ==# 'truecolor' | set termguicolors | endif
 
 " Custom colors {{{
 " ALE {{{
@@ -32,14 +35,14 @@ hi GitGutterChangeDelete ctermfg=131 guifg=#AF5F5F
 " }}}
 
 " NERDTree {{{
-hi NERDTreeDir ctermfg=107 guifg=#8ec07c
-hi NERDTreeOpenable ctermfg=208 guifg=#fe8019
-hi NERDTreeClosable ctermfg=208 guifg=#fe8019
-hi NERDTreeFile ctermfg=187 guifg=#ebdbb2
-hi NERDTreeExecFile ctermfg=214 guifg=#fabd2f
+hi NERDTreeDir ctermfg=107 guifg=#8EC07C
+hi NERDTreeOpenable ctermfg=208 guifg=#FE8019
+hi NERDTreeClosable ctermfg=208 guifg=#FE8019
+hi NERDTreeFile ctermfg=187 guifg=#EBDBB2
+hi NERDTreeExecFile ctermfg=214 guifg=#FABD2F
 hi NERDTreeUp ctermfg=102 guifg=#928374
-hi NERDTreeCWD ctermfg=142 guifg=#b8bb26
-hi NERDTreeHelp ctermfg=187 guifg=#ebdbb2
+hi NERDTreeCWD ctermfg=142 guifg=#B8BB26
+hi NERDTreeHelp ctermfg=187 guifg=#EBDBB2
 hi link NERDTreeDirSlash NERDTreeDir
 " }}}
 
@@ -49,10 +52,9 @@ hi Folded ctermbg=234 guibg=#1C1C1C
 hi Visual ctermbg=237 guibg=#3A3A3A
 hi MatchParen ctermbg=236 guibg=#303030
 hi Function cterm=NONE gui=NONE
-hi Todo ctermfg=179 guifg=#d7af5f gui=bold
+hi Todo ctermfg=179 guifg=#D7AF5F gui=bold
 hi! link vimCommentTitle Todo
 " }}}
 " }}}
 
 " vim:fdl=2:
-

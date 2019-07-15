@@ -15,4 +15,3 @@ syn region pugJS start=/^\z(\s*\)-\s*$/ end=/^\%(\z1\s\|\s*$\)\@!/
             \ keepend contains=@pugJS containedin=ALL
 syn region pugJS start=/\z(`[^`]*\)/ end=/\(%\z1`\)\@!/
             \ keepend contains=@pugJS containedin=ALL
-

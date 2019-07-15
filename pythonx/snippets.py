@@ -42,13 +42,11 @@ class Python:
     def all(contents):
         """Returns an __all__ list"""
         pattern = r'|'.join([
-            r'^{0}\s*=',
+            r'^{0}\s*=.*',
             r'^class\s*{0}.*',
             r'^def\s*{0}.*'
         ]).format(r'([^_][\w\d_-]+)')
-        exports = list(filter(
-            lambda m: re.match(pattern, m), list(contents)
-        ))
+        exports = filter(lambda m: re.match(pattern, m), contents)
         return [re.sub(pattern, r'\1\2\3', e) for e in exports]
 
 
@@ -161,4 +159,3 @@ class JS:
             'g': 'debug',
             's': 'trace',
         }.get(match.group(1), '')
-

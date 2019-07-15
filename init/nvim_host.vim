@@ -9,7 +9,7 @@ endfunction
 if g:os ==# 'windows' && g:shell !=# 'cygwin'
     let s:prog_files = GetPath($PROGRAMFILES)
     let g:python_host_prog = s:prog_files
-                \ .'/Python27/python.exe'
+                \ .'/Python27/python2.exe'
     let g:python3_host_prog = s:prog_files
                 \ .'/Python36/python3.exe'
 else
@@ -32,8 +32,12 @@ elseif get(g:, 'npm_cmd') ==# 'npm i'
 endif
 
 if executable('gem')
-    let g:ruby_host_prog = s:MergePath(
-                \ 'gem environment gemdir',
-                \ 'bin/neovim-ruby-host')
+    let s:gems = systemlist('gem environment gempath')[0]
+    for s:p in split(s:gems, ':')
+        let s:host = glob(s:p .'/gems/neovim*/exe/neovim-ruby-host')
+        if len(s:host)
+            let g:ruby_host_prog = split(s:host, '\n')[-1]
+            break
+        endif
+    endfor
 endif
-

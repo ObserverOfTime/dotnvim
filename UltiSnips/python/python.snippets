@@ -13,7 +13,7 @@ def expand_all(snip):
 	elif len(exports) == 1:
 		body += "${1:'%s'}]" % exports[0]
 	else :
-		sw = " "*int(vim.eval("&sw"))
+		sw = " " * int(vim.eval("&sw"))
 		tmpl = "${%d:%s'%s',\n}"
 		body += "\n"
 		for n, e in enumerate(exports, 1):
@@ -52,11 +52,8 @@ ${1:name} = lambda${2/.+/ /}${2:args}: ${3:action}
 endsnippet
 
 snippet main "main method definition" b
-def main(${2:argv}):
-	${3:${VISUAL:pass}}${0}
-
 if __name__ == '__main__':
-	main(${1:sys.argv})
+	${1:${VISUAL:main()}}${0}
 endsnippet
 
 snippet cls "class" b
@@ -213,4 +210,3 @@ ${VISUAL}${0}
 # }}}
 endsnippet
 # }}}
-

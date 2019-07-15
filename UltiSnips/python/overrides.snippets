@@ -59,16 +59,16 @@ ${1:def __eq__(self, other):
 endsnippet
 
 snippet o:cnt "container type methods" bm
-${1:def __len__(self):
+${1:def __getitem__(self, key):
 	${2:pass}}`!p snip.rv = space(t[1])
-`${3:def __getitem__(self, key):
+`${3:def __setitem__(self, key, value):
 	${4:pass}}`!p snip.rv = space(t[3])
-`${5:def __setitem__(self, key, value):
+`${5:def __delitem__(self, key):
 	${6:pass}}`!p snip.rv = space(t[5])
-`${7:def __delitem__(self, key):
+`${7:def __iter__(self):
 	${8:pass}}`!p snip.rv = space(t[7])
-`${9:def __iter__(self):
-	${10:pass}}`!p snip.rv = space(t[9])
+`${9:def __len__(self):
+	${10:pass}}`!p snip.rv = space(t[10])
 `${11:def __reversed__(self):
 	${12:pass}}`!p snip.rv = space(t[11])
 `${13:def __contains__(self, item):
@@ -165,4 +165,3 @@ ${1:def __new__(cls${2/.+/, /}${2:args}):
 `${4:def __del__(self):
 	${5:pass}}
 endsnippet
-

@@ -137,22 +137,18 @@ set -euo pipefail
 endsnippet
 
 snippet << "here document"
-<< ${1:EOF}
+<<${1:EOF}
 ${VISUAL}${0}
-$1
+${1/'//g}
 endsnippet
 
 snippet num "numeric operation"
 ((${VISUAL}${0}))
 endsnippet
 
-snippet xdg "XDG variable"
-${${1:XDG_CONFIG_HOME}:-${2:$HOME/.config}}
-endsnippet
-
 snippet regex "print matching regex part" b
-	[[ ${1:\$1} =~ ${2:\$2} ]] && ${3:\
-		printf '%s\n' ${4:"\$\{BASH_REMATCH[1]\}"}}
+[[ ${1:\$1} =~ ${2:\$2} ]] && ${3:\
+	printf '%s\n' ${4:"\$\{BASH_REMATCH[1]\}"}}
 endsnippet
 
 snippet farr "read file into an array" b
@@ -160,8 +156,8 @@ IFS=$'\n' read -d '' -ra ${2:arr} < ${1:'file'}
 endsnippet
 
 snippet split "split string on delimiter" b
-IFS=$'${4:\\n}' read -d '' -ra ${3:arr} <<< `!p
-`"\${${1:string}//${2:d}/$'$4'}}"
+IFS=${4:$'\\n'} read -d '' -ra ${3:arr} <<< `!p
+`"\${${1:string}//${2:d}/$4}}"
 endsnippet
 
 snippet argv "parse arguments" b
@@ -195,4 +191,3 @@ ${VISUAL}${0}
 # }}}
 endsnippet
 # }}}
-

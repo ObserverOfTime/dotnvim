@@ -11,4 +11,3 @@ hi! link jsGlobalObjects Constant
 hi! link jsObjectKey SpecialChar
 hi! link jsArrowFuncArgs Type
 hi! link jsFuncArgs Type
-

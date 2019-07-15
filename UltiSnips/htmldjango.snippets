@@ -57,6 +57,12 @@ snippet /%([^\s]+)/ "multiline tag" r
 {% end$1 %}
 endsnippet
 
+snippet blk "block" b
+{% block ${1:content} %}
+	${VISUAL}${0}
+{% endblock %}
+endsnippet
+
 snippet esc "autoescape"
 {% autoescape ${1:off} %}
 	${VISUAL}${0}
@@ -169,4 +175,3 @@ ${VISUAL}${0}
 {# }}} #}
 endsnippet
 # }}}
-

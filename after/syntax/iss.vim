@@ -11,7 +11,15 @@ else
     unlet! b:current_syntax
 endif
 
-syntax region issPascal matchgroup=issDirective
+syntax keyword issTypesFlags full compact custom
+syntax keyword issParam ExternalSize
+syntax keyword pascalStatement
+            \ try except not and
+            \ containedin=issPascal
+syntax match pascalType
+            \ /\c\<TArrayOf\w\+\>/
+            \ containedin=issPascal
+syntax region issPascal
+            \ matchgroup=issDirective
             \ start=/\[Code\]/ end=/^\[\w\+\]$/
             \ keepend containedin=ALL contains=@issPascal
-

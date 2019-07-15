@@ -14,4 +14,3 @@ endif
 syntax region vimPython matchgroup=vimCommand
             \ start=/^\s*py3\? << EOF/ end=/EOF/
             \ keepend containedin=ALL contains=@vimPython
-

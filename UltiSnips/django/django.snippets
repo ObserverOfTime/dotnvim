@@ -3,7 +3,7 @@ priority 10
 # TODO admin model & inline, methods, ...
 
 snippet model "model" b
-class ${1:Model}(${2:models.Model}):
+class ${1:ModelName}(${2:models.Model}):
 	${3:${VISUAL:pass}}${0}
 
 	def __str__(self):
@@ -35,4 +35,3 @@ endsnippet
 snippet field "any field" b
 ${1:name} = ${2:models.Char}Field(${3})
 endsnippet
-

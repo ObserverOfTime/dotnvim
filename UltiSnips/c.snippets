@@ -2,11 +2,11 @@ priority 10
 
 # Preprocessor {{{
 snippet #in< "#include global header" b
-#include <${1:stdio}.h>
+#include <${1:stdio.h}>
 endsnippet
 
 snippet #inc "#include local header" b
-#include "${1:`!v expand("%:t:r")`}.h"
+#include "${1:`!v expand("%:t:r")`.h}"
 endsnippet
 
 snippet #if "#if ... #endif" b
@@ -62,7 +62,7 @@ endsnippet
 
 # Loops {{{
 snippet for "for loop"
-for(${5:int }${2:i} = ${3:0}; ${1:$2 < l}; ${4:++$2}) {
+for(${2:int i = 0}; ${1:i < 100}; ${3:++i}) {
 	${VISUAL}${0}
 }
 endsnippet
@@ -134,7 +134,7 @@ endsnippet
 snippet struct "struct"
 ${3:typedef }struct ${1:`!v expand("%:t:r")`}_t {
 	${0:/* data */}
-}${2: $1;}
+}${2: `!p snip.rv = (t[1] or '').title()`;}
 endsnippet
 
 snippet enum "enum"
@@ -161,4 +161,3 @@ ${VISUAL}${0}
 // }}}
 endsnippet
 # }}}
-

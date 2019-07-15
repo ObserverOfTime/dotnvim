@@ -26,8 +26,6 @@ else
     let g:shell = 'unix'
     let $JAVA_HOME = '/usr/lib/jvm/java-8-openjdk/' " Use JDK8
 endif
-
-let g:_is_uni = !empty(glob('~/.unirc.sh'))
 " }}}
 
 " Get path based on platform {{{
@@ -64,17 +62,6 @@ else
     let g:plug_home = expand('~/.vim/plugged')
 endif
 
-let g:git_home = g:plug_home
-if !g:_is_uni
-    if g:os ==# 'windows'
-        let g:git_home = GetPath($USERPROFILE,
-                    \ 'Desktop/Nerd Stuff/Code/GitHub')
-    elseif g:os ==# 'linux'
-        let g:git_home = expand('~/Documents/Code/GitHub')
-        call mkdir(g:git_home, 'p')
-    endif
-endif
-
 if has('nvim')
     let g:plug_path = g:xdg_data_home
                 \ .'/nvim/site/autoload/plug.vim'
@@ -97,7 +84,7 @@ if empty(glob(g:plug_path))
         silent exec '!curl --create-dirs -Sso '.
                     \ g:plug_path .' '. s:plug_url
     elseif g:shell ==# 'cmd'
-        silent exec 'powershell -Command "'. s:ps_cmd .'"'
+        silent exec 'powershell -NoProfile -Command "'. s:ps_cmd .'"'
     else
         echoerr 'Download vim-plug from "'. s:plug_url
                     \ '" and place it in "'. g:plug_path .'"'
@@ -122,6 +109,13 @@ endif
 let g:snips_author = systemlist('git config user.name')[0]
 let g:snips_email = systemlist('git config user.email')[0]
 let g:snips_github = 'https://github.com/'. g:snips_author
+" }}}
+
+" Other variables {{{
+let g:_color_fts = [
+            \ 'css', 'html', 'htmldjango',
+            \ 'javascript', 'pug', 'scss', 'svg'
+            \ ]
 " }}}
 
 " Source scripts {{{
@@ -176,4 +170,3 @@ augroup END
 " }}}
 
 " vim:fdl=0:
-

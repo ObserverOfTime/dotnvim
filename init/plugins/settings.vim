@@ -103,7 +103,7 @@ let g:airline#parts#ffenc#skip_expected_string = 'utf-8[unix]'
 if !exists('g:airline_symbols')
     let g:airline_symbols = {}
 endif
-if &encoding ==? 'utf-8' && !g:_is_uni
+if &encoding ==? 'utf-8'
     let g:airline_powerline_fonts = 1
     let g:airline_left_sep = ''
     let g:airline_left_alt_sep = ''
@@ -114,6 +114,7 @@ if &encoding ==? 'utf-8' && !g:_is_uni
     let g:airline_symbols.paste = 'Þ'
     let g:airline_symbols.readonly = '⊘'
     let g:airline_symbols.whitespace = '✹'
+    let g:airline_symbols.notexists = ' Ɇ'
     let g:airline_symbols.dirty = ' ×'
 else
     let g:airline_symbols_ascii = 1
@@ -126,6 +127,7 @@ else
     let g:airline_symbols.paste = 'ρ'
     let g:airline_symbols.readonly = 'ο'
     let g:airline_symbols.whitespace = '!'
+    let g:airline_symbols.notexists = ' ε'
     let g:airline_symbols.dirty = ' ~'
 endif
 " }}}
@@ -315,28 +317,27 @@ if g:os !=# 'android'
     let g:ale_linters.css = ['stylelint']
     let g:ale_linters.html = ['htmlhint', 'vale']
     let g:ale_linters.javascript = ['eslint']
-    let g:ale_linters.json = ['jq', 'jsonlint']
+    let g:ale_linters.json = ['jq']
     let g:ale_linters.make = ['checkmake']
     let g:ale_linters.markdown = ['vale']
     let g:ale_linters.pug = ['puglint']
-    let g:ale_linters.python = ['flake8', 'pylint']
+    let g:ale_linters.python = ['pycodestyle']
     let g:ale_linters.rst = ['rstcheck', 'vale']
     let g:ale_linters.rust = ['rustc', 'rustfmt']
     let g:ale_linters.scss = ['stylelint']
     let g:ale_linters.sh = ['shellcheck']
-    let g:ale_linters.sql = ['sqlint']
     let g:ale_linters.verilog = ['iverilog']
     let g:ale_linters.vim = ['vint']
     " }}}
 
     " Fixers {{{
     let g:ale_fixers = {}
-    let g:ale_fixers.c = ['clang-format']
+    let g:ale_fixers.c = ['clangtidy', 'clang-format']
     let g:ale_fixers.cpp = g:ale_fixers.c
     let g:ale_fixers.css = ['stylelint']
     let g:ale_fixers.javascript = ['eslint']
-    let g:ale_fixers.json = ['jq', 'fixjson']
-    let g:ale_fixers.python = ['autopep8']
+    let g:ale_fixers.json = ['jq']
+    let g:ale_fixers.python = ['autopep8', 'isort']
     let g:ale_fixers.rust = ['rustfmt']
     let g:ale_fixers.scss = ['stylelint']
     let g:ale_fixers.sh = ['shfmt']
@@ -345,10 +346,6 @@ if g:os !=# 'android'
     " Options {{{
     let g:ale_pattern_options = {'.*\.min\..*$':
                 \ {'ale_linters': [], 'ale_fixers': []}}
-    " Python {{{
-    let g:ale_python_flake8_options = '--ignore=W391,W504,E704,E731,F403,F405'
-    let g:ale_python_autopep8_options = g:ale_python_flake8_options
-    " }}}
     " Shell {{{
     let g:ale_sh_shellcheck_exclusions = 'SC1090,SC2128,SC2164'
     let g:ale_sh_shfmt_options = '-s -ci -i 2 -bn'
@@ -363,18 +360,6 @@ if g:os !=# 'android'
     let g:ale_cpp_gcc_options = g:ale_cpp_clang_options
     let g:ale_cpp_clangformat_options = g:ale_c_clangformat_options
     " }}}
-    " }}}
-
-    " Augroup {{{
-    augroup ALEConfig
-        au!
-        au User ALEFixPre if (getline(1) =~# '^#!/bin/sh' ||
-                    \ getline(1) ==# '#!/usr/bin/env sh') |
-                    \ let b:ale_sh_shfmt_options =
-                    \ '-s -ci -i 2 -bn -n' |
-                    \ else | unlet! b:ale_sh_shfmt_options |
-                    \ endif
-    augroup END
     " }}}
     " }}}
 
@@ -392,11 +377,9 @@ if g:os !=# 'android'
     " }}}
 
     " Color picker settings {{{
-    if executable('kcolorchooser')
-        let g:vcoolor_custom_picker = 'kcolorchooser --print --color '
+    if exists('g:python3_host_prog')
+        let g:colorv_python_cmd = g:python3_host_prog
     endif
-
-    let g:vcoolor_disable_mappings = 1
     " }}}
 endif
 
@@ -457,6 +440,10 @@ augroup JavaScript
     " Apply conceal
     au FileType javascript setl conceallevel=1
 augroup END
+" }}}
+
+" Tern {{{
+let g:tern_show_signature_in_pum = 1
 " }}}
 " }}}
 
@@ -551,6 +538,13 @@ call lexima#add_rule({
             \ })
 " }}}
 
+" Vifm settings {{{
+let g:vifm_replace_netrw = 1
+if executable('konsole')
+    let g:vifm_term = 'konsole --profile NvimTerm -e'
+endif
+" }}}
+
 " Polyglot settings {{{
 let g:polyglot_disabled = ['rst', 'markdown']
 if has('nvim')
@@ -592,6 +586,12 @@ let g:JavaComplete_ImportOrder = ['java.',
             \ 'javax.', 'com.', 'org.', 'net.']
 " }}}
 
+" Shell settings {{{
+let g:is_bash = 1
+let g:sh_no_error = 1
+let g:sh_fold_enabled = 3
+" }}}
+
 " Mundo settings {{{
 let g:mundo_width = 30
 let g:mundo_close_on_revert = 1
@@ -615,4 +615,3 @@ let g:multiedit_command = 'E'
 " }}}
 
 " vim:fdl=0:
-

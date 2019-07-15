@@ -19,4 +19,3 @@ hi! link cssUIProp cssProp
 hi! link cssPositioningProp cssProp
 
 hi! cssProp ctermfg=107 guifg=#8EC07C
-

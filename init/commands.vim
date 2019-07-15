@@ -10,15 +10,17 @@ com! Gprev     :GitGutterPrevHunk
 com! Gnext     :GitGutterNextHunk
 " Highlight lines longers than 80 characters
 com! MaxLength :match ErrorMsg '\%>80v.\+'
+" Show syntax highlighting groups for word under cursor
+com! SynStack  :echo map(synstack(line('.'), col('.')),
+            \ 'synIDattr(v:val, "name")')
 
 " Use suda to edit/save as root
-if g:os ==# 'linux' && !g:_is_uni
+if g:os ==# 'linux'
     com! SudoEdit  :e suda://%
     com! SudoWrite :w suda://%
 endif
 
 " Save a file creating parent directories
-com! -complete=file W                 :call mkdir(expand("%:p:h"), "p") | w
+com! -complete=file W                 :call mkdir(expand('%:p:h'), 'p') | w
 " Open a REPL with the specified command
 com! -complete=shellcmd -nargs=* Repl :botright 10split | terminal <args>
-

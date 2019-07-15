@@ -13,4 +13,3 @@ endif
 
 syntax region rstHTML start=/^\s*</ end=/>$/
             \ keepend containedin=ALL contains=@rstHTML
-

@@ -24,6 +24,8 @@ augroup FTGroup
     au FileType vim setl foldmethod=marker foldlevel=1
     au FileType snippets setl foldmethod=marker foldlevel=0
     au FileType json setl foldmethod=syntax foldlevel=2
+    au FileType python setl foldmethod=syntax foldlevel=0
+                \ foldtext=getline(v:foldstart+1).'\ '
     " }}}
 augroup END
 " }}}
@@ -68,4 +70,3 @@ augroup END
 " }}}
 
 " vim:fdl=1:
-

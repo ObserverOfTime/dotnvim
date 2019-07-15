@@ -44,16 +44,14 @@ set tabstop=4
 " Enable mouse in all modes
 set mouse=ar
 
-if $TERM !=# 'xfce4-terminal'
-    " Set cursor styling (:h guicursor)
-    set guicursor=v-sm:block,i-ci-ve:ver25,r-o-n-c-cr:hor25
-else
-    " Terminal bug workaround (neovim/neovim#7722)
-    set guicursor=
-endif
+" Set cursor styling (:h guicursor)
+set guicursor=v-sm:block,i-ci-ve:ver25,r-o-n-c-cr:hor25
 
 " Show substitution preview
 if exists('&inccommand') | set inccommand=split | endif
+
+" Use ripgrep instead of grep if available
+if executable('rg') | set grepprg=rg\ -n\ $*\ /dev/null | endif
 
 " Set undodir for regular vim
 if !has('nvim')
@@ -71,5 +69,3 @@ else
     set listchars=tab:>>,trail:~,nbsp:_,precedes:@,extends:#
     set showbreak=^
 endif
-
-

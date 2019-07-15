@@ -14,7 +14,7 @@ function! s:DjEnv(...)
                 \ 'from distutils.sysconfig import get_python_lib; '.
                 \ 'print(get_python_lib(), end=\"\")"')
     let $VIRTUAL_ENV = l:env
-    let $PATH = l:env .'/bin:'. $PATH
+    let $PATH =  l:env . (g:os ==# 'windows' ? '/bin;' : '/bin:') . $PATH
     let $DJANGO_SETTINGS_MODULE = fnamemodify(l:cwd, ':t'). '.settings'
     let l:setupenv = 'from sys import path; '.
                 \ 'from os import environ; '.
@@ -33,4 +33,3 @@ function! s:DjEnv(...)
     call airline#add_statusline_func('airline#extensions#virtualenv#apply')
     call airline#update_statusline()
 endfunction
-

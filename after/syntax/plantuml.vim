@@ -27,4 +27,3 @@ hi plantumlHidden ctermfg=181 guifg=#d7afaf
 
 hi! link plantumlStereotype Special
 hi! link plantumlColonLine SpecialComment
-

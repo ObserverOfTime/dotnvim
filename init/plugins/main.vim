@@ -6,6 +6,7 @@ Plug 'SirVer/ultisnips'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-abolish'
 Plug 'tomtom/tcomment_vim'
+Plug 'junegunn/vim-easy-align'
 Plug 'osyo-manga/vim-anzu'
 Plug 'haya14busa/is.vim'
 Plug 'haya14busa/vim-asterisk'
@@ -13,9 +14,7 @@ Plug 'cohama/lexima.vim'
 Plug 'rcarraretto/vim-surround'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'simnalamburt/vim-mundo', {'on': 'MundoToggle'}
-Plug 'ObserverOfTime/multiedit.vim', {
-            \ 'dir': g:git_home .'/multiedit.vim'
-            \ }
+Plug 'ObserverOfTime/multiedit.vim'
 
 if g:os !=# 'android'
     Plug 'w0rp/ale'
@@ -34,13 +33,13 @@ if &encoding ==? 'utf-8'
     Plug 'chrisbra/unicode.vim'
 endif
 
-if g:os ==# 'linux' && !g:_is_uni
+if g:os ==# 'linux'
     Plug 'lambdalisue/suda.vim'
+    Plug 'vifm/vifm.vim'
 endif
 
-if has('nvim') && !g:_is_uni
+if has('nvim')
     Plug 'ObserverOfTime/discord.nvim', {
-                \ 'dir': g:git_home .'/discord.nvim',
                 \ 'do': ':UpdateRemotePlugins',
                 \ 'branch': 'refactored'
                 \ }
@@ -66,16 +65,7 @@ Plug 'hail2u/vim-css3-syntax', {
             \ 'for': ['css', 'scss', 'html', 'htmldjango', 'pug']
             \ }
 Plug 'heavenshell/vim-jsdoc', {'for': 'javascript'}
-
-let g:_color_fts = [
-            \ 'css', 'html', 'htmldjango',
-            \ 'javascript', 'pug', 'scss', 'svg'
-            \ ]
-if g:os !=# 'android' && !g:_is_uni
-    Plug 'KabbAmine/vCoolor.vim', {'for': g:_color_fts}
-else
-    Plug 'gu-fan/colorv.vim', {'for': g:_color_fts}
-endif
+Plug 'sgoranson/colorv.vim', {'for': g:_color_fts}
 
 if executable('node') && g:os !=# 'android'
     Plug 'ternjs/tern_for_vim', {
@@ -91,7 +81,7 @@ if has('nvim')
 endif
 
 if g:os !=# 'android'
-    Plug 'davidhalter/jedi-vim', {'for': 'python'}
+    Plug 'davidhalter/jedi-vim', {'for': ['python', 'rst']}
     Plug 'tweekmonster/django-plus.vim', {
                 \ 'for': ['python', 'htmldjango']
                 \ }
@@ -122,11 +112,9 @@ if g:os !=# 'android' && v:version >= 800
         Plug 'ncm2/ncm2-ultisnips'
     endif
 
-    if executable('java') && !g:_is_uni
+    if executable('java')
         Plug 'artur-shaik/vim-javacomplete2', {'for': 'java'}
-        Plug 'ObserverOfTime/ncm2-jc2', {
-                    \ 'for': 'java', 'dir': g:git_home .'/ncm2-jc2'
-                    \ }
+        Plug 'ObserverOfTime/ncm2-jc2', {'for': 'java'}
     endif
 
     if executable('clang')
@@ -164,4 +152,3 @@ call plug#end()
 call SourceInitRC('plugins/settings')
 
 " vim:fdl=0:
-

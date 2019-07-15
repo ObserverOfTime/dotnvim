@@ -6,7 +6,3 @@ syn match pythonDocRst contained /:[^:]*:/
 
 hi link pythonDocString String
 hi link pythonDocRst SpecialComment
-
-au FileType python setl foldmethod=syntax foldlevel=0
-            \ foldtext=getline(v:foldstart+1).'\ '
-

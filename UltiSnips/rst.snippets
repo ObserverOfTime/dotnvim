@@ -81,7 +81,7 @@ endsnippet
 # }}}
 
 # Links {{{
-snippet link "external link" b
+snippet link "external link"
 \`${1:Text}${1/.+/ /}<${2:${VISUAL:URL}}>\`_
 endsnippet
 
@@ -90,11 +90,11 @@ snippet l: "label" b
 ${VISUAL}${0}
 endsnippet
 
-snippet ref "reference" b
+snippet ref "reference"
 :ref:\`${1:${VISUAL:reference}}\`
 endsnippet
 
-snippet fnt "footnote" b
+snippet fnt "footnote"
 [${1:#}]_
 ${VISUAL}${0}
 
@@ -160,10 +160,10 @@ endsnippet
 
 # Include {{{
 snippet inc "include" bm
-.. include:: ${1:include}.rst${1:
-	:start-${2:line}: ${3:1}}${4:
-	:end-${5:line}: ${6:10}}${7:
-	:tab-width: ${8:3}}
+.. include:: ${1:include.rst}${2:
+	:start-${3:line}: ${4:1}}${5:
+	:end-${6:line}: ${7:10}}${8:
+	:tab-width: ${9:3}}
 
 ${0}
 endsnippet
@@ -254,4 +254,3 @@ ${VISUAL}${0}
 .. }}}
 endsnippet
 # }}}
-

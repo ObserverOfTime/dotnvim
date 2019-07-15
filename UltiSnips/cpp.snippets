@@ -2,17 +2,15 @@ extends c
 
 clearsnippets fold
 
-priority 20
+global !p
+from snippets import titlify
+endglobal
 
-# Preprocessor {{{
-snippet #in+ "#include c++" b
-#include <${1:iostream}>
-endsnippet
-# }}}
+priority 20
 
 # std:: {{{
 snippet std "std:: type"
-std::${1:array}<${2:T}> ${3};
+std::${1:string} ${3};
 endsnippet
 
 snippet array "array"
@@ -54,7 +52,7 @@ endsnippet
 
 # Classes {{{
 snippet cls "Class"
-class ${1:`!v expand('%:t:r')`} {
+class ${1:`!p snip.rv = titlify(snip.basename)`} {
 ${VISUAL}${0}
 };
 endsnippet
@@ -102,7 +100,7 @@ catch(${1}) {
 endsnippet
 
 snippet ns "namespace" b
-namespace ${1:`!v expand('%:t:r')`} {
+namespace ${1:`!v expand("%:t:r")`} {
 ${VISUAL}${0}
 } /* namespace $1 */
 endsnippet
@@ -118,7 +116,13 @@ for(${1:auto} ${2:i} : ${3:container}) {
 endsnippet
 
 snippet ld "lambda"
-[${1}](${2}) ${4:-> ${3:int}};
+[${1:=}]${2:()} {
+	${VISUAL}${0}
+}
+endsnippet
+
+snippet ldi "inline lambda"
+[${1:=}]${2:()} { ${VISUAL}${3} }
 endsnippet
 
 snippet fold "vim fold" b
@@ -127,4 +131,3 @@ ${VISUAL}${0}
 /// }}}
 endsnippet
 # }}}
-

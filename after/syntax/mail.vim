@@ -13,4 +13,3 @@ endif
 
 syntax region mailHTML start=/<html>/ end=/<\/html>$/
             \ keepend containedin=ALL contains=@mailHTML
-

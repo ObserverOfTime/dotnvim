@@ -1,7 +1,7 @@
 priority 10
 
 # TODO add required args
-# https://docs.djangoproject.com/en/2.1/ref/models/fields
+# https://docs.djangoproject.com/en/2.2/ref/models/fields
 
 # General fields {{{
 snippet mfaut "models.AutoField" b
@@ -134,16 +134,15 @@ endsnippet
 # }}}
 
 # Relationship fields {{{
-snippet fk "ForeignKey" b
+snippet mffk "ForeignKey" b
 ${1:fk} = models.ForeignKey(${1:to}${2})
 endsnippet
 
-snippet mtm "ManyToManyField" b
+snippet mfmtm "ManyToManyField" b
 ${1:fk} = models.ManyToManyField(${1:to}${2})
 endsnippet
 
-snippet oto "OneToOneField" b
+snippet mfoto "OneToOneField" b
 ${1:fk} = models.OneToOneField(${1:to}${2})
 endsnippet
 # }}}
-

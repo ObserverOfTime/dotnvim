@@ -15,20 +15,20 @@ map <silent> g#          <Plug>(asterisk-gz#)<Plug>(is-nohl-1)
 " Show tag in new tab
 noremap <silent> <C-w>]  :tab split <BAR> :exec 'tag '.expand('<cword>')<CR>
 " Go to previous ALE wrap
-noremap <silent> <C-l>k  <Plug>(ale_previous_wrap)
+noremap <silent> <C-l>k  :ALEPreviousWrap<CR>
 " Go to next ALE wrap
-noremap <silent> <C-l>j  <Plug>(ale_next_wrap)
+noremap <silent> <C-l>j  :ALENextWrap<CR>
 " Go to previous ALE line
-noremap <silent> <C-l>N  <Plug>(ale_previous)
+noremap <silent> <C-l>N  :ALEPrevious<CR>
 " Go to next ALE line
-noremap <silent> <C-l>n  <Plug>(ale_next)
+noremap <silent> <C-l>n  :ALENext<CR>
 " Fix file with ALE
-noremap <silent> <C-l>f  <Plug>(ale_fix)
+noremap <silent> <C-l>f  :ALEFix<CR>
 " }}}
 
 " Normal mode {{{
 " Toggle relative numbers
-nmap rn                  :set relativenumber!<CR>
+nmap <silent> rn         :set relativenumber!<CR>
 " Clear search highlighting
 nmap <silent> ,/         :nohlsearch <BAR> :echon<CR>
 " Go to next search match
@@ -36,20 +36,14 @@ nmap <silent> n          <Plug>(is-nohl)<Plug>(anzu-n-with-echo)
 " Go to previous search match
 nmap <silent> N          <Plug>(is-nohl)<Plug>(anzu-N-with-echo)
 " Open fzf quickfix window
-nmap Q                   <Plug>(fzf-quickfix)
+nmap <silent> Q          <Plug>(fzf-quickfix)
 
-" Toggle undo history window
-nnoremap <Leader>m       :MundoToggle<CR>
-" Toggle NERDTree window
-nnoremap <Leader>n       :NERDTreeToggle<CR>
-" Search for word under cursor
-nnoremap <Leader>s       :S<CR>
 " Close file
 nnoremap <silent> <C-q>  :q<CR>
 " Save file
 nnoremap <silent> <C-s>  :w<CR>
 " Open fzf window
-nnoremap <C-f>           :FZF<CR>
+nnoremap <silent> <C-f>  :FZF<CR>
 " Fix file indentation
 nnoremap <silent> <C-i>  mzgg=G`z
 " }}}
@@ -72,4 +66,3 @@ vnoremap <C-Insert>      "+y
 " Switch to normal mode
 tnoremap <ESC>           <C-\><C-n>
 " }}}
-
