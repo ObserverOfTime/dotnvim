@@ -138,7 +138,7 @@ endif
 
 " Other filetype plugins {{{
 Plug 'chrisbra/csv.vim', {'for': 'csv'}
-Plug 'SidOfc/mkdx', {'for': 'markdown'}
+Plug 'plasticboy/vim-markdown', {'for': 'markdown'}
 Plug 'marshallward/vim-restructuredtext', {'for': 'rst'}
 Plug 'tpope/vim-dadbod', {'on': []} " Loaded via local vimrc
 

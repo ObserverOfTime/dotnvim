@@ -144,8 +144,6 @@ if g:os !=# 'android' && v:version >= 800
         endif
         au InsertEnter * call ncm2#enable_for_buffer()
         au InsertLeave * if !pumvisible() | pclose | endif
-        au FileType markdown,rst,text,email,help
-                    \ let b:ncm2_look_enabled = 1
         if executable('node')
             au FileType html,htmldjango call tern#Enable()
         endif
@@ -288,7 +286,7 @@ if g:os !=# 'android'
     " Config {{{
     let g:ale_use_global_executables = 1
     let g:ale_lint_on_enter = 0
-    let g:lint_on_insert_leave = 1
+    let g:ale_lint_on_insert_leave = 1
     let g:ale_lint_on_text_changed = 'normal'
     let g:ale_set_loclist = 0
     let g:ale_set_quickfix = 1
@@ -324,7 +322,7 @@ if g:os !=# 'android'
     let g:ale_linters.python = ['pycodestyle']
     let g:ale_linters.rst = ['rstcheck', 'vale']
     let g:ale_linters.rust = ['rustc', 'rustfmt']
-    let g:ale_linters.scss = ['stylelint']
+    let g:ale_linters.scss = g:ale_linters.css
     let g:ale_linters.sh = ['shellcheck']
     let g:ale_linters.verilog = ['iverilog']
     let g:ale_linters.vim = ['vint']
@@ -339,7 +337,7 @@ if g:os !=# 'android'
     let g:ale_fixers.json = ['jq']
     let g:ale_fixers.python = ['autopep8', 'isort']
     let g:ale_fixers.rust = ['rustfmt']
-    let g:ale_fixers.scss = ['stylelint']
+    let g:ale_fixers.scss = g:ale_fixers.css
     let g:ale_fixers.sh = ['shfmt']
     " }}}
 
@@ -447,35 +445,6 @@ let g:tern_show_signature_in_pum = 1
 " }}}
 " }}}
 
-" Markdown settings {{{
-let g:markdown_fenced_languages = [
-            \ 'bash=sh',
-            \ 'html',
-            \ 'js=javascript',
-            \ 'json',
-            \ 'python',
-            \ 'sh',
-            \ 'vim'
-            \ ]
-let g:mkdx#settings = {}
-let g:mkdx#settings.highlight = {'enable': 1}
-let g:mkdx#settings.fold = {'enable': 1}
-let g:mkdx#settings.enter = {'enable': 0}
-let g:mkdx#settings.map = {'enable': 0}
-let g:mkdx#settings.links = {
-            \ 'external': {'enable': 0}
-            \ }
-let g:mkdx#settings.checkbox = {
-            \ 'toggles': [' ', 'x'],
-            \ 'update_tree': 0
-            \ }
-let g:mkdx#settings.tokens = {
-            \ 'list': '*',
-            \ 'fence': '`',
-            \ 'strike': '~~'
-            \ }
-" }}}
-
 " Emmet settings {{{
 let g:user_emmet_settings = {
             \ 'html': extend({
@@ -493,6 +462,21 @@ let g:user_emmet_settings = {
             \ 'javascript': {'extends': 'jsx'},
             \ 'htmldjango': {'extends': 'html'}
             \ }
+" }}}
+
+" Markdown settings {{{
+let g:vim_markdown_fenced_languages = [
+            \ 'bash=sh',
+            \ 'js=javascript',
+            \ 'ini=dosini',
+            \ ]
+let g:vim_markdown_strikethrough = 1
+let g:vim_markdown_no_extensions_in_markdown = 1
+let g:vim_markdown_edit_url_in = 'vsplit'
+let g:vim_markdown_conceal = 1
+let g:vim_markdown_follow_anchor = 1
+let g:vim_markdown_auto_insert_bullets = 0
+let g:vim_markdown_new_list_item_indent = 0
 " }}}
 
 " RST settings {{{

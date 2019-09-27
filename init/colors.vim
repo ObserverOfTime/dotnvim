@@ -1,3 +1,6 @@
+" TODO: Enable truecolor support?
+" if $COLORTERM ==# 'truecolor' | set termguicolors | endif
+
 " Gruvbox8 colorscheme {{{
 try
     let g:gruvbox_italic = 1
@@ -8,9 +11,6 @@ catch /E185|Gruvbox/
     finish
 endtry
 " }}}
-
-" TODO: Enable truecolor support?
-" if $COLORTERM ==# 'truecolor' | set termguicolors | endif
 
 " Custom colors {{{
 " ALE {{{

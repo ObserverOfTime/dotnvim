@@ -21,6 +21,7 @@ augroup FTGroup
     au FileType sql setl expandtab
     " }}}
     " Folding settings {{{
+    au FileType markdown setl conceallevel=2 foldlevel=7
     au FileType vim setl foldmethod=marker foldlevel=1
     au FileType snippets setl foldmethod=marker foldlevel=0
     au FileType json setl foldmethod=syntax foldlevel=2

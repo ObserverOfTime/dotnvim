@@ -37,6 +37,9 @@ nmap <silent> n          <Plug>(is-nohl)<Plug>(anzu-n-with-echo)
 nmap <silent> N          <Plug>(is-nohl)<Plug>(anzu-N-with-echo)
 " Open fzf quickfix window
 nmap <silent> Q          <Plug>(fzf-quickfix)
+" Toggle undo window
+nmap <silent> <Leader>u  :MundoToggle<CR>
+
 
 " Close file
 nnoremap <silent> <C-q>  :q<CR>
@@ -64,5 +67,5 @@ vnoremap <C-Insert>      "+y
 
 " Terminal mode {{{
 " Switch to normal mode
-tnoremap <ESC>           <C-\><C-n>
+tnoremap <silent> <ESC>  <C-\><C-n>
 " }}}
