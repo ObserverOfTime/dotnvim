@@ -7,8 +7,17 @@ augroup FTGroup
     au FileType mail setl spell
     " Wrap lines in manual pages
     au FileType man setl wrap linebreak
-    " Keep trailing commas in Python files
+    " SplitJoin settings {{{
     au FileType python let b:splitjoin_trailing_comma = 1
+    au FileType toml
+                \ let b:splitjoin_trailing_comma = 1 |
+                \ let b:splitjoin_split_callbacks = [
+                \   'sj#js#SplitArray', 'sj#js#SplitObjectLiteral'
+                \ ] |
+                \ let b:splitjoin_join_callbacks = [
+                \   'sj#js#JoinArray', 'sj#js#JoinObjectLiteral'
+                \ ]
+    " }}}
     " Indentation settings {{{
     au FileType make setl tabstop=8 shiftwidth=8
                 \ softtabstop=0 noexpandtab nosmartindent
@@ -34,12 +43,7 @@ augroup END
 " Buffer augroup {{{
 augroup BufGroup
     au!
-    " call SetExecBit() on save
-    au BufWritePost * call SetExecBit()
     " Set special filetypes {{{
-    au BufNewFile,BufRead *.bash* setf sh
-    au BufNewFile,BufRead *.conf setf dosini
-    au BufNewFile,BufRead *nginx*.conf setf nginx
     au BufNewFile,BufRead .babelrc setf json5
     au BufNewFile,BufRead .SRCINFO setf dosini
     " }}}

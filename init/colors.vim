@@ -1,5 +1,8 @@
-" TODO: Enable truecolor support?
-" if $COLORTERM ==# 'truecolor' | set termguicolors | endif
+" Enable truecolor support
+if $COLORTERM ==# 'truecolor' | set termguicolors | endif
+
+" Use dark background
+set background=dark
 
 " Gruvbox8 colorscheme {{{
 try
@@ -32,18 +35,6 @@ hi GitGutterAdd ctermfg=47 guifg=#00FF5F
 hi GitGutterDelete ctermfg=205 guifg=#FF5FAF
 hi GitGutterChange ctermfg=178 guifg=#D7AF00
 hi GitGutterChangeDelete ctermfg=131 guifg=#AF5F5F
-" }}}
-
-" NERDTree {{{
-hi NERDTreeDir ctermfg=107 guifg=#8EC07C
-hi NERDTreeOpenable ctermfg=208 guifg=#FE8019
-hi NERDTreeClosable ctermfg=208 guifg=#FE8019
-hi NERDTreeFile ctermfg=187 guifg=#EBDBB2
-hi NERDTreeExecFile ctermfg=214 guifg=#FABD2F
-hi NERDTreeUp ctermfg=102 guifg=#928374
-hi NERDTreeCWD ctermfg=142 guifg=#B8BB26
-hi NERDTreeHelp ctermfg=187 guifg=#EBDBB2
-hi link NERDTreeDirSlash NERDTreeDir
 " }}}
 
 " Misc {{{

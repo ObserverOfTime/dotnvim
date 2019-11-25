@@ -1,8 +1,3 @@
-syn region pythonDocString matchgroup=pythonTripleQuotes
-        \ start=+^\s*\z('''\|"""\)+ end="\z1" keepend fold
-        \ contains=pythonDocStringRst,pythonEscape,
-        \ pythonSpaceError,pythonDoctest,@Spell
-syn match pythonDocRst contained /:[^:]*:/
+" TODO: add RST highlight in docstrings
 
-hi link pythonDocString String
-hi link pythonDocRst SpecialComment
+hi semshiSelected ctermfg=208 ctermbg=NONE guifg=#FF8700 guibg=NONE

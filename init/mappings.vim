@@ -36,7 +36,7 @@ nmap <silent> n          <Plug>(is-nohl)<Plug>(anzu-n-with-echo)
 " Go to previous search match
 nmap <silent> N          <Plug>(is-nohl)<Plug>(anzu-N-with-echo)
 " Open fzf quickfix window
-nmap <silent> Q          <Plug>(fzf-quickfix)
+nmap <silent> Q          :Quickfix<CR>
 " Toggle undo window
 nmap <silent> <Leader>u  :MundoToggle<CR>
 

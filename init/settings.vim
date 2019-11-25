@@ -31,8 +31,6 @@ set shortmess=aoOtTcF
 set guifont=Hack:h12
 " Spellcheck languages
 set spelllang=en,el
-" Use dark background
-set background=dark
 " Maximum number of undoable changes
 set undolevels=250
 " Number of spaces to use for indent

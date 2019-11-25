@@ -135,6 +135,7 @@ endif
 
 if g:os !=# 'android' && v:version >= 800
     " NCM2 settings {{{
+    let g:ncm2_pyclang#library_path = s:clang_library_path
     augroup NCM2
         au!
         " Misc {{{
@@ -145,26 +146,8 @@ if g:os !=# 'android' && v:version >= 800
         au InsertEnter * call ncm2#enable_for_buffer()
         au InsertLeave * if !pumvisible() | pclose | endif
         if executable('node')
-            au FileType html,htmldjango call tern#Enable()
+            au FileType pug,svelte call tern#Enable()
         endif
-        " }}}
-
-        " Clang {{{
-        au User Ncm2Plugin call ncm2#register_source({
-                    \ 'name': 'clang',
-                    \ 'priority': 9,
-                    \ 'subscope_enable': 1,
-                    \ 'scope': ['c', 'cpp'],
-                    \ 'mark': 'c',
-                    \ 'word_pattern': '\w+',
-                    \ 'complete_pattern': [
-                    \   '->', '\.', '::', '^\s*#',
-                    \   '^\s*#include\s+[<"].*'
-                    \ ],
-                    \ 'on_complete': [
-                    \   'ncm2#on_complete#omni', 'ClangComplete'
-                    \ ]
-                    \ })
         " }}}
 
         " Sass {{{
@@ -172,7 +155,7 @@ if g:os !=# 'android' && v:version >= 800
                     \ 'name': 'sass',
                     \ 'priority': 9,
                     \ 'subscope_enable': 1,
-                    \ 'scope': ['css', 'scss'],
+                    \ 'scope': ['css', 'scss', 'svelte', 'vue'],
                     \ 'mark': 'css',
                     \ 'word_pattern': '[\w_-]+',
                     \ 'complete_pattern': [
@@ -228,7 +211,7 @@ if g:os !=# 'android' && v:version >= 800
                     \ 'name': 'emmet',
                     \ 'priority': 8,
                     \ 'subscope_enable': 1,
-                    \ 'scope': ['html', 'htmldjango', 'pug'],
+                    \ 'scope': ['html', 'htmldjango', 'pug', 'svelte', 'vue'],
                     \ 'mark': 'emmet',
                     \ 'word_pattern': '[\w_\-]+',
                     \ 'complete_pattern': '[\w:]+',
@@ -306,6 +289,12 @@ if g:os !=# 'android'
     endif
     " }}}
 
+    " Aliases {{{
+    let g:ale_linter_aliases = {}
+    let g:ale_linter_aliases.svelte = ['javascript']
+    let g:ale_linter_aliases.vue = ['javascript']
+    " }}}
+
     " Linters {{{
     let g:ale_linters = {}
     let g:ale_linters.c = executable('clang') ?
@@ -316,6 +305,8 @@ if g:os !=# 'android'
     let g:ale_linters.html = ['htmlhint', 'vale']
     let g:ale_linters.javascript = ['eslint']
     let g:ale_linters.json = ['jq']
+    let g:ale_linters.kotlin = ['ktlint']
+    let g:ale_linters.lua = ['luacheck']
     let g:ale_linters.make = ['checkmake']
     let g:ale_linters.markdown = ['vale']
     let g:ale_linters.pug = ['puglint']
@@ -324,8 +315,10 @@ if g:os !=# 'android'
     let g:ale_linters.rust = ['rustc', 'rustfmt']
     let g:ale_linters.scss = g:ale_linters.css
     let g:ale_linters.sh = ['shellcheck']
+    let g:ale_linters.svelte = g:ale_linters.javascript
     let g:ale_linters.verilog = ['iverilog']
     let g:ale_linters.vim = ['vint']
+    let g:ale_linters.vue = g:ale_linters.javascript
     " }}}
 
     " Fixers {{{
@@ -339,9 +332,12 @@ if g:os !=# 'android'
     let g:ale_fixers.rust = ['rustfmt']
     let g:ale_fixers.scss = g:ale_fixers.css
     let g:ale_fixers.sh = ['shfmt']
+    let g:ale_fixers.svelte = g:ale_fixers.javascript
+    let g:ale_fixers.vue = g:ale_fixers.javascript
     " }}}
 
     " Options {{{
+    let g:ale_linters_explicit = 1
     let g:ale_pattern_options = {'.*\.min\..*$':
                 \ {'ale_linters': [], 'ale_fixers': []}}
     " Shell {{{
@@ -373,12 +369,6 @@ if g:os !=# 'android'
     let g:jedi#auto_vim_configuration = 0
     let g:jedi#completions_enabled = 0
     " }}}
-
-    " Color picker settings {{{
-    if exists('g:python3_host_prog')
-        let g:colorv_python_cmd = g:python3_host_prog
-    endif
-    " }}}
 endif
 
 if has('nvim')
@@ -391,7 +381,6 @@ if has('nvim')
         au!
         au FileType c,cpp ChromaticaStart
         au FileType python let g:semshi#active = 1
-        au FileType python hi semshiSelected ctermfg=208 ctermbg=NONE
     augroup END
     " }}}
 endif
@@ -416,15 +405,6 @@ else
 endif
 " }}}
 
-" JsDoc {{{
-let g:javascript_plugin_jsdoc = 1
-let g:jsdoc_additional_descriptions = 0
-let g:jsdoc_allow_input_prompt = 1
-let g:jsdoc_input_description = 1
-let g:jsdoc_enable_es6 = 1
-let g:jsdoc_underscore_private = 1
-" }}}
-
 " JSON {{{
 let g:vim_json_syntax_conceal = 1
 let g:vim_json_syntax_concealcursor = ''
@@ -438,6 +418,10 @@ augroup JavaScript
     " Apply conceal
     au FileType javascript setl conceallevel=1
 augroup END
+" }}}
+
+" JsDoc {{{
+let g:javascript_plugin_jsdoc = 1
 " }}}
 
 " Tern {{{
@@ -455,12 +439,17 @@ let g:user_emmet_settings = {
             \   'extends': 'jade',
             \   'filters': 'jade',
             \ }, s:emmet_defaults),
+            \ 'svelte': extend({
+            \   'extends': 'html',
+            \   'empty_element_suffix': '/>',
+            \ }, s:emmet_defaults),
             \ 'php': {
             \   'extends': 'html',
             \   'filters': 'html,c'
             \ },
             \ 'javascript': {'extends': 'jsx'},
-            \ 'htmldjango': {'extends': 'html'}
+            \ 'htmldjango': {'extends': 'html'},
+            \ 'vue': {'extends': 'svelte'},
             \ }
 " }}}
 
@@ -501,38 +490,17 @@ let g:UltiSnipsSnippetDirectories = [
             \ expand('<sfile>:p:h:h:h') .'/UltiSnips']
 " }}}
 
-" ClangComplete settings {{{
-let g:clang_library_path = s:clang_library_path
-let g:clang_complete_complete_auto = 0
-let g:clang_complete_macros = 1
-let g:clang_complete_patterns = 1
-let g:clang_jumpto_back_key = ''
-let g:clang_print_type_key = '<Leader>gp'
-let g:clang_jumpto_declaration_key = '<Leader>gd'
-let g:clang_jumpto_declaration_in_preview_key = '<Leader>gg'
-" }}}
-
-" Lexima settings {{{
-let g:lexima_enable_endwise_rules = 0
-call lexima#add_rule({
-            \ 'filetype': 'markdown',
-            \ 'input_after': '<CR>',
-            \ 'char': '<CR>',
-            \ 'at': '```\%#```'
-            \ })
+" Pear Tree settings {{{
+let g:pear_tree_repeatable_expand = 0
+let g:pear_tree_smart_openers = 1
+let g:pear_tree_smart_closers = 1
+let g:pear_tree_smart_backspace = 1
 " }}}
 
 " Vifm settings {{{
 let g:vifm_replace_netrw = 1
 if executable('konsole')
     let g:vifm_term = 'konsole --profile NvimTerm -e'
-endif
-" }}}
-
-" Polyglot settings {{{
-let g:polyglot_disabled = ['rst', 'markdown']
-if has('nvim')
-    let g:polyglot_disabled += ['python', 'c', 'cpp']
 endif
 " }}}
 
@@ -562,6 +530,20 @@ let g:splitjoin_quiet = 1
 let g:splitjoin_trailing_comma = 0
 let g:splitjoin_curly_brace_padding = 0
 let g:splitjoin_html_attributes_hanging = 1
+" }}}
+
+" Polyglot settings {{{
+let g:polyglot_disabled = ['markdown']
+if has('nvim')
+    let g:polyglot_disabled += ['c', 'cpp']
+endif
+" }}}
+
+" DoGe settings {{{
+let g:doge_mapping = '<Leader>dg'
+let g:doge_doc_standard_python = 'sphinx'
+let g:doge_doc_standard_c = 'doxygen_qt'
+let g:doge_doc_standard_cpp = 'doxygen_qt'
 " }}}
 
 " JavaComplete2 settings {{{

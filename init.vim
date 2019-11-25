@@ -98,24 +98,25 @@ endif
 " Detect node installer {{{
 if executable('node')
     if executable('yarn')
-        let g:npm_cmd = 'yarn'
+        let g:_npm_cmd = 'yarn'
     else
-        let g:npm_cmd = 'npm i'
+        let g:_npm_cmd = 'npm'
     endif
 endif
 " }}}
 
-" Snippet variables {{{
+" Misc variables {{{
 let g:snips_author = systemlist('git config user.name')[0]
 let g:snips_email = systemlist('git config user.email')[0]
 let g:snips_github = 'https://github.com/'. g:snips_author
-" }}}
 
-" Other variables {{{
 let g:_color_fts = [
             \ 'css', 'html', 'htmldjango',
-            \ 'javascript', 'pug', 'scss', 'svg'
+            \ 'javascript', 'pug',
+            \ 'scss', 'svg', 'svelte'
             \ ]
+
+let g:plug_url_format = 'git@github.com:%s'
 " }}}
 
 " Source scripts {{{
@@ -134,7 +135,7 @@ call SourceInitRC('commands')
 call SourceInitRC('functions/main')
 call SourceInitRC('augroups')
 
-" if has('nvim') | call SourceInitRC('nvim_host') | endif
+if has('nvim') | call SourceInitRC('nvim_host') | endif
 " }}}
 
 " WARNING: This can be a security vulnerability.
