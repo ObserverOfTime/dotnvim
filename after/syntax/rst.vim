@@ -13,3 +13,6 @@ endif
 
 syntax region rstHTML start=/^\s*</ end=/>$/
             \ keepend containedin=ALL contains=@rstHTML
+
+hi! link rstEmphasis htmlItalic
+hi! link rstStrongEmphasis htmlBold

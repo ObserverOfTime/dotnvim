@@ -15,7 +15,7 @@ com! SynStack  :echo map(synstack(line('.'), col('.')),
             \ 'synIDattr(v:val, "name")')
 
 " Use suda to edit/save as root
-if exists('*suda#init')
+if executable('sudo')
     com! SudoEdit  :e suda://%
     com! SudoWrite :w suda://%
 endif
@@ -25,7 +25,8 @@ com! -complete=file W :call mkdir(expand('%:p:h'), 'p') | w
 
 " Open a REPL with the specified command
 com! -complete=shellcmd -nargs=* Repl :bot 10new |
-            \ :let t:_repl_id=termopen(len(<q-args>) ? <q-args> : &shell)
+            \ :let t:_repl_id=termopen(len(<q-args>) ? <q-args> :
+            \   (&shell ==# '/bin/bash' ? 'bash -l' : &shell))
 " Execute command in the opened REPL
 com! -complete=shellcmd -nargs=+ Rcmd :call
             \ chansend(t:_repl_id, [<q-args>, ''])

@@ -124,11 +124,15 @@ syn keyword arduinoFunc
             \ yield
 
 syn keyword arduinoModule Keyboard Mouse
-syn match arduinoModule /Serial\([123]\|USB\)\=/
+syn match arduinoModule /Serial\([123]\|USB\)\?/
+syn match arduinoBinary /B[01]\+/
+syn match arduinoAnalog /A[0-5]\+/
 
 syn keyword arduinoType boolean byte String word
 
 hi def link arduinoConstant Constant
 hi def link arduinoFunc Function
 hi def link arduinoModule Identifier
+hi def link arduinoBinary Number
+hi def link arduinoAnalog Number
 hi def link arduinoType Type

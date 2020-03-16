@@ -22,7 +22,7 @@ augroup FTGroup
     au FileType make setl tabstop=8 shiftwidth=8
                 \ softtabstop=0 noexpandtab nosmartindent
     au FileType html,htmldjango,pug setl tabstop=2 shiftwidth=2
-    au FileType markdown,xml,svg setl tabstop=2 shiftwidth=2
+    au FileType markdown,xml,svelte,svg setl tabstop=2 shiftwidth=2
     au FileType json,javascript,coffee setl tabstop=2 shiftwidth=2
     au FileType css,scss setl iskeyword+=- tabstop=2 shiftwidth=2
     au FileType rst setl tabstop=3 shiftwidth=3 foldlevel=2

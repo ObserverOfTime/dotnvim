@@ -1,5 +1,17 @@
 priority 10
 
+global !p
+def expand_list(snip, ordered=False):
+	num = int(snip.buffer[snip.line].strip()[2 : ])
+	ph = "%d. " if ordered else "%.0s* "
+	body = ""
+	snip.buffer[snip.line] = ""
+	for i in range(1, num + 1):
+		body += ph % i + ("${%d:item}\n" % i)
+	snip.expand_anon(body)
+	snip.cursor.set(snip.line + num - 1, 0)
+endglobal
+
 # Markup {{{
 snippet /sec([1-5])/ "section" br
 `!p snip.rv = "#" * int(match.group(1))
@@ -56,6 +68,16 @@ ${0}
 endsnippet
 # }}}
 
+# Lists {{{
+pre_expand "expand_list(snip)"
+snippet /li(\d+)/ "unordered list" br
+endsnippet
+
+pre_expand "expand_list(snip, True)"
+snippet /ol(\d+)/ "ordered list" br
+endsnippet
+# }}}
+
 # Misc {{{
 snippet /h:(\w+)/ "HTML element" r
 <`!p snip.rv = match.group(1)
@@ -65,6 +87,34 @@ endsnippet
 
 snippet com "comment" b
 <!-- ${VISUAL}${1} -->
+endsnippet
+
+snippet ncoc "No Code of Conduct" b
+# Contributor Code of Conduct
+
+This project adheres to No Code of Conduct:
+
+* We are all adults.
+* We accept anyone's contributions.
+* Nothing else matters.
+
+For more information, please visit
+the [No Code of Conduct][] homepage.
+
+[No Code of Conduct]: https://nocodeofconduct.com
+endsnippet
+
+snippet wcoc "WTF Code of Conduct" b
+Go Fuck Yourself
+================
+
+Offended? Go away. We don't need people who are
+offended because of a stranger on the internet.
+Not offended? You're welcome to contribute.
+
+&copy; Copyright 2015 [WTFCoC][] Consortium Committee.
+
+[WTFCoC]: https://github.com/mniip/wtfcoc
 endsnippet
 
 snippet fold "vim fold" b

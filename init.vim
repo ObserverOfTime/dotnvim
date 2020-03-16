@@ -132,7 +132,7 @@ call SourceInitRC('colors')
 call SourceInitRC('mappings')
 call SourceInitRC('motions')
 call SourceInitRC('commands')
-call SourceInitRC('functions/main')
+call SourceInitRC('functions')
 call SourceInitRC('augroups')
 
 if has('nvim') | call SourceInitRC('nvim_host') | endif

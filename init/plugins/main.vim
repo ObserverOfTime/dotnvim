@@ -13,11 +13,13 @@ Plug 'haya14busa/vim-asterisk'
 Plug 'tmsvg/pear-tree'
 Plug 'rcarraretto/vim-surround'
 Plug 'AndrewRadev/splitjoin.vim'
+Plug 'ObserverOfTime/multiedit.vim'
 Plug 'simnalamburt/vim-mundo', {'on': 'MundoToggle'}
 Plug 'kkoomen/vim-doge', {'for': [
             \   'c', 'cpp', 'java', 'javascript', 'kotlin', 'python'
             \ ]}
-Plug 'ObserverOfTime/multiedit.vim'
+Plug 'plasticboy/vim-markdown', {'for': 'markdown'}
+Plug 'tpope/vim-dadbod', {'on': []} " Loaded via local vimrc
 
 if g:os !=# 'android'
     Plug 'w0rp/ale'
@@ -36,9 +38,12 @@ if &encoding ==? 'utf-8'
     Plug 'chrisbra/unicode.vim'
 endif
 
-if g:os ==# 'linux'
-    Plug 'lambdalisue/suda.vim'
+if executable('vifm')
     Plug 'vifm/vifm.vim'
+endif
+
+if executable('sudo')
+    Plug 'lambdalisue/suda.vim'
 endif
 
 if has('nvim')
@@ -64,7 +69,7 @@ Plug 'airblade/vim-gitgutter'
 
 " Web plugins {{{
 Plug 'mattn/emmet-vim', {'for': [
-            \   'html', 'htmldjango', 'pug', 'svelte'
+            \   'html', 'htmldjango', 'pug', 'svelte', 'vue', 'xml'
             \ ]}
 Plug 'hail2u/vim-css3-syntax', {'for': [
             \   'css', 'scss', 'html',
@@ -84,11 +89,13 @@ if has('nvim')
     Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins'}
 endif
 
+if executable('notedown')
+    Plug 'szymonmaszke/vimpyter'
+endif
+
 if g:os !=# 'android'
-    Plug 'davidhalter/jedi-vim', {'for': ['python', 'rst']}
-    Plug 'tweekmonster/django-plus.vim', {
-                \ 'for': ['python', 'htmldjango']
-                \ }
+    Plug 'davidhalter/jedi-vim', {'for': ['python', 'rst', 'ipynb']}
+    Plug 'tweekmonster/django-plus.vim'
 endif
 " }}}
 
@@ -126,6 +133,7 @@ if g:os !=# 'android' && v:version >= 800
     endif
 
     if executable('R')
+        Plug 'jalvesaq/Nvim-R', {'for': 'r'}
         Plug 'gaalcaras/ncm-R', {'for': 'r'}
     endif
 
@@ -144,12 +152,6 @@ endif
 " }}}
 
 " Other filetype plugins {{{
-Plug 'plasticboy/vim-markdown', {'for': 'markdown'}
-Plug 'tpope/vim-dadbod', {'on': []} " Loaded via local vimrc
-
-if executable('R')
-    Plug 'jalvesaq/Nvim-R', {'for': 'r'}
-endif
 " }}}
 
 call plug#end()

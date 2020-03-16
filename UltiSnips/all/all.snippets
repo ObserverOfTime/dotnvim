@@ -26,24 +26,12 @@ voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet
 clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
 endsnippet
 
-snippet nococ "No Code of Conduct" b
-# Contributor Code of Conduct
-
-This project adheres to No Code of Conduct:
-
-* We are all adults.
-* We accept anyone's contributions.
-* Nothing else matters.
-
-For more information please visit the [No Code of Conduct](https://github.com/domgetter/NCoC) homepage.
-endsnippet
-
 snippet vml "vim modeline"
 `!p
 et = vim.eval('&expandtab')
 sw = vim.eval('&shiftwidth')
 ts = vim.eval('&tabstop')
-snip.rv = 'vim:set %s sw=%s ts=%s:' % \
+snip.rv = 'vim:%s:sw=%s:ts=%s:' % \
 	('et' if et else 'noet', sw, ts)`
 endsnippet
 # }}}

@@ -8,9 +8,9 @@ def expand_all(snip):
 	buf = vim.current.window.buffer
 	exports = Python.all(buf)
 	body = "__all__ = ["
-	if len(exports) == 0:
+	if len(exports) == 0 :
 		body += "${0}]"
-	elif len(exports) == 1:
+	elif len(exports) == 1 :
 		body += "${1:'%s'}]" % exports[0]
 	else :
 		sw = " " * int(vim.eval("&sw"))
@@ -43,7 +43,7 @@ endsnippet
 snippet def "method definition" b
 def ${1:method}(`!p if snip.indent:
 	s = "self, " if t[2] else "self"
-	snip.rv = s`${2:arg}):
+	snip.rv = s`${2:*args}):
 	${3:${VISUAL:pass}}${0}
 endsnippet
 
@@ -71,21 +71,26 @@ def __init__(self${1/.+/, /}${1:*args, **kwargs}):
 endsnippet
 
 snippet super "call parent method" b
-super(${1:`!p snip.rv = titlify(path)
-`}, self).${2:__init__}${3/.+/(/}`!p
+super(${1:Parent}${1/.+/, self/}).${2:__init__}${3/.+/(/}`!p
 `${3:*args, **kwargs}${3/.+/)/}
 endsnippet
 
 snippet stat "staticmethod definition" b
 @staticmethod
-def ${1:method}(${2:arg}):
+def ${1:method}(${2:*args}):
 	${3:${VISUAL:pass}}${0}
 endsnippet
 
 snippet prop "property definition" b
 @property
-def ${1:_name}(self):
+def ${1:name}(self):
 	${2:${VISUAL:pass}}${0}
+endsnippet
+
+snippet clmd "classmethod definition" b
+@classmethod
+def ${1:method}(cls${2/.+/, /}${2:*args}):
+	${3:${VISUAL:pass}}${0}
 endsnippet
 # }}}
 
@@ -136,15 +141,15 @@ endsnippet
 snippet try "try ... except" b
 try:
 	${1:${VISUAL:pass}}
-except ${2:Exception} as ${3:e}:
-	${4:raise $3}
+except ${2:Exception}${3/.+/ as /}${3:e}:
+	${4:pass}
 endsnippet
 
 snippet tryf "try ... except ... finally" b
 try:
 	${1:${VISUAL:pass}}
-except ${2:Exception} as ${3:e}:
-	${4:raise $3}
+except ${2:Exception}${3/.+/ as /}${3:e}:
+	${4:pass}
 finally:
 	${0:pass}
 endsnippet
@@ -152,9 +157,20 @@ endsnippet
 snippet trye "try ... except ... else" b
 try:
 	${1:${VISUAL:pass}}
-except ${2:Exception} as ${3:e}:
-	${4:raise $3}
+except ${2:Exception}${3/.+/ as /}${3:e}:
+	${4:pass}
 else:
+	${0:pass}
+endsnippet
+
+snippet tryef "try ... except ... else ... finally" b
+try:
+	${1:${VISUAL:pass}}
+except ${2:Exception}${3/.+/ as /}${3:e}:
+	${4:pass}
+else:
+	${5:pass}
+finally:
 	${0:pass}
 endsnippet
 # }}}

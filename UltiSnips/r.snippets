@@ -1,0 +1,17 @@
+priority 10
+
+snippet func "function definition" b
+function ${1:name}(${2:x}) {
+	${VISUAL}${0}
+}
+endsnippet
+
+snippet funi "function (inline)" b
+${1:name} <- function(${2:x}) $3
+endsnippet
+
+snippet fold "vim fold" b
+# ${1:description} {{{
+${VISUAL}${0}
+# }}}
+endsnippet

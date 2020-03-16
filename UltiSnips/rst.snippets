@@ -6,7 +6,7 @@ priority 10
 global !p
 from snippets import RST
 def expand_list(snip, ordered=False):
-	num = int(snip.buffer[snip.line].strip()[2:])
+	num = int(snip.buffer[snip.line].strip()[2 : ])
 	ph = "${%d:#} " if ordered else "* "
 	body = ""
 	snip.buffer[snip.line] = ""
@@ -198,12 +198,28 @@ endsnippet
 # TODO more table types
 # Tables {{{
 snippet tbl "list-table" bm
-.. list-table::
-	:align: ${1:center}
-	:header-rows: ${2:1}${3:
-	:stub-columns: ${4:1}}${5:
-	:width: ${6:100%}}${7:
-	:widths: ${8:auto}}
+.. list-table::${1/.+/ /}$1
+	:align: ${2:center}
+	:header-rows: ${3:1}${4:
+	:stub-columns: ${5:1}}${6:
+	:widths: ${7:auto}}
+
+	${VISUAL}${0}
+endsnippet
+
+snippet csv "csv-table" bm
+.. csv-table::${1/.+/ /}$1
+	:align: ${2:center}
+	:header-rows: ${3:1}${4:
+	:stub-columns: ${5:1}}${6:
+	:widths: ${7:auto}}${8:
+	:file: ${9:data.csv}}${10:
+	:url: ${11:data.csv}}${12:
+	:delim: ${13:,}}${14:
+	:quote: ${15:"}}${16:
+	:escape: ${17:\\}}${18:
+	:encoding: ${19:UTF-8}}${20:
+	:keepspace:}
 
 	${VISUAL}${0}
 endsnippet
@@ -219,6 +235,21 @@ snippet /ol(\d+)/ "ordered list" br
 endsnippet
 # }}}
 
+# Admonitions {{{
+snippet a: "admonition (custom)" bm
+.. admonition:: ${1:TODO}
+	:class: ${2:warning}
+
+	${VISUAL}${0}
+endsnippet
+
+snippet /a:([acdehintw])/ "admonition (built-in)" bmr
+.. `!p snip.rv = RST.admonition(match)`::
+
+	${VISUAL}${0}
+endsnippet
+# }}}
+
 # Misc {{{
 snippet side "sidebar" bm
 .. sidebar:: ${1:Title}${2:
@@ -229,12 +260,6 @@ endsnippet
 
 snippet rep "replace" b
 .. |${1:original}| ${2:replace:: ${VISUAL}${3}}
-endsnippet
-
-snippet /a:([acdehintw])?/ "admonition" bmr
-.. `!p snip.rv = RST.admonition(match)`::
-
-	${VISUAL}${0}
 endsnippet
 
 snippet :: "other directive" b
@@ -248,7 +273,7 @@ snippet /h:(\w+)/ "HTML element" r
 snip.rv = match.group(1)`>}
 endsnippet
 
-snippet vml "vim modeline" b
+snippet fold "vim fold" b
 .. ${1:description} {{{
 ${VISUAL}${0}
 .. }}}

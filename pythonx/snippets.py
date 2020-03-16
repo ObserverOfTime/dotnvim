@@ -8,51 +8,55 @@ import vim
 from os import path
 
 
-def first_letter(string):
+def first_letter(string: str) -> str:
     """Returns the first letter of a string"""
-    if not len(string): return ''  # noqa: E701
-    match = re.search(r'\w', string)
+    if not len(string):
+        return ''
+    match = re.search(r'[a-zA-Z]', string)
     return match.group() if match else ''
 
 
-def camel_case(string):
+def camel_case(string: str) -> str:
     """Converts a string to camel case"""
-    return re.sub(r'([\s_\-]+)([^\s_\-])',
-                  lambda m: m.group(2).upper(), string)
+    return re.sub(
+        r'([\s_\-]+)([^\s_\-])',
+        lambda m: m.group(2).upper(), string
+    )
 
 
-def capitalise(string):
-    """Capitalises the first letter of a string"""
-    if not len(string): return ''  # noqa: E701
+def capitalise(string: str) -> str:
+    """Capitalises the first character of a string"""
+    if not len(string):
+        return ''
     return string[0].upper() + string[1:]
 
 
-def file_name(file_path):
+def file_name(file_path: str) -> str:
     """Returns the filename from a given path"""
     return path.basename(file_path).split('.')[0]
 
 
-def titlify(file_path):
+def titlify(file_path: str) -> str:
     """Converts file path to title"""
     return file_name(file_path).replace('-', '').title()
 
 
 class Python:
     @staticmethod
-    def all(contents):
+    def all(contents: str) -> list:
         """Returns an __all__ list"""
-        pattern = r'|'.join([
+        pattern = r'|'.join((
             r'^{0}\s*=.*',
-            r'^class\s*{0}.*',
-            r'^def\s*{0}.*'
-        ]).format(r'([^_][\w\d_-]+)')
+            r'^class\s+{0}.*',
+            r'^def\s+{0}.*'
+        )).format(r'([^_][\w-]+)')
         exports = filter(lambda m: re.match(pattern, m), contents)
         return [re.sub(pattern, r'\1\2\3', e) for e in exports]
 
 
 class Django:
     @staticmethod
-    def forloop(string):
+    def forloop(string: str) -> str:
         """Completes forloop variable based on given string"""
         return {
             'f': 'first',
@@ -66,8 +70,10 @@ class Django:
 
 
 class Help:
+    modeline: str = 'vim:tw=78:ts=8:ft=help:norl:'
+
     @staticmethod
-    def section(file_path, string):
+    def section(file_path: str, string: str) -> str:
         """Returns a section string"""
         word = string.strip('1234567890. ')
         sec_name = word.lower().replace(' ', '-')
@@ -75,19 +81,16 @@ class Help:
         formatted = '*{}-{}*'.format(basename, sec_name)
         return formatted.rjust(78 - len(string))
 
-    @staticmethod
-    def modeline(): return 'vim:tw=78:ts=8:ft=help:norl:'
-
 
 class Java:
     @staticmethod
-    def arguments(group):
+    def arguments(group: str) -> list:
         """Returns the arguments of a method"""
         word = re.compile(r'[a-zA-Z0-9><.]+ \w+')
         return [w.split(' ') for w in word.findall(group)]
 
     @staticmethod
-    def complete(match, num=1):
+    def complete(match: str, num: int = 1) -> str:
         """Completes word based on a given character"""
         return {
             'i': 'int',
@@ -101,19 +104,20 @@ class Java:
         }.get(match.group(num), '')
 
     @staticmethod
-    def package():
+    def package() -> str:
         """Returns the package of the file"""
         file_path = vim.call('expand', '%:p:h')
         strip = path.join(
-            '.*', '(src|lib)', '(main',
-            '(java|test))?') + path.sep
+            '.*', '(src|lib)',
+            '(main', '(java|test))?'
+        ) + path.sep
         new_path = re.sub(strip, '', file_path)
         return new_path.replace(path.sep, '.').strip('.')
 
 
 class RST:
     @staticmethod
-    def admonition(match):
+    def admonition(match: re.Match) -> str:
         """Returns an admonition based on a match"""
         return {
             'a': 'attention',
@@ -130,22 +134,22 @@ class RST:
 
 class JS:
     @staticmethod
-    def comma(match, num=1):
+    def comma(match: str, num: int = 1) -> str:
         """Returns a comma when there's a match"""
         return ',' if match.group(num) else ''
 
     @staticmethod
-    def varname(string):
+    def varname(string: str) -> str:
         """Returns import/require as variable"""
         return camel_case(file_name(string))
 
     @staticmethod
-    def varmod(char):
+    def varmod(char: str) -> str:
         """Returns a variable modifier based on a given character"""
         return {'c': 'const', 'l': 'let', 'v': 'var'}.get(char, '')
 
     @staticmethod
-    def console(match):
+    def console(match: re.Match) -> str:
         """Returns a console method based on a match"""
         return {
             'l': 'log',

@@ -21,10 +21,14 @@ endsnippet
 # Beerware {{{
 snippet /([A-Z]+)WARE/ "(Beer)ware license" br
 "THE `!p snip.rv = match.group(1)`-WARE LICENSE" (Revision 42):
-<`!v g:snips_email`> wrote this file. As long as you retain this notice you
-can do whatever you want with this stuff. If we meet some day, and you think
-this stuff is worth it, you can buy me a `!p
-snip.rv = match.group(1).lower()` in return. `!v g:snips_author`
+
+As long as you retain this notice you can
+do whatever you want with this stuff.
+If we meet some day, and you think this stuff
+is worth it, you can buy me a `!p
+snip.rv = match.group(1).lower()` in return.
+
+-- `!v g:snips_author .' <'. g:snips_email .'>'`
 endsnippet
 # }}}
 
@@ -136,8 +140,8 @@ the rights to use, copy, modify, merge, publish, distribute, sublicense,
 and/or sell copies of the Software, and to permit persons to whom the
 Software is furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included
-in all copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
@@ -233,5 +237,28 @@ freely, subject to the following restrictions:
 2. Altered source versions must be plainly marked as such, and must not be
 `!v "  "`misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
+endsnippet
+# }}}
+
+# LIL {{{
+snippet LIL "Lil license" b
+Copyright (c) `!v strftime("%Y")` ${1:`!v g:snips_author`}
+
+Permission is hereby granted by the authors of this software, to any person,
+to use the software for any purpose, free of charge, including the rights
+to run, read, copy, change, distribute and sell it, and including usage rights
+to any patents the authors may hold on it, subject to the following conditions:
+
+This license, or a link to its text, must be included with all copies of
+the software and any derivative works.
+
+Any modification to the software submitted to the authors may be incorporated
+into the software under the terms of this license.
+
+The software is provided "as is", without warranty of any kind, including
+but not limited to the warranties of title, fitness, merchantability and
+non-infringement. The authors have no obligation to provide support or updates
+for the software, and may not be held liable for any damages, claims or other
+liability arising from its use.
 endsnippet
 # }}}

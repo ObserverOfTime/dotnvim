@@ -14,7 +14,6 @@ let s:emmet_defaults = {
             \   'link': {'href': '${cursor}', 'rel': 'stylesheet',
             \            'type': 'text/css'},
             \   'main': {'id': '${cursor}'},
-            \   'object': {'data': '${cursor}', 'type': ''},
             \   'script': {'src': '${cursor}', 'type': 'text/javascript'},
             \   'style': {'src': '${cursor}', 'type': 'text/css'},
             \ },
@@ -27,8 +26,8 @@ let s:emmet_defaults = {
             \   'obj': 'object',
             \   'sec': 'section',
             \ },
-            \ 'indentation': '  ',
-            \ 'quote_char': '"'
+            \ 'quote_char': '"',
+            \ 'inline_break': 1
             \ }
 
 if has('win32') || g:shell ==# 'msys'
@@ -91,6 +90,7 @@ let g:airline#extensions#tabline#buffer_min_count = 2
 let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
 let g:airline#extensions#tabline#fnamemod = ':~:.'
 let g:airline#extensions#tabline#fnamecollapse = 1
+let g:airline#extensions#whitespace#conflicts_format = 'c[%s]'
 let g:airline#extensions#whitespace#trailing_format = 't[%s]'
 let g:airline#extensions#whitespace#mixed_indent_format = 'mi[%s]'
 let g:airline#extensions#whitespace#long_format = 'l[%s]'
@@ -157,7 +157,7 @@ if g:os !=# 'android' && v:version >= 800
                     \ 'subscope_enable': 1,
                     \ 'scope': ['css', 'scss', 'svelte', 'vue'],
                     \ 'mark': 'css',
-                    \ 'word_pattern': '[\w_-]+',
+                    \ 'word_pattern': '[\w-]+',
                     \ 'complete_pattern': [
                     \   ':\s*', '@[\w-]*\s*', '@media[\w\s]+\(',
                     \   '@supports \(', "@charset ['\"]"
@@ -175,7 +175,7 @@ if g:os !=# 'android' && v:version >= 800
                     \ 'priority': 9,
                     \ 'mark': 'py',
                     \ 'subscope_enable': 1,
-                    \ 'scope': ['python'],
+                    \ 'scope': ['python', 'ipynb'],
                     \ 'word_pattern': '\w+',
                     \ 'complete_pattern': [
                     \   '^\s*(import|from).*\s', '\.', '\(', ',\s+'
@@ -211,9 +211,10 @@ if g:os !=# 'android' && v:version >= 800
                     \ 'name': 'emmet',
                     \ 'priority': 8,
                     \ 'subscope_enable': 1,
-                    \ 'scope': ['html', 'htmldjango', 'pug', 'svelte', 'vue'],
+                    \ 'scope': ['html', 'htmldjango', 'pug',
+                    \           'svelte', 'vue', 'xml'],
                     \ 'mark': 'emmet',
-                    \ 'word_pattern': '[\w_\-]+',
+                    \ 'word_pattern': '[\w-]+',
                     \ 'complete_pattern': '[\w:]+',
                     \ 'on_complete': [
                     \   'ncm2#on_complete#omni', 'emmet#completeTag'
@@ -229,7 +230,7 @@ if g:os !=# 'android' && v:version >= 800
                         \ 'subscope_enable': 0,
                         \ 'scope': ['htmldjango'],
                         \ 'mark': '',
-                        \ 'word_pattern': '[\w/_]+',
+                        \ 'word_pattern': '[\w/]+',
                         \ 'complete_pattern': [
                         \   '\|', '\{%\s+\w*\s*%?\}?',
                         \   "\\{%\\s+include\\s+[\"']",
@@ -245,7 +246,7 @@ if g:os !=# 'android' && v:version >= 800
                         \ 'subscope_enable': 0,
                         \ 'scope': ['python'],
                         \ 'mark': '',
-                        \ 'word_pattern': '[\w/_]+',
+                        \ 'word_pattern': '[\w/]+',
                         \ 'complete_pattern': [
                         \   '\.objects\.', 'settings\.',
                         \   "render\\([^,]+,\\s*[\"']",
@@ -291,7 +292,7 @@ if g:os !=# 'android'
 
     " Aliases {{{
     let g:ale_linter_aliases = {}
-    let g:ale_linter_aliases.svelte = ['javascript']
+    let g:ale_linter_aliases.svelte = ['javascript', 'css']
     let g:ale_linter_aliases.vue = ['javascript']
     " }}}
 
@@ -310,12 +311,13 @@ if g:os !=# 'android'
     let g:ale_linters.make = ['checkmake']
     let g:ale_linters.markdown = ['vale']
     let g:ale_linters.pug = ['puglint']
-    let g:ale_linters.python = ['pycodestyle']
+    let g:ale_linters.python = ['pycodestyle', 'isort']
+    let g:ale_linters.r = ['lintr']
     let g:ale_linters.rst = ['rstcheck', 'vale']
     let g:ale_linters.rust = ['rustc', 'rustfmt']
     let g:ale_linters.scss = g:ale_linters.css
     let g:ale_linters.sh = ['shellcheck']
-    let g:ale_linters.svelte = g:ale_linters.javascript
+    let g:ale_linters.svelte = g:ale_linters.javascript + g:ale_linters.css
     let g:ale_linters.verilog = ['iverilog']
     let g:ale_linters.vim = ['vint']
     let g:ale_linters.vue = g:ale_linters.javascript
@@ -329,10 +331,11 @@ if g:os !=# 'android'
     let g:ale_fixers.javascript = ['eslint']
     let g:ale_fixers.json = ['jq']
     let g:ale_fixers.python = ['autopep8', 'isort']
+    let g:ale_fixers.r = ['styler']
     let g:ale_fixers.rust = ['rustfmt']
     let g:ale_fixers.scss = g:ale_fixers.css
     let g:ale_fixers.sh = ['shfmt']
-    let g:ale_fixers.svelte = g:ale_fixers.javascript
+    let g:ale_fixers.svelte = g:ale_fixers.javascript + g:ale_fixers.css
     let g:ale_fixers.vue = g:ale_fixers.javascript
     " }}}
 
@@ -487,13 +490,13 @@ let g:UltiSnipsListSnippets = '<C-l>'
 let g:UltiSnipsEditSplit = 'vertical'
 let g:UltiSnipsEnableSnipMate = 0
 let g:UltiSnipsSnippetDirectories = [
-            \ expand('<sfile>:p:h:h:h') .'/UltiSnips']
+            \ fnamemodify($MYVIMRC, ':h') .'/UltiSnips']
 " }}}
 
 " Pear Tree settings {{{
 let g:pear_tree_repeatable_expand = 0
 let g:pear_tree_smart_openers = 1
-let g:pear_tree_smart_closers = 1
+let g:pear_tree_smart_closers = 0
 let g:pear_tree_smart_backspace = 1
 " }}}
 

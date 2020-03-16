@@ -31,10 +31,4 @@ function! s:PlugOpenURL()
 endfunction
 " }}}
 
-" Activate Django & virtual env {{{
-if g:os !=# 'android'
-    call SourceInitRC('functions/djenv')
-endif
-" }}}
-
 " vim:fdl=1:

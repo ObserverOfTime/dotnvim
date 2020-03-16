@@ -1,4 +1,4 @@
-syn match cssUIProp contained /pointer-events/
+syn match cssUIProp contained /\(pointer-events\|cursor\)/
 syn match cssPositioningProp contained /align-items/
 syn match cssPositioningProp contained /flex-\(direction\|basis\|shrink\|grow\)/
 syn match cssScrollbarProp contained /scrollbar-\(width\|color\)/
