@@ -5,7 +5,7 @@ if g:os ==# 'windows' && g:shell !=# 'cygwin'
     let g:python3_host_prog = s:prog_files
                 \ .'/Python37/python3.exe'
 else
-    let g:python_host_prog = '/usr/bin/python2'
+    let g:python_host_prog = '/usr/bin/python'
     let g:python3_host_prog = '/usr/bin/python3'
 endif
 

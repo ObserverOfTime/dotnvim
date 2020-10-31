@@ -1,8 +1,3 @@
-if !has('win32') || exists('g:GuiLoaded')
-    set encoding=utf-8
-    set fileencoding=utf-8
-endif
-
 " vint: -ProhibitSetNoCompatible
 if &compatible | set nocompatible | endif
 
@@ -110,11 +105,19 @@ let g:snips_author = systemlist('git config user.name')[0]
 let g:snips_email = systemlist('git config user.email')[0]
 let g:snips_github = 'https://github.com/'. g:snips_author
 
+let g:polyglot_disabled = ['markdown']
+if has('nvim')
+    let g:polyglot_disabled += ['c', 'cpp']
+endif
+
 let g:_color_fts = [
             \ 'css', 'html', 'htmldjango',
             \ 'javascript', 'pug',
             \ 'scss', 'svg', 'svelte'
             \ ]
+
+let g:unicode = g:os ==# 'linux' ? exists('$DISPLAY')
+            \ : (g:shell !=# 'cmd' && g:shell !=# 'termux')
 
 let g:plug_url_format = 'git@github.com:%s'
 " }}}

@@ -69,7 +69,7 @@ let g:airline_mode_map['v']  = 'V'
 let g:airline_mode_map['V']  = 'VL'
 let g:airline_mode_map[''] = 'VB'
 " Show expandtab & line + column numbers
-if &encoding ==? 'utf-8'
+if g:unicode
     let g:airline_section_z = '%{&et?"":"↹ "}%3l% /%L%  : %02v'
 else
     let g:airline_section_z = '%{&et?"":"t "}%3l% /%L%  : %02v'
@@ -103,7 +103,7 @@ let g:airline#parts#ffenc#skip_expected_string = 'utf-8[unix]'
 if !exists('g:airline_symbols')
     let g:airline_symbols = {}
 endif
-if &encoding ==? 'utf-8'
+if g:unicode
     let g:airline_powerline_fonts = 1
     let g:airline_left_sep = ''
     let g:airline_left_alt_sep = ''
@@ -145,6 +145,8 @@ if g:os !=# 'android' && v:version >= 800
         endif
         au InsertEnter * call ncm2#enable_for_buffer()
         au InsertLeave * if !pumvisible() | pclose | endif
+        au FileType c,cpp nnoremap <buffer> <Leader>gd
+                    \ :<C-u>call ncm2_pyclang#goto_declaration_vsplit()<CR>
         if executable('node')
             au FileType pug,svelte call tern#Enable()
         endif
@@ -221,46 +223,6 @@ if g:os !=# 'android' && v:version >= 800
                     \ ]
                     \ })
         " }}}
-
-        " Django {{{
-        if g:os !=# 'android'
-            au User Ncm2Plugin call ncm2#register_source({
-                        \ 'name': 'htmldjango',
-                        \ 'priority': 9,
-                        \ 'subscope_enable': 0,
-                        \ 'scope': ['htmldjango'],
-                        \ 'mark': '',
-                        \ 'word_pattern': '[\w/]+',
-                        \ 'complete_pattern': [
-                        \   '\|', '\{%\s+\w*\s*%?\}?',
-                        \   "\\{%\\s+include\\s+[\"']",
-                        \   "\\{%\\s+extends\\s+[\"']"
-                        \ ],
-                        \ 'on_complete': [
-                        \   'ncm2#on_complete#omni', 'djangoplus#complete'
-                        \ ]
-                        \ })
-            au User Ncm2Plugin call ncm2#register_source({
-                        \ 'name': 'pydjango',
-                        \ 'priority': 8,
-                        \ 'subscope_enable': 0,
-                        \ 'scope': ['python'],
-                        \ 'mark': '',
-                        \ 'word_pattern': '[\w/]+',
-                        \ 'complete_pattern': [
-                        \   '\.objects\.', 'settings\.',
-                        \   "render\\([^,]+,\\s*[\"']",
-                        \   "get_template\\(\\s*[\"']",
-                        \   "render_to_string\\(\\s*[\"']",
-                        \   "render_to_response\\(\\s*[\"']",
-                        \   "template_name\\s*=\\s*[\"']"
-                        \ ],
-                        \ 'on_complete': [
-                        \   'ncm2#on_complete#omni', 'djangoplus#complete'
-                        \ ]
-                        \ })
-        endif
-        " }}}
     augroup END
     " }}}
 endif
@@ -278,7 +240,7 @@ if g:os !=# 'android'
     " }}}
 
     " Symbols {{{
-    if &encoding ==? 'utf-8'
+    if g:unicode
         let g:ale_sign_info = '❢'
         let g:ale_sign_error = '✘'
         let g:ale_sign_warning = '✶'
@@ -393,13 +355,12 @@ endif
 let g:javascript_conceal_this = '@'
 let g:javascript_conceal_prototype = '#'
 
-if &encoding ==? 'utf-8'
+if g:unicode
     let g:javascript_conceal_function = 'ƒ'
     let g:javascript_conceal_arrow_function = '⇒'
     let g:javascript_conceal_null = 'ø'
     let g:javascript_conceal_undefined = '¿'
     let g:javascript_conceal_NaN = '₦'
-    " let g:javascript_conceal_return = '≺' "'↩'
 else
     let g:javascript_conceal_function = 'φ'
     let g:javascript_conceal_arrow_function = 'λ'
@@ -533,13 +494,6 @@ let g:splitjoin_quiet = 1
 let g:splitjoin_trailing_comma = 0
 let g:splitjoin_curly_brace_padding = 0
 let g:splitjoin_html_attributes_hanging = 1
-" }}}
-
-" Polyglot settings {{{
-let g:polyglot_disabled = ['markdown']
-if has('nvim')
-    let g:polyglot_disabled += ['c', 'cpp']
-endif
 " }}}
 
 " DoGe settings {{{

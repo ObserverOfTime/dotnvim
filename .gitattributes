@@ -1,3 +1,3 @@
 * text=auto
 
-UltiSnips/ linguist-detectable=false
+*.snippets linguist-detectable=false

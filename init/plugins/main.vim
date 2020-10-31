@@ -16,7 +16,7 @@ Plug 'AndrewRadev/splitjoin.vim'
 Plug 'ObserverOfTime/multiedit.vim'
 Plug 'simnalamburt/vim-mundo', {'on': 'MundoToggle'}
 Plug 'kkoomen/vim-doge', {'for': [
-            \   'c', 'cpp', 'java', 'javascript', 'kotlin', 'python'
+            \   'c', 'cpp', 'javascript', 'lua', 'python'
             \ ]}
 Plug 'plasticboy/vim-markdown', {'for': 'markdown'}
 Plug 'tpope/vim-dadbod', {'on': []} " Loaded via local vimrc
@@ -34,7 +34,7 @@ if executable('editorconfig')
     Plug 'editorconfig/editorconfig-vim'
 endif
 
-if &encoding ==? 'utf-8'
+if g:unicode
     Plug 'chrisbra/unicode.vim'
 endif
 
@@ -69,11 +69,12 @@ Plug 'airblade/vim-gitgutter'
 
 " Web plugins {{{
 Plug 'mattn/emmet-vim', {'for': [
-            \   'html', 'htmldjango', 'pug', 'svelte', 'vue', 'xml'
+            \   'html', 'htmldjango',
+            \   'pug', 'svelte', 'xml'
             \ ]}
 Plug 'hail2u/vim-css3-syntax', {'for': [
             \   'css', 'scss', 'html',
-            \   'htmldjango', 'pug', 'svelte',
+            \   'htmldjango', 'pug', 'svelte'
             \ ]}
 
 if executable('node') && g:os !=# 'android'
@@ -89,18 +90,13 @@ if has('nvim')
     Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins'}
 endif
 
-if executable('notedown')
-    Plug 'szymonmaszke/vimpyter'
-endif
-
 if g:os !=# 'android'
     Plug 'davidhalter/jedi-vim', {'for': ['python', 'rst', 'ipynb']}
-    Plug 'tweekmonster/django-plus.vim'
 endif
 " }}}
 
 " C Plugins {{{
-Plug 'daidodo/DoxygenToolkit.vim', {'for': ['c', 'cpp', 'java']}
+Plug 'daidodo/DoxygenToolkit.vim', {'for': ['c', 'cpp']}
 
 if has('nvim')
     Plug 'arakashic/chromatica.nvim', {'do': ':UpdateRemotePlugins'}
@@ -123,17 +119,12 @@ if g:os !=# 'android' && v:version >= 800
         Plug 'ncm2/ncm2-ultisnips'
     endif
 
-    if executable('java')
-        Plug 'artur-shaik/vim-javacomplete2', {'for': 'java'}
-        Plug 'ObserverOfTime/ncm2-jc2', {'for': 'java'}
-    endif
-
     if executable('clang')
-        Plug 'ncm2/ncm2-pyclang', {'for': ['c', 'cpp', 'arduino']}
+        Plug 'ncm2/ncm2-pyclang', {'for': ['c', 'cpp']}
     endif
 
     if executable('R')
-        Plug 'jalvesaq/Nvim-R', {'for': 'r'}
+        Plug 'jalvesaq/Nvim-R', {'for': 'r', 'branch': 'stable'}
         Plug 'gaalcaras/ncm-R', {'for': 'r'}
     endif
 
@@ -146,12 +137,11 @@ if g:os !=# 'android' && v:version >= 800
     Plug 'ncm2/ncm2-rst-subscope', {'for': 'rst'}
     Plug 'Shougo/neco-vim', {'for': 'vim'}
     Plug 'ncm2/ncm2-vim', {'for': 'vim'}
-    Plug 'Shougo/neco-syntax', {'on': []}
-    Plug 'ncm2/ncm2-syntax', {'on': []}
 endif
 " }}}
 
 " Other filetype plugins {{{
+Plug 'Firef0x/PKGBUILD.vim', {'for': 'PKGBUILD'}
 " }}}
 
 call plug#end()

@@ -38,12 +38,14 @@ hi GitGutterChangeDelete ctermfg=131 guifg=#AF5F5F
 " }}}
 
 " Misc {{{
-hi Comment cterm=italic
+hi String cterm=NONE gui=NONE
+hi Special cterm=NONE gui=NONE
+hi Comment cterm=italic gui=italic
 hi Folded ctermbg=234 guibg=#1C1C1C
 hi Visual ctermbg=237 guibg=#3A3A3A
 hi MatchParen ctermbg=236 guibg=#303030
 hi Function cterm=NONE gui=NONE
-hi Todo ctermfg=179 guifg=#D7AF5F gui=bold
+hi Todo ctermfg=179 cterm=bold guifg=#D7AF5F gui=bold
 hi! link vimCommentTitle Todo
 " }}}
 " }}}

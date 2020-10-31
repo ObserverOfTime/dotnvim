@@ -8,8 +8,6 @@ set smartindent
 set expandtab
 " Save undo history to a file
 set undofile
-" Turn paste mode off
-set nopaste
 " Don't wrap lines
 set nowrap
 " Show line numbers
@@ -58,7 +56,7 @@ if !has('nvim')
 endif
 
 " Set special characters
-if &encoding ==? 'utf-8'
+if g:unicode
     set fillchars=vert:┊,fold:–
     set listchars=tab:‣‣,trail:·,nbsp:⍽,precedes:«,extends:»
     set showbreak=↪

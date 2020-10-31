@@ -67,8 +67,6 @@ augroup MiscGroup
     au!
     " Shebangs everywhere
     au Syntax * syn match PreProc "^\%1l#!/.*$"
-    " Paste bug workaround (neovim/neovim#7994)
-    au InsertLeave * set nopaste
     " Reset cursor on exit
     au VimLeave * set guicursor=a:hor25
 augroup END
