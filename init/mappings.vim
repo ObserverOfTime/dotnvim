@@ -39,7 +39,10 @@ nmap <silent> N          <Plug>(is-nohl)<Plug>(anzu-N-with-echo)
 nmap <silent> Q          :Quickfix<CR>
 " Toggle undo window
 nmap <silent> <Leader>u  :MundoToggle<CR>
-
+" Move up in wrapped text
+nmap <silent> <UP>       gk
+" Move down in wrapped text
+nmap <silent> <DOWN>     gj
 
 " Close file
 nnoremap <silent> <C-q>  :q<CR>
@@ -52,6 +55,11 @@ nnoremap <silent> <C-i>  mzgg=G`z
 " }}}
 
 " Insert mode {{{
+" Move up in wrapped text
+imap <expr> <UP>         (pumvisible() ? "\<UP>" : "\<C-o>gk")
+" Move down in wrapped text
+imap <expr> <DOWN>       (pumvisible() ? "\<DOWN>" : "\<C-o>gj")
+
 " Save file
 inoremap <silent> <C-s>  <ESC>:w<CR>a
 " Complete result if available
@@ -67,5 +75,5 @@ vnoremap <C-Insert>      "+y
 
 " Terminal mode {{{
 " Switch to normal mode
-tnoremap <silent> <ESC>  <C-\><C-n>
+tnoremap <ESC>           <C-\><C-n>
 " }}}

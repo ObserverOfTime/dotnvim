@@ -8,17 +8,13 @@ com! Gundo     :GitGutterUndoHunk
 com! Gprev     :GitGutterPrevHunk
 " Go to next git hunk
 com! Gnext     :GitGutterNextHunk
-" Highlight lines longers than 80 characters
-com! MaxLength :match ErrorMsg /\%>80v.\+/
 " Show syntax highlighting groups for word under cursor
 com! SynStack  :echo map(synstack(line('.'), col('.')),
             \ 'synIDattr(v:val, "name")')
 
-" Use suda to edit/save as root
-if executable('sudo')
-    com! SudoEdit  :e suda://%
-    com! SudoWrite :w suda://%
-endif
+" Highlight lines longers than n(=80) characters
+com! -nargs=? MaxLength :exec 'match ErrorMsg /\%>'.
+            \ (len(<q-args>) ? <q-args> : '80') .'v.\+/'
 
 " Save a file creating parent directories
 com! -complete=file W :call mkdir(expand('%:p:h'), 'p') | w
@@ -27,6 +23,7 @@ com! -complete=file W :call mkdir(expand('%:p:h'), 'p') | w
 com! -complete=shellcmd -nargs=* Repl :bot 10new |
             \ :let t:_repl_id=termopen(len(<q-args>) ? <q-args> :
             \   (&shell ==# '/bin/bash' ? 'bash -l' : &shell))
+
 " Execute command in the opened REPL
 com! -complete=shellcmd -nargs=+ Rcmd :call
             \ chansend(t:_repl_id, [<q-args>, ''])

@@ -6,7 +6,7 @@ from snippets import (
 )
 def expand_all(snip):
 	buf = vim.current.window.buffer
-	exports = Python.all(buf)
+	exports = Python.all("\n".join(buf))
 	body = "__all__ = ["
 	if len(exports) == 0 :
 		body += "${0}]"

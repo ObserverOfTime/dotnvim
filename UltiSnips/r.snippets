@@ -1,13 +1,17 @@
 priority 10
 
 snippet func "function definition" b
-function ${1:name}(${2:x}) {
+${1:name} <- function(${2:x}) {
 	${VISUAL}${0}
 }
 endsnippet
 
 snippet funi "function (inline)" b
-${1:name} <- function(${2:x}) $3
+${1:name} <- function(${2:x}) ${3}
+endsnippet
+
+snippet /^[a-zA-Z0-9_\.]+/ "assignment" br
+`!p snip.rv = match.group(0)` <- ${0:${VISUAL}}
 endsnippet
 
 snippet fold "vim fold" b

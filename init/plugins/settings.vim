@@ -31,12 +31,11 @@ let s:emmet_defaults = {
             \ }
 
 if has('win32') || g:shell ==# 'msys'
-    let s:clang_library_path =
-                \ GetPath($PROGRAMFILES, 'LLVM/lib/libclang.lib')
+    let s:libclang = GetPath($PROGRAMFILES, 'LLVM/lib/libclang.lib')
 elseif g:shell ==# 'cygwin'
-    let s:clang_library_path = '/usr/lib/libclang.dll.a'
+    let s:libclang = '/usr/lib/libclang.dll.a'
 else
-    let s:clang_library_path = '/usr/lib/libclang.so'
+    let s:libclang = '/usr/lib/libclang.so'
 endif
 " }}}
 
@@ -90,11 +89,12 @@ let g:airline#extensions#tabline#buffer_min_count = 2
 let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
 let g:airline#extensions#tabline#fnamemod = ':~:.'
 let g:airline#extensions#tabline#fnamecollapse = 1
+let g:airline#extensions#vimtex#enabled = 0
 let g:airline#extensions#whitespace#conflicts_format = 'c[%s]'
-let g:airline#extensions#whitespace#trailing_format = 't[%s]'
-let g:airline#extensions#whitespace#mixed_indent_format = 'mi[%s]'
 let g:airline#extensions#whitespace#long_format = 'l[%s]'
 let g:airline#extensions#whitespace#mixed_indent_file_format = 'mif[%s]'
+let g:airline#extensions#whitespace#mixed_indent_format = 'mi[%s]'
+let g:airline#extensions#whitespace#trailing_format = 't[%s]'
 let g:airline#extensions#wordcount#formatter#default#fmt = '%sW'
 let g:airline#parts#ffenc#skip_expected_string = 'utf-8[unix]'
 " }}}
@@ -135,7 +135,7 @@ endif
 
 if g:os !=# 'android' && v:version >= 800
     " NCM2 settings {{{
-    let g:ncm2_pyclang#library_path = s:clang_library_path
+    let g:ncm2_pyclang#library_path = s:libclang
     augroup NCM2
         au!
         " Misc {{{
@@ -145,7 +145,7 @@ if g:os !=# 'android' && v:version >= 800
         endif
         au InsertEnter * call ncm2#enable_for_buffer()
         au InsertLeave * if !pumvisible() | pclose | endif
-        au FileType c,cpp nnoremap <buffer> <Leader>gd
+        au FileType c,cpp nnoremap <silent> <buffer> <Leader>gd
                     \ :<C-u>call ncm2_pyclang#goto_declaration_vsplit()<CR>
         if executable('node')
             au FileType pug,svelte call tern#Enable()
@@ -223,6 +223,23 @@ if g:os !=# 'android' && v:version >= 800
                     \ ]
                     \ })
         " }}}
+
+        " TeX {{{
+        if executable('latexmk')
+            au User Ncm2Plugin call ncm2#register_source({
+                        \ 'name': 'vimtex',
+                        \ 'priority': 8,
+                        \ 'scope': ['tex', 'bib', 'rnoweb'],
+                        \ 'mark': 'tex',
+                        \ 'word_pattern': '\w+',
+                        \ 'complete_pattern': get(g:, 'vimtex#re#ncm2', []),
+                        \ 'on_complete': [
+                        \   'ncm2#on_complete#omni',
+                        \   'vimtex#complete#omnifunc'
+                        \ ]
+                        \ })
+        endif
+        " }}}
     augroup END
     " }}}
 endif
@@ -254,6 +271,7 @@ if g:os !=# 'android'
 
     " Aliases {{{
     let g:ale_linter_aliases = {}
+    let g:ale_linter_aliases.rmd = ['r', 'markdown']
     let g:ale_linter_aliases.svelte = ['javascript', 'css']
     let g:ale_linter_aliases.vue = ['javascript']
     " }}}
@@ -268,19 +286,18 @@ if g:os !=# 'android'
     let g:ale_linters.html = ['htmlhint', 'vale']
     let g:ale_linters.javascript = ['eslint']
     let g:ale_linters.json = ['jq']
-    let g:ale_linters.kotlin = ['ktlint']
     let g:ale_linters.lua = ['luacheck']
     let g:ale_linters.make = ['checkmake']
     let g:ale_linters.markdown = ['vale']
     let g:ale_linters.pug = ['puglint']
     let g:ale_linters.python = ['pycodestyle', 'isort']
     let g:ale_linters.r = ['lintr']
+    let g:ale_linters.rmd = g:ale_linters.r + g:ale_linters.markdown
     let g:ale_linters.rst = ['rstcheck', 'vale']
     let g:ale_linters.rust = ['rustc', 'rustfmt']
     let g:ale_linters.scss = g:ale_linters.css
     let g:ale_linters.sh = ['shellcheck']
     let g:ale_linters.svelte = g:ale_linters.javascript + g:ale_linters.css
-    let g:ale_linters.verilog = ['iverilog']
     let g:ale_linters.vim = ['vint']
     let g:ale_linters.vue = g:ale_linters.javascript
     " }}}
@@ -312,11 +329,13 @@ if g:os !=# 'android'
     " C {{{
     let g:ale_c_clang_options = '-std=c99 -Wall -Wextra'
     let g:ale_c_gcc_options = g:ale_c_clang_options
+    let g:ale_c_cc_options = g:ale_c_clang_options
     let g:ale_c_clangformat_options = '-style=file'
     " }}}
     " C++ {{{
-    let g:ale_cpp_clang_options = '-std=c++11 -Wall -Wextra'
+    let g:ale_cpp_clang_options = '-std=c++14 -Wall -Wextra'
     let g:ale_cpp_gcc_options = g:ale_cpp_clang_options
+    let g:ale_cpp_cc_options = g:ale_cpp_clang_options
     let g:ale_cpp_clangformat_options = g:ale_c_clangformat_options
     " }}}
     " }}}
@@ -338,23 +357,16 @@ endif
 
 if has('nvim')
     " Semshi & Chromatica settings {{{
-    let g:chromatica#enable_at_startup = 0
-    let g:chromatica#libclang_path = s:clang_library_path
-    let g:semshi#active = 0
+    let g:chromatica#enable_at_startup = 1
+    let g:chromatica#libclang_path = s:libclang
+    let g:semshi#active = 1
     let g:semshi#error_sign = 0
-    augroup SemanticHighlight
-        au!
-        au FileType c,cpp ChromaticaStart
-        au FileType python let g:semshi#active = 1
-    augroup END
     " }}}
 endif
 
 " Javascript settings {{{
-" Conceal {{{
 let g:javascript_conceal_this = '@'
 let g:javascript_conceal_prototype = '#'
-
 if g:unicode
     let g:javascript_conceal_function = 'ƒ'
     let g:javascript_conceal_arrow_function = '⇒'
@@ -367,30 +379,11 @@ else
     let g:javascript_conceal_null = 'ν'
     let g:javascript_conceal_undefined = 'υ'
 endif
-" }}}
-
-" JSON {{{
+let g:javascript_plugin_jsdoc = 1
+let g:tern_show_signature_in_pum = 1
 let g:vim_json_syntax_conceal = 1
 let g:vim_json_syntax_concealcursor = ''
 let g:vim_json_warnings = 0
-" }}}
-
-" Augroup {{{
-augroup JavaScript
-    " Use JS filetype for JSX
-    au FileType javascript.jsx setl ft=javascript
-    " Apply conceal
-    au FileType javascript setl conceallevel=1
-augroup END
-" }}}
-
-" JsDoc {{{
-let g:javascript_plugin_jsdoc = 1
-" }}}
-
-" Tern {{{
-let g:tern_show_signature_in_pum = 1
-" }}}
 " }}}
 
 " Emmet settings {{{
@@ -415,6 +408,26 @@ let g:user_emmet_settings = {
             \ 'htmldjango': {'extends': 'html'},
             \ 'vue': {'extends': 'svelte'},
             \ }
+" }}}
+
+" TeX settings {{{
+let g:tex_flavor = 'latex'
+let g:vimtex_fold_enabled = 1
+let g:vimtex_view_method = 'zathura'
+let g:vimtex_compiler_method = 'latexmk'
+let g:vimtex_compiler_latexmk_engines = {'_': '-xelatex'}
+let g:vimtex_complete_bib = {'simple': 1}
+let g:vimtex_complete_close_braces = 1
+let g:vimtex_syntax_conceal = {}
+let g:vimtex_syntax_conceal['accents'] = 1
+let g:vimtex_syntax_conceal['fancy'] = g:unicode
+let g:vimtex_syntax_conceal['greek'] = 1
+let g:vimtex_syntax_conceal['math_bounds'] = 1
+let g:vimtex_syntax_conceal['math_delimiters'] = g:unicode
+let g:vimtex_syntax_conceal['math_fracs'] = g:unicode
+let g:vimtex_syntax_conceal['math_super_sub'] = g:unicode
+let g:vimtex_syntax_conceal['math_symbols'] = g:unicode
+let g:vimtex_syntax_conceal['styles'] = 1
 " }}}
 
 " Markdown settings {{{
@@ -503,12 +516,6 @@ let g:doge_doc_standard_c = 'doxygen_qt'
 let g:doge_doc_standard_cpp = 'doxygen_qt'
 " }}}
 
-" JavaComplete2 settings {{{
-let g:JavaComplete_ImportSortType = 'packageName'
-let g:JavaComplete_ImportOrder = ['java.',
-            \ 'javax.', 'com.', 'org.', 'net.']
-" }}}
-
 " Shell settings {{{
 let g:is_bash = 1
 let g:sh_no_error = 1
@@ -525,8 +532,17 @@ let g:colorizer_skip_comments = 1
 let g:colorizer_auto_filetype = join(g:_color_fts, ',')
 " }}}
 
+" R settings {{{
+let g:R_assign = 0
+let g:R_args = ['--no-save', '--quiet']
+" }}}
+
 " Doxygen settings {{{
 let g:load_doxygen_syntax = 1
+" }}}
+
+" Hugefile settings {{{
+let g:hugefile_trigger_size = 50
 " }}}
 
 " Discord settings {{{

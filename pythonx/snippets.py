@@ -3,6 +3,7 @@ File: snippets.py
 Description: Methods for UltiSnips
 """
 
+import ast
 import re
 import vim
 from os import path
@@ -45,13 +46,13 @@ class Python:
     @staticmethod
     def all(contents: str) -> list:
         """Returns an __all__ list"""
-        pattern = r'|'.join((
-            r'^{0}\s*=.*',
-            r'^class\s+{0}.*',
-            r'^def\s+{0}.*'
-        )).format(r'([^_][\w-]+)')
-        exports = filter(lambda m: re.match(pattern, m), contents)
-        return [re.sub(pattern, r'\1\2\3', e) for e in exports]
+        exports = []
+        for node in ast.parse(contents).body:
+            if hasattr(node, 'name'):
+                exports.append(node.name)
+            elif isinstance(node, ast.Assign):
+                exports.extend(t.id for t in node.targets)
+        return exports
 
 
 class Django:

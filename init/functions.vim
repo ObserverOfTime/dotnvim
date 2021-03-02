@@ -10,7 +10,7 @@ endfunction
 
 " Open URL with qutebrowser {{{
 if executable('qutebrowser')
-    com! -nargs=? QBrowse :call s:QuteBrowser(<f-args>)
+    com! -nargs=? QBrowse :call <SID>QuteBrowser(<f-args>)
     function! s:QuteBrowser(...)
         if !len(a:000)
             silent exec '!qutebrowser &'
@@ -22,7 +22,7 @@ endif
 " }}}
 
 " Open plugin URL in browser {{{
-com! PlugOpen :call s:PlugOpenURL()
+com! PlugOpen :call <SID>PlugOpenURL()
 function! s:PlugOpenURL()
     let l:name = matchstr(getline('.'), "'\\zs[^']\\+\\ze'")
     let l:plug = get(g:plugs, matchstr(l:name, '/\zs.\+$'))

@@ -1,0 +1,26 @@
+priority 10
+
+snippet pkg "\usepackage" b
+\usepackage${1/.+/[/}${1:utf8}${1/.+/]/}{${2:inputenc}}
+endsnippet
+
+snippet env "\begin...\end" b
+\begin{${1:document}`!p snip.rv = \
+"" if "}" == t[-1] else "}"`${2/.+/{/}${2}${2/.+/}/}
+${0:${VISUAL}}
+\end{$1`!p snip.rv = "" if "}" == t[-1] else "}"`
+endsnippet
+
+snippet fonts "\set*font" b
+\setmainfont${4/.+/[/}${4}${4/.+/]/}{${1}}
+\setsansfont${5/.+/[/}${5}${5/.+/]/}{${2}}
+\setmonofont${6/.+/[/}${6:Contextuals=Alternate}${6/.+/]/}{${3}}
+endsnippet
+
+snippet sum "\sum_{}^{}" w
+\sum_{${1:i = 1}}^{${2:\nu}} ${0:${VISUAL}}
+endsnippet
+
+snippet frac "\frac{}{}" w
+\frac{${1:${VISUAL}}}{${2}}
+endsnippet

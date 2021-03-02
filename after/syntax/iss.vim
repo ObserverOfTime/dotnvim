@@ -14,7 +14,7 @@ endif
 syntax keyword issTypesFlags full compact custom
 syntax keyword issParam ExternalSize
 syntax keyword pascalStatement
-            \ try except not and
+            \ try except finally not and
             \ containedin=issPascal
 syntax match pascalType
             \ /\c\<TArrayOf\w\+\>/

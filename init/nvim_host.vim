@@ -1,9 +1,6 @@
 if g:os ==# 'windows' && g:shell !=# 'cygwin'
-    let s:prog_files = GetPath($PROGRAMFILES)
-    let g:python_host_prog = s:prog_files
-                \ .'/Python27/python2.exe'
-    let g:python3_host_prog = s:prog_files
-                \ .'/Python37/python3.exe'
+    let g:python_host_prog = 'python.exe'
+    let g:python3_host_prog = 'python3.exe'
 else
     let g:python_host_prog = '/usr/bin/python'
     let g:python3_host_prog = '/usr/bin/python3'

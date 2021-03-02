@@ -19,19 +19,26 @@ Plug 'kkoomen/vim-doge', {'for': [
             \   'c', 'cpp', 'javascript', 'lua', 'python'
             \ ]}
 Plug 'plasticboy/vim-markdown', {'for': 'markdown'}
+Plug 'vim-pandoc/vim-pandoc-syntax', {'for': 'rmd'}
+Plug 'vim-pandoc/vim-rmarkdown', {'for': 'rmd'}
 Plug 'tpope/vim-dadbod', {'on': []} " Loaded via local vimrc
+
+if g:os ==# 'windows'
+    Plug 'junegunn/fzf', {'dir': '~/.fzf', 'do': './install --all'}
+endif
 
 if g:os !=# 'android'
     Plug 'w0rp/ale'
-    Plug 'systemmonkey42/vim-hugefile'
-    if empty(glob('/usr/share/vim/vimfiles/plugin/fzf.vim'))
-        Plug 'junegunn/fzf', {'dir': '~/.fzf', 'do': './install --all'}
-    endif
+    Plug 'andrewferrier/vim-hugefile'
     Plug 'fszymanski/fzf-quickfix', {'on': 'Quickfix'}
 endif
 
 if executable('editorconfig')
     Plug 'editorconfig/editorconfig-vim'
+endif
+
+if executable('pacman')
+    Plug 'Firef0x/PKGBUILD.vim', {'for': 'PKGBUILD'}
 endif
 
 if g:unicode
@@ -40,10 +47,6 @@ endif
 
 if executable('vifm')
     Plug 'vifm/vifm.vim'
-endif
-
-if executable('sudo')
-    Plug 'lambdalisue/suda.vim'
 endif
 
 if has('nvim')
@@ -124,8 +127,12 @@ if g:os !=# 'android' && v:version >= 800
     endif
 
     if executable('R')
-        Plug 'jalvesaq/Nvim-R', {'for': 'r', 'branch': 'stable'}
-        Plug 'gaalcaras/ncm-R', {'for': 'r'}
+        Plug 'jalvesaq/Nvim-R', {'for': ['r', 'rmd', 'rnoweb']}
+        Plug 'gaalcaras/ncm-R', {'for': ['r', 'rmd', 'rnoweb']}
+    endif
+
+    if executable('latexmk')
+        Plug 'lervag/vimtex', {'for': ['tex', 'bib', 'rnoweb']}
     endif
 
     Plug 'jsit/sasscomplete.vim', {'for': [
@@ -133,15 +140,11 @@ if g:os !=# 'android' && v:version >= 800
                 \   'htmldjango', 'pug', 'svelte'
                 \ ]}
     Plug 'ncm2/ncm2-html-subscope', {'for': ['html', 'htmldjango']}
-    Plug 'ncm2/ncm2-markdown-subscope', {'for': 'markdown'}
+    Plug 'ncm2/ncm2-markdown-subscope', {'for': ['markdown', 'rmd']}
     Plug 'ncm2/ncm2-rst-subscope', {'for': 'rst'}
     Plug 'Shougo/neco-vim', {'for': 'vim'}
     Plug 'ncm2/ncm2-vim', {'for': 'vim'}
 endif
-" }}}
-
-" Other filetype plugins {{{
-Plug 'Firef0x/PKGBUILD.vim', {'for': 'PKGBUILD'}
 " }}}
 
 call plug#end()

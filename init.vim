@@ -105,10 +105,10 @@ let g:snips_author = systemlist('git config user.name')[0]
 let g:snips_email = systemlist('git config user.email')[0]
 let g:snips_github = 'https://github.com/'. g:snips_author
 
-let g:polyglot_disabled = ['markdown']
-if has('nvim')
-    let g:polyglot_disabled += ['c', 'cpp']
-endif
+let g:vimsyn_embed = 'lP' | let g:vimsyn_folding = 'lP'
+
+let g:polyglot_disabled = ['markdown', 'tex', 'r', 'rmd', 'rnoweb']
+if has('nvim') | let g:polyglot_disabled += ['c', 'cpp'] | endif
 
 let g:_color_fts = [
             \ 'css', 'html', 'htmldjango',
@@ -116,8 +116,7 @@ let g:_color_fts = [
             \ 'scss', 'svg', 'svelte'
             \ ]
 
-let g:unicode = g:os ==# 'linux' ? exists('$DISPLAY')
-            \ : (g:shell !=# 'cmd' && g:shell !=# 'termux')
+let g:unicode = g:os ==# 'linux' && exists('$DISPLAY')
 
 let g:plug_url_format = 'git@github.com:%s'
 " }}}
@@ -157,20 +156,17 @@ function! s:SourceLocalRC()
     let l:lvimrc = fnamemodify(findfile(
                 \ '.lvimrc', '.;'), ':p')
     if !len(l:lvimrc) | return | endif
-    if get(g:, 'loaded_localrc', 0)
-        if get(g:, 'local_vimrc') ==# l:lvimrc
-            return
-        endif
+    if get(g:, 'local_vimrc', '') ==# l:lvimrc
+        return
     endif
     if filereadable(l:lvimrc)
         exec 'source '. l:lvimrc
         let g:local_vimrc = l:lvimrc
-        let g:loaded_localrc = 1
     endif
 endfunction
 augroup LocalRC
     au!
-    au BufReadPre,BufNewFile * call s:SourceLocalRC()
+    au VimEnter * call <SID>SourceLocalRC()
 augroup END
 " }}}
 
