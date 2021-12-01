@@ -30,7 +30,6 @@ endif
 if g:os !=# 'android'
     Plug 'w0rp/ale'
     Plug 'andrewferrier/vim-hugefile'
-    Plug 'fszymanski/fzf-quickfix', {'on': 'Quickfix'}
 endif
 
 if executable('editorconfig')
@@ -127,7 +126,7 @@ if g:os !=# 'android' && v:version >= 800
     endif
 
     if executable('R')
-        Plug 'jalvesaq/Nvim-R', {'for': ['r', 'rmd', 'rnoweb']}
+        Plug 'jalvesaq/Nvim-R', {'for': ['r', 'rmd', 'rnoweb'], 'branch': 'oldstable'}
         Plug 'gaalcaras/ncm-R', {'for': ['r', 'rmd', 'rnoweb']}
     endif
 

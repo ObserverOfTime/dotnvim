@@ -247,13 +247,14 @@ endif
 if g:os !=# 'android'
     " Ale settings {{{
     " Config {{{
-    let g:ale_use_global_executables = 1
     let g:ale_lint_on_enter = 0
     let g:ale_lint_on_insert_leave = 1
     let g:ale_lint_on_text_changed = 'normal'
     let g:ale_set_loclist = 0
     let g:ale_set_quickfix = 1
+    let g:ale_linters_explicit = 1
     let g:ale_list_window_size = 5
+    let g:ale_virtualenv_dir_names = ['.venv']
     " }}}
 
     " Symbols {{{
@@ -278,28 +279,28 @@ if g:os !=# 'android'
 
     " Linters {{{
     let g:ale_linters = {}
-    let g:ale_linters.c = executable('clang') ?
-                \ ['clang', 'clangtidy'] : ['gcc']
+    let g:ale_linters.c = ['clang', 'clangtidy']
     let g:ale_linters.cpp = g:ale_linters.c
     let g:ale_linters.cmake = ['cmakelint']
     let g:ale_linters.css = ['stylelint']
-    let g:ale_linters.html = ['htmlhint', 'vale']
+    let g:ale_linters.html = ['htmlhint']
     let g:ale_linters.javascript = ['eslint']
     let g:ale_linters.json = ['jq']
+    let g:ale_linters.kotlin = ['ktlint']
     let g:ale_linters.lua = ['luacheck']
     let g:ale_linters.make = ['checkmake']
-    let g:ale_linters.markdown = ['vale']
     let g:ale_linters.pug = ['puglint']
-    let g:ale_linters.python = ['pycodestyle', 'isort']
+    let g:ale_linters.python = ['flake8', 'isort']
     let g:ale_linters.r = ['lintr']
-    let g:ale_linters.rmd = g:ale_linters.r + g:ale_linters.markdown
-    let g:ale_linters.rst = ['rstcheck', 'vale']
+    let g:ale_linters.rmd = g:ale_linters.r
+    let g:ale_linters.rst = ['rstcheck']
     let g:ale_linters.rust = ['rustc', 'rustfmt']
     let g:ale_linters.scss = g:ale_linters.css
     let g:ale_linters.sh = ['shellcheck']
     let g:ale_linters.svelte = g:ale_linters.javascript + g:ale_linters.css
     let g:ale_linters.vim = ['vint']
     let g:ale_linters.vue = g:ale_linters.javascript
+    let g:ale_linters.xml = ['xmllint']
     " }}}
 
     " Fixers {{{
@@ -316,12 +317,10 @@ if g:os !=# 'android'
     let g:ale_fixers.sh = ['shfmt']
     let g:ale_fixers.svelte = g:ale_fixers.javascript + g:ale_fixers.css
     let g:ale_fixers.vue = g:ale_fixers.javascript
+    let g:ale_fixers.xml = ['xmllint']
     " }}}
 
     " Options {{{
-    let g:ale_linters_explicit = 1
-    let g:ale_pattern_options = {'.*\.min\..*$':
-                \ {'ale_linters': [], 'ale_fixers': []}}
     " Shell {{{
     let g:ale_sh_shellcheck_exclusions = 'SC1090,SC2128,SC2164'
     let g:ale_sh_shfmt_options = '-s -ci -i 2 -bn'
@@ -337,6 +336,13 @@ if g:os !=# 'android'
     let g:ale_cpp_gcc_options = g:ale_cpp_clang_options
     let g:ale_cpp_cc_options = g:ale_cpp_clang_options
     let g:ale_cpp_clangformat_options = g:ale_c_clangformat_options
+    " }}}
+    " CMake {{{
+    let g:ale_cmake_cmakelint_executable = 'cmake-lint'
+    let g:ale_cmake_cmakelint_options = '--tab-size 4'
+    " }}}
+    " JavaScript {{{
+    let g:ale_javascript_eslint_suppress_missing_config = 1
     " }}}
     " }}}
     " }}}

@@ -17,7 +17,7 @@ com! -nargs=? MaxLength :exec 'match ErrorMsg /\%>'.
             \ (len(<q-args>) ? <q-args> : '80') .'v.\+/'
 
 " Save a file creating parent directories
-com! -complete=file W :call mkdir(expand('%:p:h'), 'p') | w
+com! -complete=file -nargs=1 W :call mkdir(expand('%:p:h'), 'p') | w
 
 " Open a REPL with the specified command
 com! -complete=shellcmd -nargs=* Repl :bot 10new |

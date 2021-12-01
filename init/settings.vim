@@ -12,18 +12,18 @@ set undofile
 set nowrap
 " Show line numbers
 set number
-" Don't close hidden buffers
-set hidden
 " Show special characters
 set list
 
-" Completion options (:h completeopt)
+" Completion options (:h 'completeopt')
 set completeopt=noinsert,noselect,preview,menuone
+" Display options (:h 'display')
+set display=truncate,msgsep,uhex
 " Switch to open buffers or tabs
 set switchbuf=useopen,usetab
 " Format options (:h fo-table)
 set formatoptions=cqn1j
-" Short message options (:h shortmess)
+" Short message options (:h 'shortmess')
 set shortmess=aoOtTcF
 " Font for GUIs (like gnvim)
 set guifont=Hack:h12
