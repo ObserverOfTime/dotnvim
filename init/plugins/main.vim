@@ -36,10 +36,6 @@ if executable('editorconfig')
     Plug 'editorconfig/editorconfig-vim'
 endif
 
-if executable('pacman')
-    Plug 'Firef0x/PKGBUILD.vim', {'for': 'PKGBUILD'}
-endif
-
 if g:unicode
     Plug 'chrisbra/unicode.vim'
 endif
@@ -75,7 +71,7 @@ Plug 'mattn/emmet-vim', {'for': [
             \   'pug', 'svelte', 'xml'
             \ ]}
 Plug 'hail2u/vim-css3-syntax', {'for': [
-            \   'css', 'scss', 'html',
+            \   'css', 'scss', 'html', 'stylus',
             \   'htmldjango', 'pug', 'svelte'
             \ ]}
 
@@ -135,7 +131,7 @@ if g:os !=# 'android' && v:version >= 800
     endif
 
     Plug 'jsit/sasscomplete.vim', {'for': [
-                \   'css', 'scss', 'html',
+                \   'css', 'scss', 'html', 'stylus',
                 \   'htmldjango', 'pug', 'svelte'
                 \ ]}
     Plug 'ncm2/ncm2-html-subscope', {'for': ['html', 'htmldjango']}

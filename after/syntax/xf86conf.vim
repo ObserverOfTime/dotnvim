@@ -4,5 +4,6 @@ syn keyword xf86confKeyword
             \ MatchIsTouchpad
             \ MatchIsTouchscreen
             \ MatchIsJoystick
+            \ MatchDevicePath
             \ nextgroup=xf86confValue,xf86confComment
             \ skipwhite

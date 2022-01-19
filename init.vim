@@ -94,6 +94,8 @@ endif
 if executable('node')
     if executable('yarn')
         let g:_npm_cmd = 'yarn'
+    elseif executable('pnpm')
+        let g:_npm_cmd = 'pnpm'
     else
         let g:_npm_cmd = 'npm'
     endif
@@ -107,13 +109,20 @@ let g:snips_github = 'https://github.com/'. g:snips_author
 
 let g:vimsyn_embed = 'lP' | let g:vimsyn_folding = 'lP'
 
+if g:os ==# 'windows' && g:shell !=# 'cygwin'
+    let g:python3_host_prog = 'python3.exe'
+else
+    let g:python3_host_prog = '/usr/bin/python3'
+    let g:node_host_prog = '/usr/bin/neovim-node-host'
+endif
+
 let g:polyglot_disabled = ['markdown', 'tex', 'r', 'rmd', 'rnoweb']
 if has('nvim') | let g:polyglot_disabled += ['c', 'cpp'] | endif
 
 let g:_color_fts = [
             \ 'css', 'html', 'htmldjango',
-            \ 'javascript', 'pug',
-            \ 'scss', 'svg', 'svelte'
+            \ 'javascript', 'pug', 'scss',
+            \ 'stylus', 'svg', 'svelte'
             \ ]
 
 let g:unicode = g:os ==# 'linux' && exists('$DISPLAY')
@@ -136,8 +145,6 @@ call SourceInitRC('motions')
 call SourceInitRC('commands')
 call SourceInitRC('functions')
 call SourceInitRC('augroups')
-
-if has('nvim') | call SourceInitRC('nvim_host') | endif
 " }}}
 
 " WARNING: This can be a security vulnerability.

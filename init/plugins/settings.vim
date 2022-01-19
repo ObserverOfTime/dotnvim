@@ -157,7 +157,7 @@ if g:os !=# 'android' && v:version >= 800
                     \ 'name': 'sass',
                     \ 'priority': 9,
                     \ 'subscope_enable': 1,
-                    \ 'scope': ['css', 'scss', 'svelte', 'vue'],
+                    \ 'scope': ['css', 'scss', 'stylus', 'svelte', 'vue'],
                     \ 'mark': 'css',
                     \ 'word_pattern': '[\w-]+',
                     \ 'complete_pattern': [
