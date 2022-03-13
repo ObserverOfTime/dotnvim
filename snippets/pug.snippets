@@ -1,0 +1,44 @@
+# Conditions {{{
+snippet if "if"
+	if ${1}
+		$TM_SELECTED_TEXT${0}
+
+snippet ifi "if inline"
+	if ${1}: $TM_SELECTED_TEXT${0}
+
+snippet ife "if...else"
+	if ${1}
+		${2}
+	else ${3}
+		$TM_SELECTED_TEXT${4}
+
+snippet eli "else if"
+	else if ${1}
+		$TM_SELECTED_TEXT${0}
+
+snippet unl "unless"
+	unless ${1}
+		$TM_SELECTED_TEXT${0}
+
+snippet case "case"
+	case ${1}
+		when ${2}
+			$TM_SELECTED_TEXT${3}
+		default
+# }}}
+
+# Loops {{{
+snippet wh "while"
+	while ${1:true}
+		$TM_SELECTED_TEXT${0}
+
+snippet each "each"
+	each ${1:i} in ${2}
+		$TM_SELECTED_TEXT${0}
+# }}}
+
+# Mixins {{{
+snippet mix "mixin" b
+	mixin ${1:name}(${2:args})
+		$TM_SELECTED_TEXT${0}
+# }}}

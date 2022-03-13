@@ -1,0 +1,85 @@
+# Shebangs {{{
+snippet #! "bash shebang" #
+	#!/bin/bash${1: -e}
+
+snippet #!s "sh shebang" #
+	#!/bin/sh${1: -e}
+# }}}
+
+# Conditions {{{
+snippet if "if condition"
+	if ${1:condition}; then
+		$TM_SELECTED_TEXT${2}
+	fi
+
+snippet ife "if ... else"
+	if ${1:condition}; then
+		$TM_SELECTED_TEXT${2}
+	else
+		${3}
+	fi
+
+snippet elif "elif"
+	elif ${1:condition}; then
+		$TM_SELECTED_TEXT${2}
+
+snippet case "case ... esac"
+	case ${1:word} in
+		${2:pattern})
+			$TM_SELECTED_TEXT${2}
+			;;
+	esac
+
+snippet opt "case option"
+	${1:pattern})
+		$TM_SELECTED_TEXT${2}
+		;;
+
+snippet ter "numeric ternary"
+	((${1:var}=${2:condition}?${3:true}:${4:false}))
+
+snippet cmp "number comparisons"
+	[[ ${1:$var} -${2|eq,ne,gt,ge,lt,le|} ${3:0} ]]
+# }}}
+
+# Loops {{{
+snippet while "while loop"
+	while ${1::}; do
+		$TM_SELECTED_TEXT${2}
+	done
+
+snippet until "until loop"
+	until ${1:condition}; do
+		$TM_SELECTED_TEXT${2}
+	done
+
+snippet for "for loop"
+	for ((${1:i} = ${2:0}; $1 ${3:< 10}; ${4:++i})); do
+		$TM_SELECTED_TEXT${5}
+	done
+
+snippet fori "for (in)"
+	for ${1} in ${2}; do
+		$TM_SELECTED_TEXT${3}
+	done
+
+snippet fort "for (tiny)"
+	for((;${1:i++<10};)) { $TM_SELECTED_TEXT${0} }
+
+snippet wread "loop over a file" b
+	while read -r ${2:line}; do
+		$TM_SELECTED_TEXT${3}
+	done < ${1:'file'}
+# }}}
+
+# Misc {{{
+snippet fun "function definition"
+	${1:name}() {
+		$TM_SELECTED_TEXT${2}
+	}
+
+snippet << "here-document"
+	<<$1EOF${1:'}
+		$TM_SELECTED_TEXT${2}
+	EOF
+# }}}

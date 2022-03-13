@@ -1,0 +1,51 @@
+# Functions {{{
+snippet fun: "local function" b
+	function! s:${1:Name}(${2})${3: abort}
+		$TM_SELECTED_TEXT${4}
+	endfunction
+
+snippet fun# "file function" b
+	function! $TM_FILENAME_BASE#${1:name}(${2})${3: abort}
+		$TM_SELECTED_TEXT${4}
+	endfunction
+# }}}
+
+# Conditions {{{
+snippet ifi "inline if"
+	if ${1:condition} | $TM_SELECTED_TEXT${2} | endif
+
+snippet ife "if ... else"
+	if ${1:condition}
+		$TM_SELECTED_TEXT${2}
+	else
+		${3}
+	endif
+
+snippet elif "elseif"
+	elseif ${1:condition}
+		$TM_SELECTED_TEXT${2}
+# }}}
+
+# Loops {{{
+snippet for "for loop"
+	for ${1:element} in ${2:list}
+		$TM_SELECTED_TEXT${3}
+	endfor
+
+snippet wh "while loop"
+	while ${1:v:true}
+		$TM_SELECTED_TEXT${2}
+	endwhile
+# }}}
+
+# Misc {{{
+snippet lua "lua here-document" ^
+	lua <<${1:EOF}
+		$TM_SELECTED_TEXT${2}
+	$1
+
+snippet py3 "python here-document" ^
+	py3 <<${1:EOF}
+		$TM_SELECTED_TEXT${2}
+	$1
+# }}}

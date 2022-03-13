@@ -1,0 +1,9 @@
+snippet ex "extends" ^
+	extends ${1:filetype}
+
+snippet snip "snippet definition" ^
+	snippet ${1:trigger} "${2:docstring}"
+		$TM_SELECTED_TEXT${0}
+
+snippet sel "TM_SELECTED_TEXT"
+	\$TM_SELECTED_TEXT

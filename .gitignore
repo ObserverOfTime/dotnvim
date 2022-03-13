@@ -8,14 +8,10 @@
 
 Session.vim
 .netrwhist
-.lvimrc
+.nvimrc
 tags
 
-pythonx/__pycache__/
-pythonx/*.pyc
-
-indent/*
-syntax/*
-colors/*
-spell/*
 doc/*
+spell/*
+
+plugin/packer_compiled.lua

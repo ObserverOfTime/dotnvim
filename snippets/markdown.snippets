@@ -1,0 +1,34 @@
+snippet code "code block" b
+	`"\`\`\`"`${1}
+	$TM_SELECTED_TEXT${2}
+	`"\`\`\`"`
+
+snippet * "italics"
+	*$TM_SELECTED_TEXT${1}*
+
+snippet ** "bold"
+	**$TM_SELECTED_TEXT${1}**
+
+snippet *** "bold italics"
+	***$TM_SELECTED_TEXT${1}***
+
+snippet lnk "link"
+	[${1:$TM_SELECTED_TEXT}](${2:path}${3})
+
+snippet img "image"
+	![${1:alt}](${2:$TM_SELECTED_TEXT}${3})
+
+snippet ref ""reference""
+	[${1:$TM_SELECTED_TEXT}][${2:id}]
+	${0}
+	[$2]: ${4:path}${5}
+
+snippet fnt "footnote"
+	[^${1:1}]
+	${0}
+	[^$1]: ${2:$TM_SELECTED_TEXT}
+
+snippet fng "footnote (GFM)"
+	<sup name="${4:a}$1">[${1:1}](#$3$1)</sup>
+	${0}
+	<a href="#$4$1">[$1]:</a>${2:$TM_SELECTED_TEXT}

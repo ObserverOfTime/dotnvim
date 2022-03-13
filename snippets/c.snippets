@@ -1,0 +1,52 @@
+# Preprocessor {{{
+snippet #if "#if ... #endif" b
+	#if ${1:0}
+	$TM_SELECTED_TEXT${2}
+	#endif // $1
+
+snippet #ifd "#ifdef ... #endif" b
+	#ifdef ${1:SYMBOL}
+	$TM_SELECTED_TEXT${2}
+	#endif // $1
+
+snippet #ifn "#ifndef ... #endif" b
+	#ifndef ${1:SYMBOL}
+	$TM_SELECTED_TEXT${2}
+	#endif // !$1
+# }}}
+
+# Functions {{{
+snippet main "Main function" ^
+	int main(int argc, char **argv) {
+		$TM_SELECTED_TEXT${0}
+	}
+
+snippet fund "function declaration" b
+	${1:void} ${2:function}(${3:params});
+
+snippet func "function definition" b
+	${1:void} ${2:function}(${3:params}) {
+		$TM_SELECTED_TEXT${4}
+	}
+# }}}
+
+# Conditions {{{
+snippet ifi "if (inline)" b
+	if (${1:true}) ${2};
+
+snippet ter "ternary operator"
+	${1:true} ? ${2:a} : ${3:b}
+# }}}
+
+# Misc {{{
+snippet exc "extern C" ^
+	#ifdef __cplusplus
+	extern "C" {
+	#endif // __cplusplus
+
+	$TM_SELECTED_TEXT${1}
+
+	#ifdef __cplusplus
+	} // extern "C"
+	#endif // __cplusplus
+# }}}

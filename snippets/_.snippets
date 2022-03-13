@@ -1,0 +1,10 @@
+snippet fold "vim fold" b
+	$LINE_COMMENT ${1} {{{
+	$TM_SELECTED_TEXT${2}
+	$LINE_COMMENT }}}
+
+snippet #!e "env shebang" #
+	#!/usr/bin/env ${1:bash}
+
+snippet vml "Vim modeline" ^
+	`printf(&cms, printf(' %s:%s:sw=%s:ts=%s: ', 'vim', &et ? 'et' : 'noet', &sw, &ts))`

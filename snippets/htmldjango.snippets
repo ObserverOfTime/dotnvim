@@ -1,0 +1,115 @@
+# Inline tags {{{
+snippet % "inline tag"
+	{% ${1:debug} %}
+
+snippet ex "extends"
+	{% extends '${1:skeleton.html}' %}
+
+snippet in "include"
+	{% include '${1}' %}
+
+snippet load "load"
+	{% load ${1:static} %}
+
+snippet stat "static"
+	{% static '${1:style.css}' %}
+
+snippet trans "translate"
+	{% translate '${1:text}' %}
+
+snippet reg "regroup"
+	{% regroup ${1} by ${2} as ${3} %}
+
+snippet now "now"
+	{% now '${1:jS F Y H:i}' %}
+# }}}
+
+# Multiline tags {{{
+snippet %% "multiline tag"
+	{% ${1} ${2} %}
+		$TM_SELECTED_TEXT${3}
+	{% end$1 %}
+
+snippet blk "block"
+	{% block ${1:content} %}
+		$TM_SELECTED_TEXT${2}
+	{% endblock $1 %}
+
+snippet esc "autoescape"
+	{% autoescape ${1|off,on|} %}
+		$TM_SELECTED_TEXT${2}
+	{% endautoescape %}
+
+snippet with "with"
+	{% with ${1:var}=${2:value} %}
+		$TM_SELECTED_TEXT${3}
+	{% endwith %}
+
+snippet spl "spaceless"
+	{% spaceless %}
+		$TM_SELECTED_TEXT${1}
+	{% endspaceless %}
+
+snippet ver "verbatim"
+	{% verbatim ${1:block }%}
+		$TM_SELECTED_TEXT${2}
+	{% endverbatim $1%}
+
+snippet btrans "blocktranslate"
+	{% blocktranslate %}
+		$TM_SELECTED_TEXT${1}
+	{% endblocktranslate %}
+# }}}
+
+# Loops {{{
+snippet for "for loop"
+	{% for ${1} in ${2} %}
+		$TM_SELECTED_TEXT${3}
+	{% endfor %}
+
+snippet fore "for ... empty"
+	{% for ${1} in ${2} %}
+		$TM_SELECTED_TEXT${3}
+	{% empty %}
+		${4}
+	{% endfor %}
+
+snippet cycle "cycle"
+	{% cycle ${1:val1} ${2:val2} as ${3} %}
+
+snippet forl "forloop.variable"
+	forloop.${1|first,last,counter,counter0,revcounter,revcounter0,parentloop|}
+# }}}
+
+# Conditions {{{
+snippet ifi "inline if"
+	{% if ${1} %}$TM_SELECTED_TEXT${2}{% endif %}
+
+snippet if "if ..."
+	{% if ${1} %}
+		$TM_SELECTED_TEXT${2}
+	{% endif %}
+
+snippet ife "if ... else"
+	{% if ${1} %}
+		$TM_SELECTED_TEXT${2}
+	{% else %}
+		${3}
+	{% endif %}
+
+snippet else "else"
+	{% else %}
+		$TM_SELECTED_TEXT${1}
+
+snippet elif "elif"
+	{% elif ${1} %}
+		$TM_SELECTED_TEXT${2}
+
+snippet ifc "ifchanged"
+	{% ifchanged %}
+		$TM_SELECTED_TEXT${1}
+	{% endifchanged %}
+
+snippet ifci "inline ifchanged"
+	{% ifchanged %}$TM_SELECTED_TEXT${1}{% endifchanged %}
+# }}}

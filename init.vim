@@ -1,180 +1,68 @@
-" vint: -ProhibitSetNoCompatible
-if &compatible | set nocompatible | endif
+" Define utilities {{{
+lua <<EOF
+--- Pretty print
+function put(...)
+    print(vim.inspect(...))
+end
 
-" Detect platform {{{
-if expand('$OS') =~? 'Windows'
-    let g:os = 'windows'
-    if &shell =~? 'powershell'
-        let g:shell = 'pwsh'
-    elseif expand('$OSTYPE') ==? 'msys'
-        let g:shell = 'msys'
-    elseif expand('$OSTYPE') ==? 'cygwin'
-        let g:shell = 'cygwin'
-    else
-        let g:shell = 'cmd'
-    endif
-elseif expand('$OSTYPE') ==? 'linux-android'
-    let g:os = 'android'
-    let g:shell = 'termux'
-else
-    let g:os = 'linux'
-    let g:shell = 'unix'
-    let $JAVA_HOME = '/usr/lib/jvm/java-8-openjdk/' " Use JDK8
-endif
+--- Running in a proper terminal
+vim.g.in_term = vim.env.TERM ~= 'linux'
+EOF
 " }}}
 
-" Get path based on platform {{{
-function! GetPath(...)
-    let l:input = join(a:000, '/')
-    if g:os ==# 'windows'
-        let l:path = substitute(l:input, '\\', '/', 'g')
-        if g:shell ==# 'msys'
-            return substitute(shellescape(l:path),
-                        \ '\(\w\):', '/\L\1', '')
-        elseif g:shell ==# 'cygwin'
-            return systemlist('cygpath '.
-                        \ shellescape(l:path))[0]
-        endif
-        return shellescape(l:path)
-    else
-        return expand(l:input)
-    endif
-endfunction
+" Load modules {{{
+lua <<EOF
+require('settings')
+require('filetypes')
+require('plugins')
+require('mappings')
+EOF
 " }}}
 
-" Directory variables {{{
-if exists('$XDG_DATA_HOME')
-    let g:xdg_data_home = GetPath($XDG_DATA_HOME)
-elseif g:os ==# 'windows'
-    let g:xdg_data_home = GetPath($LOCALAPPDATA)
-else
-    let g:xdg_data_home = expand('~/.local/share')
-endif
+" Define custom commands {{{
+" Copy file to the clipboard
+command! CopyFile :silent w !xclip -i -sel c
 
-if has('nvim')
-    let g:plug_home = g:xdg_data_home .'/nvim/plugged'
-else
-    let g:plug_home = expand('~/.vim/plugged')
-endif
+" Delete trailing whitespace
+command! DelTrail :silent %s/\s\+$//e
 
-if has('nvim')
-    let g:plug_path = g:xdg_data_home
-                \ .'/nvim/site/autoload/plug.vim'
-else
-    let g:plug_path = expand('~/.vim/autoload/plug.vim')
-endif
+" Show syntax groups under cursor
+command! SynStack :echo map(
+            \ synstack(line('.'), col('.')),
+            \ 'synIDattr(v:val, "name")')
+
+" Save a file after creating parent directories
+command! -complete=file -nargs=? W
+            \ :call mkdir(expand('%:p:h'), 'p') | w
 " }}}
 
-" Download plug if missing {{{
-if empty(glob(g:plug_path))
-    let s:plug_url = 'https://raw.githubusercontent.com'
-                \ .'/junegunn/vim-plug/master/plug.vim'
-    let s:ps_cmd = "New-Item (Split-Path -Path '". g:plug_path
-                \ ."') -ItemType Directory -Force > $null; "
-                \ ."Invoke-WebRequest -OutFile '". g:plug_path
-                \ ."' -Uri '". s:plug_url ."' > $null"
-    if g:shell ==# 'pwsh'
-        silent exec s:ps_cmd
-    elseif executable('curl')
-        silent exec '!curl --create-dirs -Sso '.
-                    \ g:plug_path .' '. s:plug_url
-    elseif g:shell ==# 'cmd'
-        silent exec 'powershell -NoProfile -Command "'. s:ps_cmd .'"'
-    else
-        echoerr 'Download vim-plug from "'. s:plug_url
-                    \ '" and place it in "'. g:plug_path .'"'
-        finish
-    endif
-    call mkdir(g:plug_home, 'p')
-    finish
-endif
-" }}}
-
-" Detect node installer {{{
-if executable('node')
-    if executable('yarn')
-        let g:_npm_cmd = 'yarn'
-    elseif executable('pnpm')
-        let g:_npm_cmd = 'pnpm'
-    else
-        let g:_npm_cmd = 'npm'
-    endif
-endif
-" }}}
-
-" Misc variables {{{
-let g:snips_author = systemlist('git config user.name')[0]
-let g:snips_email = systemlist('git config user.email')[0]
-let g:snips_github = 'https://github.com/'. g:snips_author
-
-let g:vimsyn_embed = 'lP' | let g:vimsyn_folding = 'lP'
-
-if g:os ==# 'windows' && g:shell !=# 'cygwin'
-    let g:python3_host_prog = 'python3.exe'
-else
-    let g:python3_host_prog = '/usr/bin/python3'
-    let g:node_host_prog = '/usr/bin/neovim-node-host'
-endif
-
-let g:polyglot_disabled = ['markdown', 'tex', 'r', 'rmd', 'rnoweb']
-if has('nvim') | let g:polyglot_disabled += ['c', 'cpp'] | endif
-
-let g:_color_fts = [
-            \ 'css', 'html', 'htmldjango',
-            \ 'javascript', 'pug', 'scss',
-            \ 'stylus', 'svg', 'svelte'
-            \ ]
-
-let g:unicode = g:os ==# 'linux' && exists('$DISPLAY')
-
-let g:plug_url_format = 'git@github.com:%s'
-" }}}
-
-" Source scripts {{{
-function! SourceInitRC(initrc)
-    let l:vimrc = resolve(expand('$MYVIMRC'))
-    let l:path = fnamemodify(l:vimrc, ':p:h')
-    exec 'source '. l:path .'/init/'. a:initrc .'.vim'
-endfunction
-
-call SourceInitRC('plugins/main')
-call SourceInitRC('settings')
-call SourceInitRC('colors')
-call SourceInitRC('mappings')
-call SourceInitRC('motions')
-call SourceInitRC('commands')
-call SourceInitRC('functions')
-call SourceInitRC('augroups')
-" }}}
-
+" Source local .nvimrc {{{
 " WARNING: This can be a security vulnerability.
 " When editing files from an untrusted source,
-" always check the directories for .lvimrc
+" always check the directories for .nvimrc
 " files and verify their contents.
-" Source local vimrc {{{
-function! s:SourceLocalRC()
-    " Abort if running as root/admin
-    if g:os !=# 'windows'
-        if expand('$EUID') == 0 | return | endif
-    else
-        silent call system('net session')
-        if v:shell_error != 0 | return | endif
-    endif
-    let l:lvimrc = fnamemodify(findfile(
-                \ '.lvimrc', '.;'), ':p')
-    if !len(l:lvimrc) | return | endif
-    if get(g:, 'local_vimrc', '') ==# l:lvimrc
-        return
-    endif
-    if filereadable(l:lvimrc)
-        exec 'source '. l:lvimrc
-        let g:local_vimrc = l:lvimrc
+function! s:SourceRC()
+    " Abort if running as root
+    if expand('$EUID') == 0 | return | endif
+    if get(g:, '_exrc', '') !=# '' | return | endif
+    let l:exrc = fnamemodify(findfile(
+                \ '.nvimrc', '.;'), ':p')
+    if l:exrc ==# '' | return | endif
+    if filereadable(l:exrc)
+        exec 'source '. l:exrc
+        let g:_exrc = l:exrc
     endif
 endfunction
-augroup LocalRC
-    au!
-    au VimEnter * call <SID>SourceLocalRC()
-augroup END
 " }}}
 
-" vim:fdl=0:
+" Init augroup {{{
+augroup VimInit
+    au!
+    " Source .nvimrc on enter
+    au VimEnter * call <SID>SourceRC()
+    " Set formatoptions (:h 'formatoptions')
+    au BufEnter * set formatoptions=cqn1j
+    " Fix cursor on exit
+    au VimLeave * set guicursor=a:hor25
+augroup END
+" }}}

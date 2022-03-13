@@ -1,0 +1,83 @@
+# Links {{{
+snippet lnk "external link"
+	`"\`"`${1:$TM_SELECTED_TEXT} <${2}>`"\`"`_
+
+snippet fnt "footnote"
+	[${1:#}]_
+	$TM_SELECTED_TEXT${0}
+
+	.. [$1] ${2:footnote}
+
+snippet img "image" b
+	.. image:: ${1:image.jpg}
+		:alt: ${2:alternate text}
+# }}}
+
+# Include {{{
+snippet inc "include" b
+	.. include:: ${1:include.rst}${2:
+		:start-${3|line,after|}: ${4:1}}${5:
+		:end-${6|line,before|}: ${7:10}}${8:
+		:tab-width: ${9:3}}
+
+snippet linc "literal include" b
+	.. literalinclude:: ${1:file}
+		:language: ${2:python}${3:
+		:linenos:}${4:
+		:start-${5|after,line|}: ${6:3}}${7:
+		:end-${8|before,line|}: ${9:5}}
+
+snippet raw "raw html/latex" b
+	.. raw:: ${1|html,latex|}${2:
+		:${3:file}: ${4:file.html}}
+# }}}
+
+# Contents {{{
+snippet toc "table of contents" b
+	.. contents:: ${1:Table of Contents}${2:
+		:local:}${3:
+		:depth: ${4:2}}${5:
+		:backlinks: ${6|entry,top,none|}}
+
+snippet tree "toctree" b
+	.. toctree::
+		:maxdepth: ${1:2}${2:
+		:titlesonly:}${3:
+		:numbered:}${4:
+		:glob:}${5:
+		:hidden:}
+# }}}
+
+# Tables {{{
+snippet tbl "list-table" b
+	.. list-table:: ${1}
+		:align: ${2:center}
+		:header-rows: ${3:1}${4:
+		:stub-columns: ${5:1}}${6:
+		:widths: ${7:auto}}
+
+snippet csv "csv-table" b
+	.. csv-table:: ${1}
+		:align: ${2:center}
+		:header-rows: ${3:1}${4:
+		:stub-columns: ${5:1}}${6:
+		:widths: ${7:auto}}${8:
+		:file: ${9:data.csv}}${10:
+		:url: ${11:data.csv}}${12:
+		:delim: ${13:,}}${14:
+		:quote: ${15:"}}${16:
+		:escape: ${17:\\}}${18:
+		:encoding: ${19:UTF-8}}${20:
+		:keepspace:}
+# }}}
+
+# Misc {{{
+snippet sup "superscript"
+	:superscript:`"\`"`$TM_SELECTED_TEXT${1}`"\`"`
+
+snippet sub "subscript"
+	:subscript:`"\`"`$TM_SELECTED_TEXT${1}`"\`"`
+
+snippet rep "replace" b
+	.. |${1:original}| ${2:replace:: $TM_SELECTED_TEXT${3}}
+# }}}

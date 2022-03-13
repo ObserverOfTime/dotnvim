@@ -1,0 +1,206 @@
+# Functions {{{
+snippet iife "IIFE"
+	(function(${1}) {
+		$TM_SELECTED_TEXT${3}
+	})(${2});
+
+snippet func "function"
+	function ${1:name}(${2}) {
+		$TM_SELECTED_TEXT${3}
+	}
+
+snippet fun* "generator"
+	function* ${1:name}(${2:args}) {
+		yield ${3};
+	}
+
+snippet af "arrow function"
+	${1:args} => {
+		$TM_SELECTED_TEXT${2}
+	}
+
+snippet afi "inline arrow function"
+	${1:args} => $TM_SELECTED_TEXT${2};
+
+snippet proto "prototype"
+	${1:Class}.prototype.${2:method} = function(${3}) {
+		$TM_SELECTED_TEXT${4}
+	};
+# }}}
+
+# Element methods {{{
+snippet .ae "addEventListener" i
+	.addEventListener('${1:click}', ${2} => ${3});
+
+snippet .get "getElement..." i
+	.getElement${1|byId,sByClassName,sByTagName,sByName|}(${2})
+
+snippet .qs "querySelector" i
+	.querySelector(${2})
+
+snippet .qsa "querySelectorAll" i
+	.querySelectorAll(${2})
+# }}}
+
+# Conditions {{{
+snippet if "if statement"
+	if (${1}) {
+		$TM_SELECTED_TEXT${2}
+	}
+
+snippet ifi "inline if"
+	if (${1}) $TM_SELECTED_TEXT${2};
+
+snippet ife "if ... else"
+	if (${1}) {
+		$TM_SELECTED_TEXT${2}
+	} else {
+		${3}
+	}
+
+snippet elif "else if"
+	else if (${1}) {
+		$TM_SELECTED_TEXT${2}
+	}
+
+snippet switch "switch"
+	switch (${1}) {
+		case ${2}:
+			$TM_SELECTED_TEXT${3}
+	}
+
+snippet case "case"
+	case ${1}:
+		$TM_SELECTED_TEXT${2}
+# }}}
+
+# Loops {{{
+snippet for "for loop"
+	for (let ${1:i} = ${2:0}; $1 ${3:< 10}; ${4:++}$1) {
+		$TM_SELECTED_TEXT${5}
+	}
+
+snippet fori "for (in)"
+	for (const ${1:i} in ${2:arr}) {
+		$TM_SELECTED_TEXT${3}
+	}
+
+snippet foro "for (of)"
+	for(const ${1:e} of ${2:arr}) {
+		$TM_SELECTED_TEXT${3}
+	}
+
+snippet wh "while loop"
+	while (${1:true}) {
+		$TM_SELECTED_TEXT${2}
+	}
+
+snippet do "do ... while"
+	do {
+		$TM_SELECTED_TEXT${2}
+	} while (${1:true});
+# }}}
+
+# Exceptions {{{
+snippet try "try ... catch"
+	try {
+		$TM_SELECTED_TEXT${1}
+	} catch (${2:err}) {
+		${3}
+	}
+
+snippet tryf "try ... catch ... finally"
+	try {
+		$TM_SELECTED_TEXT${1}
+	} catch (${2:err}) {
+		${3}
+	} finally {
+		${4}
+	}
+# }}}
+
+# Classes {{{
+snippet cls "class" b
+	class ${1:$TM_FILENAME_BASE} {
+		$TM_SELECTED_TEXT${2}
+	}
+
+snippet cos "constructor" b
+	constructor(${1}) {
+		$TM_SELECTED_TEXT${2}
+	}
+
+snippet get "getter" b
+	get ${1:prop}() {
+		$TM_SELECTED_TEXT
+		return ${2};
+	}
+
+snippet geti "inline getter" b
+	get ${1:prop}() { return ${2}; }
+
+snippet set "setter" b
+	set ${1:prop}(${2}) {
+		$TM_SELECTED_TEXT${3}
+	}
+# }}}
+
+# Objects {{{
+snippet def "Object.defineProperty" b
+	Object.defineProperty(${1:this}, '${2:prop}', {
+		enumerable: ${6:false},
+		configurable: ${5:true},
+		writable: ${4:true},
+		value: ${3}
+	});
+
+snippet ass "Object.assign" b
+	Object.assign(${1:this}, {
+		$TM_SELECTED_TEXT${2}
+	});
+# }}}
+
+# Utilities {{{
+snippet merge "merge objects"
+	(...obj) => Object.assign({}, ...obj);
+
+snippet empty "check if object is empty"
+	(obj) => (!obj || !Object.keys(obj).length);
+
+snippet omit "omit key from object"
+	(obj, key) => {
+		const {[key]: _, ...keys} = obj;
+		return keys;
+	};
+
+snippet isnum "check if number"
+	(arg) => {
+		if(typeof arg === 'number') return isFinite(arg);
+		if(typeof arg === 'string' && arg.trim() !== '')
+			return isFinite(Number(arg));
+		return false;
+	}
+
+snippet isobj "check if object"
+	(arg) => (arg !== null && typeof arg === 'object');
+# }}}
+
+# Misc {{{
+snippet xhr "XMLHttpRequest" b
+	${1|const,let,var|} ${2:xhr} = new XMLHttpRequest();
+
+snippet strict "use strict" ^
+	'use strict';
+
+snippet imp "import" b
+	import ${1:path} from '${2:$1}';
+
+snippet req "require" b
+	const ${1:path} = require('${2:$1}');
+
+snippet mod "module.exports" b
+	module.exports = ${1:$TM_FILENAME_BASE};
+
+snippet con "console method"
+	console.${1|log,dir,info,warn,eror,table,dirxml,assert,debug,trace|}($TM_SELECTED_TEXT${2});
+# }}}

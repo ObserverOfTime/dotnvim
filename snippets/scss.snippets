@@ -1,0 +1,52 @@
+extends css
+
+# At-rules {{{
+snippet @fun "@function" b
+	@function ${1:name}(${2:args}) {
+		$TM_SELECTED_TEXT${3}
+	}
+
+snippet @mix "@mixin" b
+	@mixin ${1:name}(${2:args}) {
+		$TM_SELECTED_TEXT${3}
+	}
+# }}}
+
+# Conditions {{{
+snippet @if "@if" b
+	@if (${1:condition}) {
+		$TM_SELECTED_TEXT${2}
+	}
+
+snippet @ifi "inline @if" b
+	@if (${1:condition}) { $TM_SELECTED_TEXT${2} }
+
+snippet @ife "@if ... @else" b
+	@if (${1:condition}) {
+		$TM_SELECTED_TEXT${2}
+	} @else {
+		${3}
+	}
+
+snippet @elif "@else if" b
+	@else if (${1:condition}) {
+		$TM_SELECTED_TEXT${2}
+	}
+# }}}
+
+# Loops {{{
+snippet @for "@for loop" b
+	@for ${1:$i} from ${2:1} through ${3:10} {
+		$TM_SELECTED_TEXT${4}
+	}
+
+snippet @each "@each loop" b
+	@each ${2:$i} in ${1:$items} {
+		$TM_SELECTED_TEXT${3}
+	}
+
+snippet @wh "@while loop" b
+	@while ${1:$i} ${2:< 10} {
+		$TM_SELECTED_TEXT${3}
+	}
+# }}}
