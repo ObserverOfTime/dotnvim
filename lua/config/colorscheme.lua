@@ -25,6 +25,7 @@ if pcall(vim.api.nvim_command, gruvbox) then
     hi! link Operator GruvboxGreen
     hi! link TSOperator GruvboxGreen
     hi! link FocusedSymbol GruvboxYellowBold
+    hi! link LightBulbVirtualText DiagnosticVirtualTextHint
     ]]
     --#endregion
 else -- Fallback

@@ -59,7 +59,13 @@ local function on_attach(_, bufnr)
     vim.api.nvim_create_autocmd(
         {'CursorHold', 'CursorHoldI'}, {
             callback = function()
-                bulb.update_lightbulb()
+                bulb.update_lightbulb {
+                    sign = {enabled = false},
+                    virtual_text = {
+                        text = i.hint,
+                        enabled = true
+                    }
+                }
             end, buffer = bufnr
         })
 
@@ -352,11 +358,7 @@ lsp.yamlls.setup {
 require('null-ls').setup {on_attach = on_attach}
 --#endregion
 
---#region Extensions
-vim.fn.sign_define('LightBulbSign', {
-    text = i.hint, texthl = 'DiagnosticSignHint'
-})
-
+--#region Symbols Outline
 vim.g.symbols_outline = {
     preview_bg_highlight = 'NormalFloat',
     symbols = vim.tbl_map(function(val)
