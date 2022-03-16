@@ -58,11 +58,21 @@ map('n', '<Leader>p', function()
     require('nabla').popup {border = 'rounded'}
 end)
 
+--#region Git
+map('n', ']h', '<Cmd>Gitsigns next_hunk<CR>')
+map('n', '[h', '<Cmd>Gitsigns prev_hunk<CR>')
+map('n', '<Leader>gd', '<Cmd>Gitsigns diffthis<CR>')
+map('n', '<Leader>ga', '<Cmd>Gitsigns stage_hunk<CR>')
+map('n', '<Leader>gr', '<Cmd>Gitsigns reset_hunk<CR>')
+map('n', '<Leader>gs', '<Cmd>Gitsigns select_hunk<CR>')
+map('n', '<Leader>gb', '<Cmd>Gitsigns toggle_current_line_blame<CR>')
+--#endregion
+
 --#region Diagnostics
 map('n', '[d', vim.diagnostic.goto_prev)
 map('n', ']d', vim.diagnostic.goto_next)
 map('n', '<Leader>l', function()
     vim.diagnostic.setloclist {open = false}
-    require('fzf-lua').loclist {}
+    package.loaded['fzf-lua'].loclist {}
 end)
 --#endregion
