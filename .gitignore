@@ -14,4 +14,4 @@ tags
 doc/*
 spell/*
 
-plugin/packer_compiled.lua
+packer_compiled.lua

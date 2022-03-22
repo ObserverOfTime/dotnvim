@@ -8,8 +8,8 @@ config.debug_fts = {
 --- Colorable filetypes
 config.color_fts = {
     'css', 'html', 'htmldjango',
-    'javascript', 'pug', 'scss',
-    'stylus', 'svg', 'svelte'
+    'javascript', 'less', 'pug',
+    'scss', 'stylus', 'svg', 'svelte'
 }
 
 --- Text filetypes
@@ -306,10 +306,8 @@ function config.neogen()
     end
     local py_template = vim.g.neogen_py_template or 'reST'
     neogen.setup {
+        enable_placeholders = false,
         languages = {
-            lua = {
-                template = {annotation_convention = 'ldoc'}
-            },
             python = {
                 template = {annotation_convention = py_template}
             }

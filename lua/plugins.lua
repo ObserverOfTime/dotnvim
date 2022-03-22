@@ -70,9 +70,8 @@ local function plugins(use)
         config = [[require('config').gitsigns()]]
     }
     use {
-        -- TODO: rewrite in Lua
-        'ObserverOfTime/discord.nvim',
-        run = ':UpdateRemotePlugins'
+        'ObserverOfTime/nvimcord',
+        config = [[require('nvimcord').setup()]]
     }
     use {
         -- XXX: no alternative

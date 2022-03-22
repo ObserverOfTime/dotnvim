@@ -14,8 +14,8 @@ EOF
 lua <<EOF
 require('settings')
 require('filetypes')
-require('plugins')
 require('mappings')
+require('plugins')
 EOF
 " }}}
 

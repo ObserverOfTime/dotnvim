@@ -80,7 +80,7 @@ Using packer.nvim_ as the plugin manager.
 * `windwp/nvim-autopairs <https://github.com/windwp/nvim-autopairs>`_
 * `gpanders/editorconfig.nvim <https://github.com/gpanders/editorconfig.nvim>`_
 * `lewis6991/gitsigns.nvim <https://github.com/lewis6991/gitsigns.nvim>`_ |P|
-* `ObserverOfTime/discord.nvim <https://github.com/ObserverOfTime/discord.nvim>`_ |R|
+* `ObserverOfTime/nvimcord <https://github.com/ObserverOfTime/nvimcord>`_ |R|
 * `mattn/emmet-vim <https://github.com/mattn/emmet-vim>`_ |V|
 * `AndrewRadev/splitjoin.vim <https://github.com/AndrewRadev/splitjoin.vim>`_ |V|
 * `wsdjeg/vim-fetch <https://github.com/wsdjeg/vim-fetch>`_ |V|
@@ -160,6 +160,7 @@ Tree-sitter
 * cpp |T|
 * css |T|
 * html
+* glimmer
 * java |T|
 * javascript |T|
 * jsdoc

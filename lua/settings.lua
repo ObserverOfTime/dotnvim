@@ -23,6 +23,8 @@ vim.opt.undolevels = 250
 vim.opt.shiftwidth = 4
 --- Number of spaces to use for tabs
 vim.opt.tabstop = 4
+--- Minimum completion menu width
+vim.opt.pumwidth = 5
 --- Don't hide any folds
 vim.opt.foldlevelstart = 99
 

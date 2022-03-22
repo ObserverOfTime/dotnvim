@@ -14,34 +14,27 @@ local function convert(cmd, path, bufnr)
     )
 end
 
-if vim.fn.executable('pdftotext') == 1 then
-    --- Convert pdf -> text
-    extension.pdf = function(path, bufnr)
-        convert('pdftotext -nopgbrk -layout %q -', path, bufnr)
-        return 'text'
-    end
+--- Convert pdf -> text
+extension.pdf = function(path, bufnr)
+    convert('pdftotext -nopgbrk -layout %q -', path, bufnr)
+    return 'text'
 end
 
-if vim.fn.executable('cfr') == 1 then
-    --- Convert class -> java
-    extension.class = function(path, bufnr)
-        convert('cfr %q', path, bufnr)
-        return 'java'
-    end
+--- Convert class -> java
+extension.class = function(path, bufnr)
+    convert('cfr %q', path, bufnr)
+    return 'java'
 end
 
-if vim.fn.executable('xlsx2csv') == 1 then
-    --- Convert xlsx -> csv
-    extension.xlsx = function(path, bufnr)
-        convert('xlsx2csv -e %q', path, bufnr)
-        return 'csv'
-    end
+--- Convert xlsx -> csv
+extension.xlsx = function(path, bufnr)
+    convert('xlsx2csv -e %q', path, bufnr)
+    return 'csv'
 end
 --#endregion
 
 --#region Custom filetypes
 vim.g.do_filetype_lua = 1
--- vim.g.did_load_filetypes = 1
 
 extension.ass = 'ass'
 extension.chatito = 'chatito'
@@ -60,6 +53,7 @@ vim.filetype.add {
         ['.luacheckrc'] = 'lua',
         ['.SRCINFO'] = 'dosini',
         ['dev-requirements.txt'] = 'requirements',
+        ['fonts.conf'] = 'xml',
         ['MANIFEST.in'] = 'pymanifest',
         ['MANIFEST.MF'] = 'manifest',
         ['requirements.txt'] = 'requirements',

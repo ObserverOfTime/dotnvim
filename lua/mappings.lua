@@ -9,18 +9,16 @@ map('n', '<DOWN>', 'gj')
 --#endregion
 
 -- Close file
-map('n', '<C-q>', '<Cmd>q<CR>', {noremap = true})
+map('n', '<C-q>', '<Cmd>quit<CR>', {noremap = true})
 
 -- Save file
-map({'n', 'i'}, '<C-s>', '<Cmd>w<CR>', {noremap = true})
+map({'n', 'i'}, '<C-s>', '<Cmd>write<CR>', {noremap = true})
+
+-- Undo
+map({'n', 'i'}, '<C-z>', '<Cmd>undo<CR>', {noremap = true})
 
 -- Fix file indentation
 map('n', '<Leader><Tab>', 'mzgg=G`z', {noremap = true})
-
---#region Undo
-map('n', '<C-z>', 'u')
-map('i', '<C-z>', '<ESC>ua')
---#endregion
 
 --#region Copy to clipboard
 map('v', '<C-c>', '"+y', {noremap = true})
@@ -59,8 +57,8 @@ map('n', '<Leader>p', function()
 end)
 
 --#region Git
-map('n', ']h', '<Cmd>Gitsigns next_hunk<CR>')
 map('n', '[h', '<Cmd>Gitsigns prev_hunk<CR>')
+map('n', ']h', '<Cmd>Gitsigns next_hunk<CR>')
 map('n', '<Leader>gd', '<Cmd>Gitsigns diffthis<CR>')
 map('n', '<Leader>ga', '<Cmd>Gitsigns stage_hunk<CR>')
 map('n', '<Leader>gr', '<Cmd>Gitsigns reset_hunk<CR>')

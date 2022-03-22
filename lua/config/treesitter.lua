@@ -61,6 +61,7 @@ require('nvim-treesitter.configs').setup {
         'cpp',
         'css',
         'html',
+        'glimmer',
         'java',
         'javascript',
         'jsdoc',
