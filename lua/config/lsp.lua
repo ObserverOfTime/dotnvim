@@ -6,8 +6,9 @@ local i = require('config.icons').lsp
 --#endregion
 
 --#region Capabilities
-local capabilities = cmp.update_capabilities(
-    vim.lsp.protocol.make_client_capabilities())
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = cmp.update_capabilities(capabilities)
+capabilities.offsetEncoding = {'utf-16'}
 --#endregion
 
 --#region Borders

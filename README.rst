@@ -69,13 +69,14 @@ Using packer.nvim_ as the plugin manager.
 
 * `kyazdani42/nvim-web-devicons <https://github.com/kyazdani42/nvim-web-devicons>`_
 * `rcarriga/nvim-notify <https://github.com/rcarriga/nvim-notify>`_
+* `stevearc/dressing.nvim <https://github.com/stevearc/dressing.nvim>`_
 * `ibhagwan/fzf-lua <https://github.com/ibhagwan/fzf-lua>`_
 * `ellisonleao/gruvbox.nvim <https://github.com/ellisonleao/gruvbox.nvim>`_
 * `nvim-lualine/lualine.nvim <https://github.com/nvim-lualine/lualine.nvim>`_
 * `lukas-reineke/virt-column.nvim <https://github.com/lukas-reineke/virt-column.nvim>`_
 * `anuvyklack/pretty-fold.nvim <https://github.com/anuvyklack/pretty-fold.nvim>`_
 * `folke/todo-comments.nvim <https://github.com/folke/todo-comments.nvim>`_
-* `norcalli/nvim-colorizer.lua <https://github.com/norcalli/nvim-colorizer.lua>`_
+* `NvChad/nvim-colorizer.lua <https://github.com/NvChad/nvim-colorizer.lua>`_
 * `numToStr/Comment.nvim <https://github.com/numToStr/Comment.nvim>`_
 * `windwp/nvim-autopairs <https://github.com/windwp/nvim-autopairs>`_
 * `gpanders/editorconfig.nvim <https://github.com/gpanders/editorconfig.nvim>`_
@@ -111,7 +112,7 @@ Using packer.nvim_ as the plugin manager.
 
   - `kosayoda/nvim-lightbulb <https://github.com/kosayoda/nvim-lightbulb>`_
   - `simrat39/symbols-outline.nvim <https://github.com/simrat39/symbols-outline.nvim>`_
-  - `folke/lua-dev.nvim <https://github.com/folke/lua-dev.nvim>`_
+  - `max397574/lua-dev.nvim <https://github.com/max397574/lua-dev.nvim>`_
 * `jose-elias-alvarez/null-ls.nvim <https://github.com/jose-elias-alvarez/null-ls.nvim>`_ |P|
 * `mbbill/undotree <https://github.com/mbbill/undotree>`_ |V|
 * `kg8m/vim-simple-align <https://github.com/kg8m/vim-simple-align>`_ |V|

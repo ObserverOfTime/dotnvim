@@ -50,19 +50,23 @@ cmp.setup {
     enabled = true,
     formatting = {format = format},
     completion = {keyword_length = 1},
-    mapping = {
+    mapping = cmp.mapping.preset.insert {
         ['<CR>'] = cmp.mapping.confirm {select = false},
         ['<Tab>'] = cmp.mapping(forward, {'i', 's'}),
         ['<S-Tab>'] = cmp.mapping(backward, {'i', 's'}),
-        ['<C-x><C-o>'] = cmp.mapping.complete()
+        ['<C-Space>'] = cmp.mapping.complete(),
+        ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+        ['<C-f>'] = cmp.mapping.scroll_docs(4)
     },
     snippet = {
         expand = function(args)
             snip.expand_snippet(args.body)
         end
     },
-    documentation = {
-        border = {'┌', '─', '┐', '│', '┘', '─', '└', '│'}
+    window = {
+        documentation = {
+            border = {'┌', '─', '┐', '│', '┘', '─', '└', '│'}
+        }
     },
     sources = {
         {name = 'nvim_lsp'},

@@ -13,6 +13,11 @@ local function plugins(use)
         config = [[require('config').notify()]]
     }
     use {
+        'stevearc/dressing.nvim',
+        cond = [[vim.g.in_term]],
+        config = [[require('config').dressing()]]
+    }
+    use {
         'ibhagwan/fzf-lua',
         config = [[require('config').fzf()]]
     }
@@ -43,7 +48,7 @@ local function plugins(use)
         config = [[require('config').todocomments()]]
     }
     use {
-        'norcalli/nvim-colorizer.lua',
+        'NvChad/nvim-colorizer.lua',
         ft = c.color_fts,
         config = [[require('config'):colorizer()]]
     }
@@ -170,7 +175,7 @@ local function plugins(use)
         fts = c.lsp_fts
     }
     use {
-        'folke/lua-dev.nvim',
+        'max397574/lua-dev.nvim',
         ft = {'lua'}
     }
     use {

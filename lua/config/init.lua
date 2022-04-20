@@ -46,6 +46,9 @@ vim.g.sh_fold_enabled = 3
 -- TeX flavour
 vim.g.tex_flavor = 'latex'
 
+-- C header syntax
+vim.g.c_syntax_for_h = true
+
 -- Disable FZF
 vim.g.loaded_fzf = false
 
@@ -286,6 +289,17 @@ function config.fzf()
         }
     }
 end
+
+--#region Configure dressing
+function config.dressing()
+    require('dressing').setup {
+        input = {winblend = 0},
+        select = {
+            backend = {'fzf_lua', 'builtin'}
+        }
+    }
+end
+--#endregion
 
 --#region Configure Neogen
 function config.neogen()
