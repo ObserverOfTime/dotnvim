@@ -1,5 +1,3 @@
-local cache = vim.fn.stdpath('cache')
-
 --- Append newline to file
 vim.opt.fixendofline = true
 --- Do smart autoindenting
@@ -42,10 +40,6 @@ vim.opt.inccommand = 'split'
 vim.opt.spellsuggest = 'fast'
 --- Use ripgrep as grep
 vim.opt.grepprg = [[rg -S --vimgrep --no-heading $*]]
---- Set swap directory
-vim.opt.directory = cache..'/swap'
---- Set undo directory
-vim.opt.undodir = cache..'/undo'
 
 --- Enable mouse in all modes
 vim.opt.mouse = 'ar'
@@ -55,7 +49,9 @@ vim.opt.shortmess = 'aoOtTcF'
 --- Spellcheck languages
 vim.opt.spelllang = {'en', 'el'}
 -- Set backup directory
-vim.opt.backupdir = {cache..'/backup'}
+vim.opt.backupdir = {
+    vim.fn.stdpath('state')..'/backup'
+}
 --- Switch to open buffers or tabs
 vim.opt.switchbuf = {
     'useopen', 'usetab'

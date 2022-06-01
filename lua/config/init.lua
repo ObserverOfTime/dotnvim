@@ -58,7 +58,7 @@ vim.g.netrw_winsize = 25
 vim.g.netrw_liststyle = 3
 vim.g.netrw_sizestyle = 'H'
 vim.g.netrw_browse_split = 4
-vim.g.netrw_home = vim.fn.stdpath('cache')
+vim.g.netrw_home = vim.fn.stdpath('state')
 --#endregion
 
 --#region Unicode
@@ -240,8 +240,6 @@ function config.prettyfold()
             }
         }
     }
-
-    require('pretty-fold.preview').setup {border = 'double'}
 end
 
 -- Configure FZF
@@ -314,7 +312,7 @@ function config.neogen()
         require('snippy').expand_snippet {body = lines}
     end
     neogen.generate_command = function()
-        vim.api.nvim_add_user_command('Neogen', neogen_generate, {
+        vim.api.nvim_create_user_command('Neogen', neogen_generate, {
             range = true, nargs = '?', complete = neogen.match_commands
         })
     end

@@ -26,7 +26,7 @@ local function multiedit(args)
     end
 end
 
-vim.api.nvim_add_user_command('E', multiedit, {
+vim.api.nvim_create_user_command('E', multiedit, {
     nargs = '*', complete = 'file',
     desc = 'lua multiedit(...)'
 })
