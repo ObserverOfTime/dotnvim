@@ -140,7 +140,8 @@ lsp.bashls.setup {
     on_attach = on_attach,
     capabilities = capabilities,
     cmd_env = {
-        GLOB_PATTERN = '*.sh'
+        GLOB_PATTERN = '*.sh',
+        SHELLCHECK_PATH = ''
     }
 }
 --#endregion

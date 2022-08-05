@@ -265,11 +265,6 @@ local function plugins(use)
     }
     use {
         -- XXX: no tree-sitter parser
-        'MatthewDietrich/cup.vim',
-        ft = {'cup'}
-    }
-    use {
-        -- XXX: no tree-sitter parser
         'MartinDelille/vim-qmake',
         ft = {'qmake'}
     }

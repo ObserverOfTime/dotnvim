@@ -127,7 +127,6 @@ Using packer.nvim_ as the plugin manager.
 * `kchmck/vim-coffee-script <https://github.com/kchmck/vim-coffee-script>`_ |S|
 * `wsdjeg/vim-livescript <https://github.com/wsdjeg/vim-livescript>`_ |S|
 * `dieterplex/vim-smali <https://github.com/dieterplex/vim-smali>`_ |S|
-* `MatthewDietrich/cup.vim <https://github.com/MatthewDietrich/cup.vim>`_ |S|
 * `MartinDelille/vim-qmake <https://github.com/MartinDelille/vim-qmake>`_ |S|
 * `aklt/plantuml-syntax <https://github.com/aklt/plantuml-syntax>`_ |S|
 * `sayak-k/vim-log-highlighting <https://github.com/sayak-k/vim-log-highlighting>`_ |S|

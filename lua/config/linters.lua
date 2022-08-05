@@ -54,7 +54,8 @@ local cfg = {
     },
     shellcheck = {
         extra_args = {
-            '-e', 'SC1090,SC2128,SC2164'
+            '-e', 'SC1090,SC2034,SC2128,SC2148,SC2164',
+            '-o', 'add-default-case,require-double-brackets'
         }
     },
     shfmt = {

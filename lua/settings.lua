@@ -38,6 +38,8 @@ vim.opt.signcolumn = 'auto:1-3'
 vim.opt.inccommand = 'split'
 -- Show fast spell suggestions
 vim.opt.spellsuggest = 'fast'
+--- Disable right click menu
+vim.opt.mousemodel = 'extend'
 --- Use ripgrep as grep
 vim.opt.grepprg = [[rg -S --vimgrep --no-heading $*]]
 
