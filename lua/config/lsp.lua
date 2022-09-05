@@ -2,7 +2,7 @@
 local lsp = require 'lspconfig'
 local cmp = require 'cmp_nvim_lsp'
 local fzf = require 'fzf-lua'
-local i = require('config.icons').lsp
+local i = require('config.icons')
 --#endregion
 
 --#region Capabilities
@@ -39,7 +39,7 @@ end
 --#endregion
 
 --#region Signs
-for type, icon in pairs(i.diag) do
+for type, icon in pairs(i.lsp.diag) do
     local hl = 'DiagnosticSign'..type
     vim.api.nvim_set_hl(0, hl, {background = nil})
     vim.fn.sign_define(hl, {text = icon, texthl = hl})
@@ -54,17 +54,17 @@ local function on_attach(_, bufnr)
 
     local map = vim.keymap.set
     local opts = {buffer = bufnr}
-    local bulb = require 'nvim-lightbulb'
-    local syms = require 'symbols-outline'
+    local symbols = require 'symbols-outline'
+    local lightbulb = require 'nvim-lightbulb'
 
     vim.api.nvim_create_autocmd(
         {'CursorHold', 'CursorHoldI'}, {
             callback = function()
-                bulb.update_lightbulb {
+                lightbulb.update_lightbulb {
                     sign = {enabled = false},
                     virtual_text = {
-                        text = i.hint,
-                        enabled = true
+                        enabled = true,
+                        text = i.lsp.hint
                     }
                 }
             end, buffer = bufnr
@@ -77,12 +77,12 @@ local function on_attach(_, bufnr)
     map('n', 'glT', vim.lsp.buf.type_definition, opts)
     map('n', 'glR', vim.lsp.buf.references, opts)
     map('n', 'glr', vim.lsp.buf.rename, opts)
-    map('n', 'glf', vim.lsp.buf.formatting, opts)
+    map('n', 'glf', vim.lsp.buf.format, opts)
     map('n', 'glh', vim.lsp.buf.signature_help, opts)
     map('n', 'gla', fzf.lsp_code_actions, opts)
     map('n', 'gD', vim.lsp.buf.declaration, opts)
     map('n', 'gd', fzf.lsp_definitions, opts)
-    map('n', 'gO', syms.open_outline, opts)
+    map('n', 'gO', symbols.open_outline, opts)
     map('n', 'K', vim.lsp.buf.hover, opts)
 end
 
@@ -184,11 +184,6 @@ lsp.gradle_ls.setup {
     capabilities = capabilities
 }
 
-lsp.jedi_language_server.setup {
-    on_attach = on_attach,
-    capabilities = capabilities
-}
-
 lsp.html.setup {
     on_attach = on_attach,
     capabilities = capabilities,
@@ -234,6 +229,11 @@ lsp.jsonls.setup {
                     fileMatch = {'.luarc.json'},
                     url = 'https://raw.githubusercontent.com/sumneko/vscode-lua/master/setting/schema.json'
                 },
+                {
+                    fileMatch = {'pyrightconfig.json'},
+                    url = 'https://raw.githubusercontent.com/microsoft/pyright/main/'..
+                          'packages/vscode-pyright/schemas/pyrightconfig.schema.json'
+                }
             }
         }
     }
@@ -256,12 +256,12 @@ lsp.lemminx.setup {
                 {
                     pattern = '**/*.svg',
                     systemId = 'https://raw.githubusercontent.com/'..
-                        'dumistoklus/svg-xsd-schema/master/svg.xsd'
+                               'dumistoklus/svg-xsd-schema/master/svg.xsd'
                 },
                 {
                     pattern = 'AndroidManifest.xml',
                     systemId = 'https://gist.github.com/ObserverOfTime/'..
-                        '4bd03e49a3c267281cfa88853be53b1e/raw/AndroidManifest.xsd'
+                               '4bd03e49a3c267281cfa88853be53b1e/raw/AndroidManifest.xsd'
                 },
                 {
                     pattern = 'pom.xml',
@@ -269,15 +269,35 @@ lsp.lemminx.setup {
                 },
                 {
                     pattern = 'opensearch.xml',
-                    systemId = 'https://gitlab.com/gitlab-org/gitlab-foss/'..
-                        '-/raw/ab077b8/spec/fixtures/OpenSearchDescription.xsd'
+                    systemId = 'https://gitlab.com/gitlab-org/gitlab-foss/-/'..
+                               'raw/ab077b8/spec/fixtures/OpenSearchDescription.xsd'
                 },
             }
         }
     }
 }
 
+lsp.pyright.setup {
+    on_attach = on_attach,
+    capabilities = capabilities,
+    settings = {
+        python = {
+            disableOrganizeImports = true,
+            analysis = {
+                typeCheckingMode = 'off',
+                autoImportCompletions = true,
+                useLibraryCodeForTypes = true
+            }
+        }
+    }
+}
+
 lsp.r_language_server.setup {
+    on_attach = on_attach,
+    capabilities = capabilities
+}
+
+lsp.rust_analyzer.setup {
     on_attach = on_attach,
     capabilities = capabilities
 }
@@ -358,13 +378,4 @@ lsp.yamlls.setup {
 
 --#region Null LS
 require('null-ls').setup {on_attach = on_attach}
---#endregion
-
---#region Symbols Outline
-vim.g.symbols_outline = {
-    preview_bg_highlight = 'NormalFloat',
-    symbols = vim.tbl_map(function(val)
-        return {icon = val}
-    end, i.kind)
-}
 --#endregion

@@ -35,7 +35,7 @@ vim.opt.colorcolumn = '+1'
 --- Set signcolumn size
 vim.opt.signcolumn = 'auto:1-3'
 --- Show substitution preview
-vim.opt.inccommand = 'split'
+vim.opt.inccommand = 'nosplit'
 -- Show fast spell suggestions
 vim.opt.spellsuggest = 'fast'
 --- Disable right click menu

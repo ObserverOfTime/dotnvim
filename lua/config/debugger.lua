@@ -13,7 +13,16 @@ dap.configurations.c = {{
     request = 'launch',
     cwd = '${workspaceFolder}',
     program = function()
-        return vim.fn.input('Program: ', vim.fn.getcwd()..'/', 'file')
+        local co = assert(coroutine.running())
+        vim.schedule(function()
+            vim.ui.input({
+                prompt = 'Program',
+                completion = 'file'
+            }, function(input)
+                coroutine.resume(co, input)
+            end)
+        end)
+        return coroutine.yield()
     end,
     env = function()
         local variables = {}
@@ -58,7 +67,7 @@ dap.configurations.javascript = {{
     name = 'Node',
     request = 'launch',
     program = '${file}',
-    cwd = vim.fn.getcwd(),
+    cwd = vim.loop.cwd(),
     sourceMaps = true,
     protocol = 'inspector',
     console = 'integratedTerminal'
@@ -79,21 +88,27 @@ local function dapui_eval()
     package.loaded.dapui.eval()
 end
 
--- Evaluate input with DAP UI
+--- Evaluate input with DAP UI
 local function dapui_input()
-    local expr = vim.fn.input('Expression: ')
-    package.loaded.dapui.eval(expr)
+    vim.ui.input({
+        prompt = 'Expression'
+    }, package.loaded.dapui.eval)
 end
 
 --- Set log point
 local function dap_log_point()
-    local msg = vim.fn.input('Log point message: ')
-    dap.set_breakpoint(nil, nil, msg)
+    vim.ui.input({
+        prompt = 'Log point message'
+    }, function(input)
+        dap.set_breakpoint(nil, nil, input)
+    end)
 end
 
 --- Set breakpoint condition
 local function dap_condition()
-    dap.set_breakpoint(vim.fn.input('Condition: '))
+    vim.ui.input({
+        prompt = 'Condition',
+    }, dap.set_breakpoint)
 end
 
 map('n', '<Leader>Dc', dap.continue)

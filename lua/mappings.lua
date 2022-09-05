@@ -71,6 +71,6 @@ map('n', '[d', vim.diagnostic.goto_prev)
 map('n', ']d', vim.diagnostic.goto_next)
 map('n', '<Leader>l', function()
     vim.diagnostic.setloclist {open = false}
-    package.loaded['fzf-lua'].loclist {}
+    package.loaded['fzf-lua'].loclist()
 end)
 --#endregion

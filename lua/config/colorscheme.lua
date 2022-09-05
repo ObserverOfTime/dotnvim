@@ -5,6 +5,7 @@ if pcall(require, 'gruvbox') then
             Folded = {bg = '#1C1C1C'},
             Visual = {bg = '#3A3A3A'},
             MatchParen = {bg = '#303030'},
+            WinSeparator = {fg = '#BDAE93'},
             Todo = {fg = '#D7AF5F'},
             Pmenu = {bg = '#121212'},
             PmenuSel = {

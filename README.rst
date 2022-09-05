@@ -1,7 +1,7 @@
 My Neovim Configuration
 =======================
 
-**Neovim v0.7.0 is required.**
+**Neovim v0.8.0 is required.**
 
 .. contents::
    :local:
@@ -79,13 +79,13 @@ Using packer.nvim_ as the plugin manager.
 * `NvChad/nvim-colorizer.lua <https://github.com/NvChad/nvim-colorizer.lua>`_
 * `numToStr/Comment.nvim <https://github.com/numToStr/Comment.nvim>`_
 * `windwp/nvim-autopairs <https://github.com/windwp/nvim-autopairs>`_
+* `kylechui/nvim-surround <https://github.com/kylechui/nvim-surround>`_
 * `gpanders/editorconfig.nvim <https://github.com/gpanders/editorconfig.nvim>`_
 * `lewis6991/gitsigns.nvim <https://github.com/lewis6991/gitsigns.nvim>`_ |P|
 * `ObserverOfTime/nvimcord <https://github.com/ObserverOfTime/nvimcord>`_ |R|
 * `mattn/emmet-vim <https://github.com/mattn/emmet-vim>`_ |V|
 * `AndrewRadev/splitjoin.vim <https://github.com/AndrewRadev/splitjoin.vim>`_ |V|
 * `wsdjeg/vim-fetch <https://github.com/wsdjeg/vim-fetch>`_ |V|
-* `tpope/vim-surround <https://github.com/tpope/vim-surround>`_ |V|
 * `tpope/vim-abolish <https://github.com/tpope/vim-abolish>`_ |V|
 * `tpope/vim-eunuch <https://github.com/tpope/vim-eunuch>`_ |V|
 * `tpope/vim-fugitive <https://github.com/tpope/vim-fugitive>`_ |V|
@@ -102,6 +102,7 @@ Using packer.nvim_ as the plugin manager.
 * `hrsh7th/nvim-cmp <https://github.com/hrsh7th/nvim-cmp>`_
 
   - `hrsh7th/cmp-path <https://github.com/hrsh7th/cmp-path>`_
+  - `hrsh7th/cmp-omni <https://github.com/hrsh7th/cmp-omni>`_
   - `hrsh7th/cmp-buffer <https://github.com/hrsh7th/cmp-buffer>`_
   - `hrsh7th/cmp-nvim-lsp <https://github.com/hrsh7th/cmp-nvim-lsp>`_
   - `petertriho/cmp-git <https://github.com/petertriho/cmp-git>`_ |P|
@@ -111,6 +112,8 @@ Using packer.nvim_ as the plugin manager.
 * `neovim/nvim-lspconfig <https://github.com/neovim/nvim-lspconfig>`_
 
   - `kosayoda/nvim-lightbulb <https://github.com/kosayoda/nvim-lightbulb>`_
+
+    + `antoinemadec/FixCursorHold.nvim <https://github.com/antoinemadec/FixCursorHold.nvim>`_
   - `simrat39/symbols-outline.nvim <https://github.com/simrat39/symbols-outline.nvim>`_
   - `max397574/lua-dev.nvim <https://github.com/max397574/lua-dev.nvim>`_
 * `jose-elias-alvarez/null-ls.nvim <https://github.com/jose-elias-alvarez/null-ls.nvim>`_ |P|
@@ -153,19 +156,21 @@ Personal
 Tree-sitter
 -----------
 
+* bash
 * bibtex
 * c |T|
 * cmake
 * comment
 * cpp |T|
 * css |T|
+* dockerfile |H| |T|
 * html
 * glimmer
 * java |T|
 * javascript |T|
 * jsdoc
 * json |T|
-* kotlin |T|
+* kotlin |H| |T|
 * latex |H|
 * lua |T|
 * make
@@ -176,6 +181,7 @@ Tree-sitter
 * r |T|
 * regex
 * rst
+* rust |T|
 * scss |H| |T|
 * svelte
 * toml |T|
@@ -205,9 +211,10 @@ Language Servers
 :kotlin: kotlin-language-server_
 :less: vscode-css-languageserver_
 :lua: lua-language-server_
-:python: jedi-language-server_
+:python: pyright_
 :r: `r-languageserver`_
 :rst: esbonio_
+:rust: rust-analyzer_
 :scss: vscode-css-languageserver_
 :sh: bash-language-server_
 :stylus: vscode-css-languageserver_
@@ -290,7 +297,7 @@ Debuggers
 .. _flake8: https://flake8.pycqa.org/
 .. _gradle-language-server: https://github.com/naco-siren/vscode-gradle-language/tree/master/server
 .. _isort: https://pycqa.github.io/isort/
-.. _jedi-language-server: https://github.com/pappasam/jedi-language-server
+.. _pyright: https://github.com/microsoft/pyright
 .. _kotlin-language-server: https://github.com/fwcd/kotlin-language-server
 .. _ktlint: https://ktlint.github.io/
 .. _lemminx: https://github.com/eclipse/lemminx
@@ -303,6 +310,7 @@ Debuggers
 .. _pylint: https://pylint.org/
 .. _`r-languageserver`: https://github.com/REditorSupport/languageserver
 .. _rstcheck: https://github.com/myint/rstcheck
+.. _rust-analyzer: https://github.com/rust-lang/rust-analyzer
 .. _shellcheck: https://github.com/koalaman/shellcheck
 .. _shfmt: https://github.com/mvdan/sh
 .. _stylelint: https://stylelint.io/

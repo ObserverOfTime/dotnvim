@@ -38,7 +38,7 @@ config.emmet_fts = {
 vim.g.python3_host_prog = '/usr/bin/python3'
 
 -- Zip extensions
-vim.g.zipPlugin_ext = '*.zip,*.jar,*.war,*.cbz,*.epub'
+vim.g.zipPlugin_ext = '*.zip,*.jar,*.war,*.cbz,*.epub,*.whl,*.aix'
 
 -- Shell folding
 vim.g.sh_fold_enabled = 3
@@ -130,9 +130,10 @@ vim.g.discord_activate_on_enter = false
 
 --- Configure Colorizer
 function config:colorizer()
-    require('colorizer').setup(
-        self.color_fts, {css = true}
-    )
+    require('colorizer').setup {
+        filetypes = self.color_fts,
+        user_default_options = {css = true}
+    }
 end
 
 --- Configure VirtColumn
@@ -245,7 +246,8 @@ end
 -- Configure FZF
 function config.fzf()
     local i = require 'config.icons'
-    require('fzf-lua').setup {
+    local fzf = require 'fzf-lua'
+    fzf.setup {
         winopts = {
             preview = {
                 wrap = 'wrap',
@@ -286,20 +288,36 @@ function config.fzf()
             }
         }
     }
+    fzf.register_ui_select()
 end
 
---#region Configure dressing
+--- Configure symbols outline
+function config.symbols()
+    local i = require 'config.icons'
+    require('symbols-outline').setup {
+        preview_bg_highlight = 'NormalFloat',
+        symbols = vim.tbl_map(function(val)
+            return {icon = val}
+        end, i.lsp.kind)
+    }
+end
+
+--- Configure dressing
 function config.dressing()
     require('dressing').setup {
         input = {winblend = 0},
-        select = {
-            backend = {'fzf_lua', 'builtin'}
-        }
+        select = {enabled = false}
     }
 end
---#endregion
 
---#region Configure Neogen
+--- Configure surround
+function config.surround()
+    require('nvim-surround').setup {
+        move_cursor = false
+    }
+end
+
+--- Configure Neogen
 function config.neogen()
     local neogen = require 'neogen'
     local function neogen_generate(args)
@@ -307,7 +325,7 @@ function config.neogen()
             type = args.args, return_snippet = true
         }
         if not lines then return end
-        vim.fn.append(pos, '')
+        vim.fn.append(pos, '') ---@diagnostic disable-line: param-type-mismatch
         vim.api.nvim_command(tostring(pos + 1))
         require('snippy').expand_snippet {body = lines}
     end
@@ -326,7 +344,6 @@ function config.neogen()
         }
     }
 end
---#endregion
 
 --- Configure ToggleTerm
 function config.toggleterm()

@@ -75,10 +75,47 @@ cmp.setup {
         {
             name = 'buffer',
             option = {keyword_pattern = [[\k\+]]}
-        },
-        {name = 'cmp_git'}
+        }
     }
 }
 
+cmp.setup.filetype('gitcommit', {
+    sorting = {
+        comparators = {
+            cmp.config.compare.offset,
+            cmp.config.compare.exact,
+            cmp.config.compare.sort_text,
+            cmp.config.compare.order
+        }
+    },
+    sources = {
+        {name = 'git'},
+        {name = 'buffer'}
+    }
+})
+
+cmp.setup.filetype('query', {
+    sources = {
+        {name = 'omni'},
+        {name = 'buffer'}
+    }
+})
+
+cmp.setup.filetype('dap-repl', {
+    sources = {{
+        name = 'omni',
+        trigger_characters = {'.'}
+    }}
+})
+
 cmp.event:on('confirm_done', pairs.on_confirm_done())
+--#endregion
+
+--#region Git
+---@diagnostic disable-next-line: undefined-global
+if packer_plugins['cmp-git'].loaded then
+    require('cmp_git').setup {
+        enableRemoteUrlRewrites = true
+    }
+end
 --#endregion

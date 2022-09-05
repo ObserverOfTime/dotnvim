@@ -65,6 +65,10 @@ local function plugins(use)
         config = [[require('config').autopairs()]]
     }
     use {
+        'kylechui/nvim-surround',
+        config = [[require('config').surround()]]
+    }
+    use {
         'gpanders/editorconfig.nvim',
         cond = [[vim.fn.findfile('.editorconfig', '.;') ~= '']]
     }
@@ -92,8 +96,6 @@ local function plugins(use)
         'wsdjeg/vim-fetch'
     }
     use {
-        -- XXX: no good alternative
-        'tpope/vim-surround',
         -- XXX: no alternative
         'tpope/vim-abolish',
         -- XXX: no alternative
@@ -149,14 +151,14 @@ local function plugins(use)
     }
     use {
         'hrsh7th/cmp-path',
+        'hrsh7th/cmp-omni',
         'hrsh7th/cmp-buffer',
         'hrsh7th/cmp-nvim-lsp'
     }
     use {
         'petertriho/cmp-git',
         requires = {'nvim-lua/plenary.nvim'},
-        ft = {'gitcommit'},
-        config = [[require('cmp_git').setup()]]
+        ft = {'gitcommit'}
     }
     use {
         'dcampos/cmp-snippy',
@@ -168,11 +170,13 @@ local function plugins(use)
     --#region LSP
     use {
         'kosayoda/nvim-lightbulb',
-        fts = c.lsp_fts
+        fts = c.lsp_fts,
+        requires = {'antoinemadec/FixCursorHold.nvim'}
     }
     use {
         'simrat39/symbols-outline.nvim',
-        fts = c.lsp_fts
+        fts = c.lsp_fts,
+        config = [[require('config').symbols()]]
     }
     use {
         'max397574/lua-dev.nvim',

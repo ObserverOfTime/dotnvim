@@ -12,6 +12,7 @@ local function multiedit(args)
         return vim.api.nvim_command('silent tabnew')
     end
     for _, arg in ipairs(args.fargs) do
+        ---@diagnostic disable-next-line: missing-parameter
         local glob = vim.fn.glob(arg)
         if glob ~= '' then
             local files = vim.tbl_filter(

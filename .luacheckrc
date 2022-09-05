@@ -4,7 +4,7 @@ stds.nvim = {
 
 std = 'luajit+nvim'
 
-globals = {'put'}
+globals = {'put', 'packer_plugins'}
 
 exclude_files = {
     'plugin/packer_compiled.lua'

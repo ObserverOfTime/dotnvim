@@ -43,7 +43,7 @@ command! -complete=file -nargs=? W
 " files and verify their contents.
 function! s:SourceRC()
     " Abort if running as root
-    if expand('$EUID') == 0 | return | endif
+    if $USER ==# 'root' | return | endif
     if get(g:, '_exrc', '') !=# '' | return | endif
     let l:exrc = fnamemodify(findfile(
                 \ '.nvimrc', '.;'), ':p')
@@ -62,6 +62,8 @@ augroup VimInit
     au VimEnter * call <SID>SourceRC()
     " Set formatoptions (:h 'formatoptions')
     au BufEnter * set formatoptions=cqn1j
+    " Jump to last cursor position
+    au BufWinEnter * normal g`"
     " Fix cursor on exit
     au VimLeave * set guicursor=a:hor25
 augroup END

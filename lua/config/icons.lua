@@ -35,10 +35,11 @@ return {
     },
     cmp = {
         buffer = '﬘',
-        cmp_git = '',
-        snippy = '',
+        git = '',
         nvim_lsp = '',
+        omni = '',
         path = 'ﱮ',
+        snippy = '',
     },
     lsp = {
         kind = {

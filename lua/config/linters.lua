@@ -114,8 +114,6 @@ null_ls.register {
     --#endregion
 
     --#region Code actions
-    null_ls.builtins.code_actions.gitsigns,
-    null_ls.builtins.code_actions.gitrebase,
     null_ls.builtins.code_actions.eslint.with(cfg.eslint),
     null_ls.builtins.code_actions.shellcheck.with(cfg.shellcheck)
     --#endregion
