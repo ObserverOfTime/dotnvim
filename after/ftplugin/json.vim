@@ -1,2 +1,3 @@
 setlocal foldmethod=expr
-setlocal tabstop=2 shiftwidth=2
+setlocal conceallevel=1
+setlocal softtabstop=2 shiftwidth=2

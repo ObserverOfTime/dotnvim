@@ -1,3 +1,3 @@
-["@function" "@return"] @keyword
+; extends
 
-(function_statement (name) @function)
+[(variable_name) (variable_value)] @attribute

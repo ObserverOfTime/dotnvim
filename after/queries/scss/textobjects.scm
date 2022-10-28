@@ -1,1 +1,3 @@
-../css/textobjects.scm
+; extends
+
+[(integer_value) (float_value)] @number

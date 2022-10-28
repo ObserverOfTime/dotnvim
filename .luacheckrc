@@ -1,10 +1,12 @@
+---@diagnostic disable: undefined-global, lowercase-global
+
 stds.nvim = {
     globals = {'vim'}
 }
 
 std = 'luajit+nvim'
 
-globals = {'put', 'packer_plugins'}
+globals = {'packer_plugins'}
 
 exclude_files = {
     'plugin/packer_compiled.lua'

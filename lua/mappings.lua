@@ -1,7 +1,7 @@
 local map = vim.keymap.set
 
 -- Clear search highlighting
-map('n', ',/', '<Cmd>nohlsearch<CR>')
+map('n', '<Leader>/', '<Cmd>nohlsearch<CR>')
 
 --#region Move up/down in wrapped text
 map('n', '<UP>', 'gk')
@@ -31,12 +31,34 @@ map('x', [[a"]], [[2i"]], {noremap = true})
 map('x', [[a`]], [[2i`]], {noremap = true})
 --#endregion
 
+--#region Add more motions
+map({'o', 'x'}, 'a/', ':<C-U>normal F/vf/<CR>', {silent = true})
+map({'o', 'x'}, 'i/', ':<C-U>normal T/vt/<CR>', {silent = true})
+
+map({'o', 'x'}, 'a+', ':<C-U>normal F+vf+<CR>', {silent = true})
+map({'o', 'x'}, 'i+', ':<C-U>normal T+vt+<CR>', {silent = true})
+
+map({'o', 'x'}, 'a@', ':<C-U>normal F@vf@<CR>', {silent = true})
+map({'o', 'x'}, 'i@', ':<C-U>normal T@vt@<CR>', {silent = true})
+--#endregion
+
 --#region Actually delete text
 map('n', 'X', 'D', {noremap = true})
 map('n', 'dd', '"_dd', {noremap = true})
 map({'n', 'x'}, 'd', '"_d', {noremap = true})
 map({'n', 'x'}, 'D', '"_D', {noremap = true})
 map({'n', 'x'}, '<Del>', '"_x', {noremap = true})
+--#endregion
+
+--#region Map Greek letters
+map('n', 'ο', 'o')
+map('n', 'Ο', 'O')
+map('n', 'ι', 'i')
+map('n', 'Ι', 'I')
+map('n', 'α', 'a')
+map('n', 'Α', 'A')
+map('n', 'ζ=', 'z=')
+map('n', 'ζγ', 'zg')
 --#endregion
 
 -- Escape terminal
@@ -46,15 +68,22 @@ map('t', '<Esc>', [[<C-\><C-n>]], {noremap = true})
 map('n', '<Leader>u', '<Cmd>UndotreeToggle<CR>')
 
 -- Open todo list
-map('n', '<Leader>T', '<Cmd>TodoQuickFix<CR>')
+map('n', '<Leader>Q', '<Cmd>TodoQuickFix<CR>')
 
 -- Generate docs
 map('n', '<Leader>d', '<Cmd>Neogen<CR>')
 
--- Open equation preview
-map('n', '<Leader>p', function()
-    require('nabla').popup {border = 'rounded'}
-end)
+--#region Coverage
+map('n', '<Leader>cl', function()
+    package.loaded.coverage.load(true)
+end, {desc = 'load coverage'})
+map('n', '<Leader>cs', function()
+    package.loaded.coverage.summary()
+end, {desc = 'show coverage summary'})
+map('n', '<Leader>ct', function()
+    package.loaded.coverage.toggle()
+end, {desc = 'toggle coverage'})
+--#endregion
 
 --#region Git
 map('n', '[h', '<Cmd>Gitsigns prev_hunk<CR>')
@@ -67,10 +96,14 @@ map('n', '<Leader>gb', '<Cmd>Gitsigns toggle_current_line_blame<CR>')
 --#endregion
 
 --#region Diagnostics
-map('n', '[d', vim.diagnostic.goto_prev)
-map('n', ']d', vim.diagnostic.goto_next)
+map('n', '[d', vim.diagnostic.goto_prev, {
+    desc = 'Goto previous diagnostic'
+})
+map('n', ']d', vim.diagnostic.goto_next, {
+    desc = 'Goto next diagnostic'
+})
 map('n', '<Leader>l', function()
     vim.diagnostic.setloclist {open = false}
     package.loaded['fzf-lua'].loclist()
-end)
+end, {desc = 'list diagnostics'})
 --#endregion

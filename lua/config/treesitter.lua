@@ -3,11 +3,8 @@ vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
 
 --#region Config
 require('nvim-treesitter.configs').setup {
-    highlight = {
-        enable = true,
-        disable = {'bash'}
-    },
     indent = {enable = true},
+    highlight = {enable = true},
     playground = {enable = true},
     query_linter = {enable = true},
     incremental_selection = {enable = true},
@@ -28,7 +25,9 @@ require('nvim-treesitter.configs').setup {
                 ['aL'] = '@loop.outer',
                 ['iL'] = '@loop.inner',
                 ['aC'] = '@comment.outer',
-                ['in'] = '@number'
+                ['ar'] = '@regex.outer',
+                ['ir'] = '@regex.inner',
+                ['in'] = '@number',
             }
         },
         swap = {
@@ -39,7 +38,31 @@ require('nvim-treesitter.configs').setup {
             swap_previous = {
                 ['gsS'] = '@parameter.inner'
             }
-        }
+        },
+        move = {
+            enable = true,
+            set_jumps = true,
+            goto_next_start = {
+                [']k'] = '@class.outer',
+                [']m'] = '@function.outer',
+                [']a'] = '@parameter.outer'
+            },
+            goto_next_end = {
+                [']K'] = '@class.outer',
+                [']M'] = '@function.outer',
+                [']A'] = '@parameter.outer'
+            },
+            goto_previous_start = {
+                ['[k'] = '@class.outer',
+                ['[m'] = '@function.outer',
+                ['[a'] = '@parameter.outer'
+            },
+            goto_previous_end = {
+                ['[K'] = '@class.outer',
+                ['[M'] = '@function.outer',
+                ['[A'] = '@parameter.outer'
+            },
+        },
     },
     refactor = {
         smart_rename = {
@@ -51,9 +74,10 @@ require('nvim-treesitter.configs').setup {
         navigation = {
             enable = true,
             keymaps = {
-                goto_definition = 'gsd',
-                goto_next_usage = 'gsn',
-                goto_previous_usage = 'gsp'
+                goto_definition      = 'gsd',
+                goto_next_usage      = 'gsn',
+                goto_previous_usage  = 'gsp',
+                list_definitions_toc = 'gst'
             }
         }
     },
@@ -66,24 +90,31 @@ require('nvim-treesitter.configs').setup {
         'cpp',
         'css',
         'dockerfile',
+        'gitattributes',
+        'gitignore',
         'glimmer',
         -- 'help', FIXME: vigoux/tree-sitter-vimdoc#1
         'html',
+        'http',
         'java',
         'javascript',
         'jsdoc',
         'json',
+        'jsonc',
         'kotlin',
         'latex',
         'lua',
+        'luap',
         'make',
         'markdown',
+        'markdown_inline',
         'nix',
         -- 'perl', FIXME: ganezdragon/tree-sitter-perl#20
         'python',
         'query',
         'r',
         'regex',
+        'rnoweb',
         'rst',
         'rust',
         'scss',

@@ -1,15 +1,19 @@
 syn keyword fsOptionsGeneral lazytime
 syn keyword fsOptionsKeywords nodiscard hidden nohidden
 
-syn keyword fsTypeKeyword contained exfat ntfs3
+syn keyword fsTypeKeyword exfat ntfs3 contained
 
 syn match fsOptionsSize /\d\+[MG]/
 syn match fsOptionsTime /\d\+[smh]/
 
-syn match fsOptionsKeywords contained
-    \ /\<size=/ nextgroup=fsOptionsSize
-syn match fsOptionsKeywords contained
-    \ /\<x-systemd\.device-timeout=/ nextgroup=fsOptionsTime
+syn match fsOptionsKeywords
+            \ /\<size=/
+            \ contained
+            \ nextgroup=fsOptionsSize
+syn match fsOptionsKeywords
+            \ /\<x-systemd\.device-timeout=/
+            \ contained
+            \ nextgroup=fsOptionsTime
 
 hi! link fsDevice Structure
 hi! link fsMountPoint Special

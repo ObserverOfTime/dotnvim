@@ -1,1 +1,3 @@
-([(integer) (float)]) @number
+; extends
+
+[(integer) (float)] @number

@@ -1,7 +1,0 @@
-* text=auto
-
-.luacheckrc linguist-language=Lua
-
-syntax/ass.vim linguist-vendored
-syntax/openvpn.vim linguist-vendored
-syntax/manifest.vim linguist-vendored

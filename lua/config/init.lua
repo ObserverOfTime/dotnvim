@@ -2,7 +2,7 @@ local config = {}
 
 --- Debuggable filetypes
 config.debug_fts = {
-    'c', 'cpp', 'python', 'javascript'
+    'c', 'cpp', 'python', 'java', 'javascript'
 }
 
 --- Colorable filetypes
@@ -23,7 +23,7 @@ config.lsp_fts = {
     'sh', 'c', 'cpp', 'css', 'scss', 'less',
     'stylus', 'dockerfile', 'groovy', 'html',
     'python', 'json', 'kotlin', 'r', 'rst',
-    'lua', 'svelte', 'tex', 'bib',
+    'lua', 'svelte', 'tex', 'bib', 'toml',
     'javascript', 'typescript', 'vim', 'yaml'
 }
 
@@ -197,10 +197,10 @@ function config.gitsigns()
     local i = require('config.icons').git
     require('gitsigns').setup {
         signs = {
-            add = {text = i.hunks.A},
-            change = {text = i.hunks.M},
-            delete = {text = i.hunks.D},
-            topdelete = {text = i.hunks.D},
+            add          = {text = i.hunks.A},
+            change       = {text = i.hunks.M},
+            delete       = {text = i.hunks.D},
+            topdelete    = {text = i.hunks.D},
             changedelete = {text = i.hunks.M}
         }
     }
@@ -211,7 +211,7 @@ function config.todocomments()
     local i = require('config.icons').todo
     require('todo-comments').setup {
         keywords = {
-            FIX = {icon = i.FIX},
+            FIX  = {icon = i.FIX},
             TODO = {icon = i.TODO},
             HACK = {icon = i.HACK},
             WARN = {icon = i.WARN, alt = {'WARNING'}},
@@ -257,22 +257,22 @@ function config.fzf()
         },
         keymap = {
             builtin = {
-                ['?'] = 'toggle-help',
-                ['<C-d>'] = 'toggle-fullscreen',
-                ['<C-w>'] = 'toggle-preview-wrap',
-                ['<C-p>'] = 'toggle-preview',
+                ['?']        = 'toggle-help',
+                ['<C-d>']    = 'toggle-fullscreen',
+                ['<C-w>']    = 'toggle-preview-wrap',
+                ['<C-p>']    = 'toggle-preview',
                 ['<S-Down>'] = 'preview-page-down',
-                ['<S-Up>'] = 'preview-page-up',
-                ['<C-r>'] = 'preview-page-reset'
+                ['<S-Up>']   = 'preview-page-up',
+                ['<C-r>']    = 'preview-page-reset'
             }
         },
         lsp = {
             async_or_timeout = 3000,
             icons = {
-                Error = {icon = i.lsp.diag.Error, color = 'red'},
-                Warning = {icon = i.lsp.diag.Warn, color = 'yellow'},
-                Information = {icon = i.lsp.diag.Info, color = 'cyan'},
-                Hint = {icon = i.lsp.diag.Hint, color = 'blue'},
+                Error       = {icon = i.lsp.diag.Error, color = 'red'},
+                Warning     = {icon = i.lsp.diag.Warn, color  = 'yellow'},
+                Information = {icon = i.lsp.diag.Info, color  = 'cyan'},
+                Hint        = {icon = i.lsp.diag.Hint, color  = 'blue'},
             }
         },
         git = {
@@ -317,43 +317,44 @@ function config.surround()
     }
 end
 
+--- Configure coverage
+function config.coverage()
+    require('coverage').setup {
+        commands = false,
+        highlights = {
+            covered   = {fg = '#00DD00'},
+            uncovered = {fg = '#FF0000'}
+        },
+        signs = {
+            covered   = {text = '▍', priority = 1},
+            uncovered = {text = '▍', priority = 1}
+        }
+    }
+end
+
 --- Configure Neogen
 function config.neogen()
-    local neogen = require 'neogen'
-    local function neogen_generate(args)
-        local lines, pos = neogen.generate {
-            type = args.args, return_snippet = true
-        }
-        if not lines then return end
-        vim.fn.append(pos, '') ---@diagnostic disable-line: param-type-mismatch
-        vim.api.nvim_command(tostring(pos + 1))
-        require('snippy').expand_snippet {body = lines}
-    end
-    neogen.generate_command = function()
-        vim.api.nvim_create_user_command('Neogen', neogen_generate, {
-            range = true, nargs = '?', complete = neogen.match_commands
-        })
-    end
     local py_template = vim.g.neogen_py_template or 'reST'
-    neogen.setup {
-        enable_placeholders = false,
+    require('neogen').setup {
+        enable_placeholders = true,
+        snippet_engine = 'snippy',
         languages = {
             python = {
-                template = {annotation_convention = py_template}
+                template = {
+                    annotation_convention = py_template
+                }
             }
         }
     }
 end
 
---- Configure ToggleTerm
-function config.toggleterm()
-    require('toggleterm').setup {
-        size = 10,
-        shell = 'bash -l',
-        direction = 'horizontal',
-        shade_terminals = false,
-        open_mapping = '<Leader>t'
-    }
+--- Configure EditorConfig
+function config.editorconfig()
+    local ec = require 'editorconfig'
+    -- XXX: editorconfig/editorconfig#315
+    ec.properties.spell_language = function(bufnr, val)
+        vim.bo[bufnr].spelllang = val
+    end
 end
 
 return config

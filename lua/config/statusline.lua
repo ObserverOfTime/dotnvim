@@ -69,9 +69,14 @@ local comp = {
     csv_col = {csv_col, cond = is_csv},
     expandtab = expandtab,
     trailing = trailing,
-    filename = {'filename', symbols = {
-        modified = ' ', readonly = ' '
-    }},
+    filename = {
+        'filename',
+        path = 1,
+        symbols = {
+            modified = '',
+            readonly = ''
+        }
+    },
     spell = spell,
     paste = paste,
     clock = clock
@@ -125,7 +130,7 @@ require('lualine.extensions.quickfix').sections.lualine_a = {
 --#region Clock
 if not _G._clock_timer then
     local refresh = vim.schedule_wrap(function()
-        vim.api.nvim_command('redrawstatus')
+        vim.cmd.redrawstatus()
     end)
 
     _G._clock_timer = vim.loop.new_timer()

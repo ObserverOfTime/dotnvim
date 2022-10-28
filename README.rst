@@ -29,35 +29,10 @@ Commands
      - Delete trailing whitespace
    * - ``SynStack``
      - Show syntax groups under cursor
-   * - ``W``
-     - Save a file after creating parent directories
-
-Syntax files
-------------
-
-Custom
-^^^^^^
-
-| Feel free to download any of these that you want.
-| I might separate them from the repo at some point.
-|
-
-* `chatito <https://github.com/rodrigopivi/Chatito/blob/master/spec.md>`_
-* `gitattributes <https://git-scm.com/docs/gitattributes>`_
-* `gitignore <https://git-scm.com/docs/gitignore>`_
-* `pymanifest <https://packaging.python.org/en/latest/guides/using-manifest-in/>`_
-* `requirements <https://pip.pypa.io/en/stable/reference/requirements-file-format/>`_
-* `srt <https://en.wikipedia.org/wiki/SubRip#SubRip_file_format>`_
-* `vdf <https://developer.valvesoftware.com/wiki/KeyValues>`_
-
-Vendored
-^^^^^^^^
-
-All of these are public domain.
-
-* `ass <https://github.com/joeky888/Ass.vim>`_
-* `manifest <https://github.com/alblue/vim-manifest>`_
-* `openvpn <https://github.com/mvoppen/openvpn>`_
+   * - ``Term``
+     - Open a terminal in a horizontal split
+   * - ``TermExec``
+     - Execute the selection in the terminal
 
 Plugins
 -------
@@ -94,7 +69,6 @@ Using packer.nvim_ as the plugin manager.
   - `nvim-treesitter/nvim-treesitter-refactor <https://github.com/nvim-treesitter/nvim-treesitter-refactor>`_
   - `nvim-treesitter/nvim-treesitter-textobjects <https://github.com/nvim-treesitter/nvim-treesitter-textobjects>`_
   - `nvim-treesitter/playground <https://github.com/nvim-treesitter/playground>`_
-  - `lewis6991/spellsitter.nvim <https://github.com/lewis6991/spellsitter.nvim>`_
   - `stsewd/sphinx.nvim <https://github.com/stsewd/sphinx.nvim>`_ |R|
 * `mfussenegger/nvim-dap <https://github.com/mfussenegger/nvim-dap>`_
 
@@ -109,28 +83,21 @@ Using packer.nvim_ as the plugin manager.
   - `dcampos/cmp-snippy <https://github.com/dcampos/cmp-snippy>`_
 
     + `ObserverOfTime/nvim-snippy <https://github.com/ObserverOfTime/nvim-snippy>`_
-* `neovim/nvim-lspconfig <https://github.com/neovim/nvim-lspconfig>`_
-
-  - `kosayoda/nvim-lightbulb <https://github.com/kosayoda/nvim-lightbulb>`_
-
-    + `antoinemadec/FixCursorHold.nvim <https://github.com/antoinemadec/FixCursorHold.nvim>`_
-  - `simrat39/symbols-outline.nvim <https://github.com/simrat39/symbols-outline.nvim>`_
-  - `max397574/lua-dev.nvim <https://github.com/max397574/lua-dev.nvim>`_
+* `kosayoda/nvim-lightbulb <https://github.com/kosayoda/nvim-lightbulb>`_
+* `simrat39/symbols-outline.nvim <https://github.com/simrat39/symbols-outline.nvim>`_
+* `lvimuser/lsp-inlayhints.nvim <https://github.com/lvimuser/lsp-inlayhints.nvim>`_
+* `folke/neodev.nvim <https://github.com/folke/neodev.nvim>`_
 * `jose-elias-alvarez/null-ls.nvim <https://github.com/jose-elias-alvarez/null-ls.nvim>`_ |P|
 * `mbbill/undotree <https://github.com/mbbill/undotree>`_ |V|
 * `kg8m/vim-simple-align <https://github.com/kg8m/vim-simple-align>`_ |V|
 * `chrisbra/unicode.vim <https://github.com/chrisbra/unicode.vim>`_ |V|
 * `danymat/neogen <https://github.com/danymat/neogen>`_
-* `akinsho/toggleterm.nvim <https://github.com/akinsho/toggleterm.nvim>`_
-* `ellisonleao/glow.nvim <https://github.com/ellisonleao/glow.nvim>`_
-* `jbyuki/nabla.nvim <https://github.com/jbyuki/nabla.nvim>`_
+* `andythigpen/nvim-coverage <https://github.com/andythigpen/nvim-coverage>`_ |P|
 * `chrisbra/csv.vim <https://github.com/chrisbra/csv.vim>`_ |V| |S|
 * `seletskiy/vim-pug <https://github.com/seletskiy/vim-pug>`_ |S|
 * `vio/vim-stylus <https://github.com/vio/vim-stylus>`_ |S|
 * `kchmck/vim-coffee-script <https://github.com/kchmck/vim-coffee-script>`_ |S|
 * `wsdjeg/vim-livescript <https://github.com/wsdjeg/vim-livescript>`_ |S|
-* `dieterplex/vim-smali <https://github.com/dieterplex/vim-smali>`_ |S|
-* `MartinDelille/vim-qmake <https://github.com/MartinDelille/vim-qmake>`_ |S|
 * `aklt/plantuml-syntax <https://github.com/aklt/plantuml-syntax>`_ |S|
 * `sayak-k/vim-log-highlighting <https://github.com/sayak-k/vim-log-highlighting>`_ |S|
 
@@ -156,43 +123,49 @@ Personal
 Tree-sitter
 -----------
 
-* bash
+* bash |H|
 * bibtex
 * c |T|
 * cmake
 * comment
 * cpp |T|
 * css |T|
-* dockerfile |H| |T|
+* dockerfile |T|
 * html
+* http
 * glimmer
 * java |T|
 * javascript |T|
 * jsdoc
-* json |T|
-* kotlin |H| |T|
+* json |H| |T|
+* jsonc |H| |T|
+* kotlin |T|
 * latex |H|
 * lua |T|
 * make
-* markdown
+* markdown |H| |I|
+* markdown_inline |H|
 * nix |T|
 * python |T|
 * query
 * r |T|
 * regex
-* rst
+* rst |I|
+* rnoweb
 * rust |T|
-* scss |H| |T|
+* scss |T|
 * svelte
 * toml |T|
-* typescript |H| |T|
+* typescript |T|
 * vim |T|
 * yaml |T|
 
+| |I| Custom injections
 | |H| Custom highlights
 | |T| Custom text objects
 
 .. |H| replace:: :sup:`H`
+.. |I| replace:: :sup:`I`
 .. |T| replace:: :sup:`T`
 
 Language Servers
@@ -200,27 +173,26 @@ Language Servers
 
 :bib: texlab_
 :c: clangd_
-:cmake: cmake-language-server_
+:cmake: neocmakelsp_
 :cpp: clangd_
 :css: vscode-css-languageserver_
 :dockerfile: docker-langserver_
-:groovy: gradle-language-server_
 :html: vscode-html-languageserver_
 :javascript: typescript-language-server_
 :json: vscode-json-languageserver_
-:kotlin: kotlin-language-server_
 :less: vscode-css-languageserver_
 :lua: lua-language-server_
 :python: pyright_
 :r: `r-languageserver`_
+:rnoweb: texlab_
 :rst: esbonio_
 :rust: rust-analyzer_
 :scss: vscode-css-languageserver_
 :sh: bash-language-server_
-:stylus: vscode-css-languageserver_
 :svelte: svelteserver_
 :svg: lemminx_
 :tex: texlab_
+:toml: taplo_
 :typescript: typescript-language-server_
 :vim: `vim-language-server`_
 :xml: lemminx_
@@ -232,8 +204,7 @@ Linters
 :css: stylelint_
 :html: tidy_
 :htmldjango: djlint_
-:javascript: eslint_
-:kotlin: ktlint_
+:javascript: eslint_d_
 :less: stylelint_
 :lua: luacheck_
 :pug: pug-lint_
@@ -246,9 +217,9 @@ Linters
 :sh: shellcheck_
 :stylus: stylint_
 :svelte:
-   | eslint_
+   | eslint_d_
    | stylelint_
-:typescript: eslint_
+:typescript: eslint_d_
 :vim: vint_
 
 Formatters
@@ -256,7 +227,7 @@ Formatters
 
 :css: stylelint_
 :html: tidy_
-:javascript: eslint_
+:javascript: eslint_d_
 :kotlin: ktlint_
 :less: stylelint_
 :lua: stylua_
@@ -267,10 +238,10 @@ Formatters
 :scss: stylelint_
 :sh: shfmt_
 :svelte:
-   | eslint_
+   | eslint_d_
    | stylelint_
 :svg: xmllint_
-:typescript: eslint_
+:typescript: eslint_d_
 :xml: xmllint_
 
 Debuggers
@@ -288,26 +259,24 @@ Debuggers
 .. _autopep8: https://github.com/hhatto/autopep8
 .. _bash-language-server: https://github.com/bash-lsp/bash-language-server
 .. _clangd: https://clangd.llvm.org/
-.. _cmake-language-server: https://github.com/regen100/cmake-language-server
 .. _debugpy: https://github.com/microsoft/debugpy
 .. _djlint: https://djlint.com/
 .. _docker-langserver: https://github.com/rcjsuen/dockerfile-language-server-nodejs
 .. _esbonio: https://github.com/swyddfa/esbonio
-.. _eslint: https://eslint.org/
+.. _eslint_d: https://github.com/mantoni/eslint_d.js
 .. _flake8: https://flake8.pycqa.org/
-.. _gradle-language-server: https://github.com/naco-siren/vscode-gradle-language/tree/master/server
 .. _isort: https://pycqa.github.io/isort/
-.. _pyright: https://github.com/microsoft/pyright
-.. _kotlin-language-server: https://github.com/fwcd/kotlin-language-server
 .. _ktlint: https://ktlint.github.io/
 .. _lemminx: https://github.com/eclipse/lemminx
 .. _lldb-vscode: https://github.com/llvm/llvm-project/tree/main/lldb/tools/lldb-vscode
 .. _lua-language-server: https://github.com/sumneko/lua-language-server/
 .. _luacheck: https://luacheck.readthedocs.io/
 .. _mypy: https://mypy.readthedocs.io/
+.. _neocmakelsp: https://github.com/Decodetalkers/neocmakelsp
 .. _perltidy: https://metacpan.org/dist/Perl-Tidy/view/bin/perltidy
 .. _pug-lint: https://github.com/pugjs/pug-lint
 .. _pylint: https://pylint.org/
+.. _pyright: https://github.com/microsoft/pyright
 .. _`r-languageserver`: https://github.com/REditorSupport/languageserver
 .. _rstcheck: https://github.com/myint/rstcheck
 .. _rust-analyzer: https://github.com/rust-lang/rust-analyzer
@@ -317,6 +286,7 @@ Debuggers
 .. _stylint: https://simenb.github.io/stylint/
 .. _stylua: https://github.com/JohnnyMorganz/StyLua
 .. _svelteserver: https://github.com/sveltejs/language-tools/tree/master/packages/language-server
+.. _taplo: https://github.com/tamasfe/taplo/tree/master/crates/taplo-lsp
 .. _texlab: https://github.com/latex-lsp/texlab
 .. _tidy: https://www.html-tidy.org/
 .. _typescript-language-server: https://github.com/typescript-language-server/typescript-language-server

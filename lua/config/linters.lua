@@ -23,8 +23,8 @@ local cfg = {
         filetypes = {'htmldjango'},
         condition = is_executable('djlint')
     },
-    eslint = {
-        prefer_local = 'node_modules/.bin',
+    eslint_d = {
+        env = {ESLINT_D_LOCAL_ESLINT_ONLY = true},
         filetypes = {'javascript', 'typescript', 'svelte'},
         condition = has_node_bin('eslint')
     },
@@ -47,7 +47,7 @@ local cfg = {
     },
     puglint = {
         prefer_local = 'node_modules/.bin',
-        condition = has_node_bin('pug-lint'),
+        condition = has_node_bin('pug-lint')
     },
     pylint = {
         condition = is_executable('pylint')
@@ -63,11 +63,12 @@ local cfg = {
     },
     stylelint = {
         prefer_local = 'node_modules/.bin',
-        filetypes = {'css', 'scss', 'less', 'svelte'}
+        filetypes = {'css', 'scss', 'less', 'svelte'},
+        condition = has_node_bin('stylelint')
     },
     stylint = {
         prefer_local = 'node_modules/.bin',
-        condition = has_node_bin('stylint'),
+        condition = has_node_bin('stylint')
     },
     tidy = {
         filetypes = {'html'}
@@ -82,40 +83,41 @@ local cfg = {
 --#endregion
 
 --#region Sources
-null_ls.register {
-    --#region Diagnostics
-    null_ls.builtins.diagnostics.djlint.with(cfg.djlint),
-    null_ls.builtins.diagnostics.eslint.with(cfg.eslint),
-    null_ls.builtins.diagnostics.flake8.with(cfg.flake8),
-    null_ls.builtins.diagnostics.ktlint.with(cfg.ktlint),
-    null_ls.builtins.diagnostics.luacheck,
-    null_ls.builtins.diagnostics.mypy.with(cfg.mypy),
-    null_ls.builtins.diagnostics.puglint.with(cfg.puglint),
-    null_ls.builtins.diagnostics.pylint.with(cfg.pylint),
-    null_ls.builtins.diagnostics.rstcheck.with(cfg.rstcheck),
-    null_ls.builtins.diagnostics.shellcheck.with(cfg.shellcheck),
-    null_ls.builtins.diagnostics.stylelint.with(cfg.stylelint),
-    null_ls.builtins.diagnostics.stylint.with(cfg.stylint),
-    null_ls.builtins.diagnostics.tidy.with(cfg.tidy),
-    null_ls.builtins.diagnostics.vint.with(cfg.vint),
-    --#endregion
+require('null-ls').setup {
+    debug = true,
+    sources = {
+        --#region Diagnostics
+        null_ls.builtins.diagnostics.djlint.with(cfg.djlint),
+        null_ls.builtins.diagnostics.eslint_d.with(cfg.eslint_d),
+        null_ls.builtins.diagnostics.flake8.with(cfg.flake8),
+        null_ls.builtins.diagnostics.luacheck,
+        null_ls.builtins.diagnostics.mypy.with(cfg.mypy),
+        null_ls.builtins.diagnostics.puglint.with(cfg.puglint),
+        null_ls.builtins.diagnostics.pylint.with(cfg.pylint),
+        null_ls.builtins.diagnostics.rstcheck.with(cfg.rstcheck),
+        null_ls.builtins.diagnostics.shellcheck.with(cfg.shellcheck),
+        null_ls.builtins.diagnostics.stylelint.with(cfg.stylelint),
+        null_ls.builtins.diagnostics.stylint.with(cfg.stylint),
+        null_ls.builtins.diagnostics.tidy.with(cfg.tidy),
+        -- null_ls.builtins.diagnostics.vint.with(cfg.vint),
+        --#endregion
 
-    --#region Formatting
-    null_ls.builtins.formatting.autopep8.with(cfg.autopep8),
-    null_ls.builtins.formatting.eslint.with(cfg.eslint),
-    null_ls.builtins.formatting.isort.with(cfg.isort),
-    null_ls.builtins.formatting.ktlint.with(cfg.ktlint),
-    null_ls.builtins.formatting.perltidy,
-    null_ls.builtins.formatting.shfmt.with(cfg.shfmt),
-    null_ls.builtins.formatting.stylelint.with(cfg.stylelint),
-    null_ls.builtins.formatting.stylua,
-    null_ls.builtins.formatting.tidy.with(cfg.tidy),
-    null_ls.builtins.formatting.xmllint.with(cfg.xmllint),
-    --#endregion
+        --#region Formatting
+        null_ls.builtins.formatting.autopep8.with(cfg.autopep8),
+        null_ls.builtins.formatting.eslint_d.with(cfg.eslint_d),
+        null_ls.builtins.formatting.isort.with(cfg.isort),
+        null_ls.builtins.formatting.perltidy,
+        null_ls.builtins.formatting.shfmt.with(cfg.shfmt),
+        null_ls.builtins.formatting.stylelint.with(cfg.stylelint),
+        null_ls.builtins.formatting.stylua,
+        null_ls.builtins.formatting.tidy.with(cfg.tidy),
+        null_ls.builtins.formatting.xmllint.with(cfg.xmllint),
+        --#endregion
 
-    --#region Code actions
-    null_ls.builtins.code_actions.eslint.with(cfg.eslint),
-    null_ls.builtins.code_actions.shellcheck.with(cfg.shellcheck)
-    --#endregion
+        --#region Code actions
+        null_ls.builtins.code_actions.eslint_d.with(cfg.eslint_d),
+        null_ls.builtins.code_actions.shellcheck.with(cfg.shellcheck)
+        --#endregion
+    }
 }
 --#endregion

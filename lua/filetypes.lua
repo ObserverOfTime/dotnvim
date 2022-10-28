@@ -3,15 +3,9 @@ local extension = {}
 
 --- Convert buffer
 local function convert(cmd, path, bufnr)
-    vim.api.nvim_command(
-        'silent %!'..cmd:format(path)
-    )
-    vim.api.nvim_buf_set_option(
-        bufnr, 'modifiable', false
-    )
-    vim.api.nvim_buf_set_option(
-        bufnr, 'readonly', true
-    )
+    vim.api.nvim_command('silent %!'..cmd:format(path))
+    vim.api.nvim_buf_set_option(bufnr, 'modifiable', false)
+    vim.api.nvim_buf_set_option(bufnr, 'readonly', true)
 end
 
 --- Convert pdf -> text
@@ -34,37 +28,13 @@ end
 --#endregion
 
 --#region Custom filetypes
-vim.g.do_filetype_lua = 1
-
-extension.ass = 'ass'
-extension.chatito = 'chatito'
-extension.ovpn = 'openvpn'
-extension.srt = 'srt'
-extension.tikz = 'tex'
-extension.vdf = 'vdf'
-
 vim.filetype.add {
     extension = extension,
     filename = {
-        ['.gitattributes'] = 'gitattributes',
-        ['.gitignore'] = 'gitignore',
-        ['.latexmkrc'] = 'perl',
-        ['.lintr'] = 'debcontrol',
-        ['.luacheckrc'] = 'lua',
-        ['.SRCINFO'] = 'dosini',
+        ['.lintr']               = 'debcontrol',
         ['dev-requirements.txt'] = 'requirements',
-        ['fonts.conf'] = 'xml',
-        ['MANIFEST.in'] = 'pymanifest',
-        ['MANIFEST.MF'] = 'manifest',
-        ['requirements.txt'] = 'requirements',
-        ['Rprofile'] = 'r',
-        ['vifmrc'] = 'vim',
-    },
-    pattern = {
-        ['.*/git/ignore'] = 'gitignore',
-        ['.*/info/attributes'] = 'gitattributes',
-        ['.*/info/exclude'] = 'gitignore',
-        ['.*/openvpn/.*/.*%.conf'] = 'openvpn',
+        ['MANIFEST.in']          = 'pymanifest',
+        ['requirements.txt']     = 'requirements',
     }
 }
 --#endregion

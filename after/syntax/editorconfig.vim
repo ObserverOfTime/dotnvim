@@ -1,2 +1,3 @@
 syn keyword editorconfigProperty
-            \ quote_type curly_bracket_next_line
+            \ curly_bracket_next_line
+            \ quote_type

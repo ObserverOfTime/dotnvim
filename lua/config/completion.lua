@@ -15,8 +15,8 @@ end
 
 --- Check if cursor is after words
 local function has_words_before()
-    local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-    line = vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]
+    local lnum, col = unpack(vim.api.nvim_win_get_cursor(0))
+    local line = vim.api.nvim_buf_get_lines(0, lnum - 1, lnum, true)[1]
     return col ~= 0 and line:sub(col, col):match('%s') == nil
 end
 
@@ -54,7 +54,7 @@ cmp.setup {
         ['<CR>'] = cmp.mapping.confirm {select = false},
         ['<Tab>'] = cmp.mapping(forward, {'i', 's'}),
         ['<S-Tab>'] = cmp.mapping(backward, {'i', 's'}),
-        ['<C-Space>'] = cmp.mapping.complete(),
+        ['<C-Space>'] = cmp.mapping.complete {},
         ['<C-b>'] = cmp.mapping.scroll_docs(-4),
         ['<C-f>'] = cmp.mapping.scroll_docs(4)
     },
@@ -74,7 +74,15 @@ cmp.setup {
         {name = 'path'},
         {
             name = 'buffer',
-            option = {keyword_pattern = [[\k\+]]}
+            option = {
+                keyword_pattern = [[\k\+]],
+                get_bufnrs = function()
+                    return vim.tbl_map(
+                        vim.api.nvim_win_get_buf,
+                        vim.api.nvim_tabpage_list_wins(0)
+                    )
+                end
+            },
         }
     }
 }
@@ -90,6 +98,7 @@ cmp.setup.filetype('gitcommit', {
     },
     sources = {
         {name = 'git'},
+        {name = 'path'},
         {name = 'buffer'}
     }
 })
@@ -112,8 +121,8 @@ cmp.event:on('confirm_done', pairs.on_confirm_done())
 --#endregion
 
 --#region Git
----@diagnostic disable-next-line: undefined-global
-if packer_plugins['cmp-git'].loaded then
+---@diagnostic disable-next-line: undefined-field
+if _G.packer_plugins['cmp-git'].loaded then
     require('cmp_git').setup {
         enableRemoteUrlRewrites = true
     }

@@ -4,6 +4,9 @@ local function plugins(use)
 
     --#region Utilities
     use {
+        'nvim-lua/plenary.nvim'
+    }
+    use {
         'kyazdani42/nvim-web-devicons',
         cond = [[vim.g.in_term]]
     }
@@ -56,6 +59,10 @@ local function plugins(use)
 
     --#region Miscellanea
     use {
+        'gpanders/editorconfig.nvim',
+        config = [[require('config').editorconfig()]]
+    }
+    use {
         'numToStr/Comment.nvim',
         as = 'comment.nvim',
         config = [[require('config').comment()]]
@@ -69,12 +76,7 @@ local function plugins(use)
         config = [[require('config').surround()]]
     }
     use {
-        'gpanders/editorconfig.nvim',
-        cond = [[vim.fn.findfile('.editorconfig', '.;') ~= '']]
-    }
-    use {
         'lewis6991/gitsigns.nvim',
-        requires = {'nvim-lua/plenary.nvim'},
         cond = [[vim.g.in_term]],
         config = [[require('config').gitsigns()]]
     }
@@ -94,6 +96,10 @@ local function plugins(use)
     use {
         -- XXX: no alternative
         'wsdjeg/vim-fetch'
+    }
+    use {
+        -- XXX: no good alternative
+        'mg979/vim-lion'
     }
     use {
         -- XXX: no alternative
@@ -120,10 +126,6 @@ local function plugins(use)
         cmd = {'TSPlaygroundToggle'}
     }
     use {
-        'lewis6991/spellsitter.nvim',
-        config = [[require('spellsitter').setup()]]
-    }
-    use {
         'stsewd/sphinx.nvim',
         run = ':UpdateRemotePlugins'
     }
@@ -139,6 +141,7 @@ local function plugins(use)
     use {
         'rcarriga/nvim-dap-ui',
         ft = c.debug_fts,
+        after = {'nvim-dap'},
         cond = [[vim.g.in_term]],
         config = [[require('dapui').setup()]]
     }
@@ -151,13 +154,15 @@ local function plugins(use)
     }
     use {
         'hrsh7th/cmp-path',
-        'hrsh7th/cmp-omni',
         'hrsh7th/cmp-buffer',
         'hrsh7th/cmp-nvim-lsp'
     }
     use {
+        'hrsh7th/cmp-omni',
+        ft = {'query', 'dap-repl'}
+    }
+    use {
         'petertriho/cmp-git',
-        requires = {'nvim-lua/plenary.nvim'},
         ft = {'gitcommit'}
     }
     use {
@@ -170,8 +175,7 @@ local function plugins(use)
     --#region LSP
     use {
         'kosayoda/nvim-lightbulb',
-        fts = c.lsp_fts,
-        requires = {'antoinemadec/FixCursorHold.nvim'}
+        fts = c.lsp_fts
     }
     use {
         'simrat39/symbols-outline.nvim',
@@ -179,18 +183,19 @@ local function plugins(use)
         config = [[require('config').symbols()]]
     }
     use {
-        'max397574/lua-dev.nvim',
+        'lvimuser/lsp-inlayhints.nvim',
+        -- XXX: neovim/neovim#20130
+        -- branch = 'anticonceal',
+        fts = c.lsp_fts,
+        config = [[require('lsp-inlayhints').setup()]]
+    }
+    use {
+        'folke/neodev.nvim',
         ft = {'lua'}
     }
     use {
         'jose-elias-alvarez/null-ls.nvim',
-        requires = {'nvim-lua/plenary.nvim'},
         config = [[require('config.linters')]]
-    }
-    use {
-        'neovim/nvim-lspconfig',
-        fts = c.lsp_fts,
-        config = [[require('config.lsp')]]
     }
     -- }}}
 
@@ -199,12 +204,6 @@ local function plugins(use)
         -- XXX: nvim-lua/wishlist#21
         'mbbill/undotree',
         cmd = {'UndotreeToggle'}
-    }
-    use {
-        --- XXX: no alternative
-        'kg8m/vim-simple-align',
-        branch = 'vim9',
-        cmd = {'SimpleAlign'}
     }
     use {
         -- XXX: no alternative
@@ -219,26 +218,17 @@ local function plugins(use)
         cmd = {'Neogen'},
         config = [[require('config').neogen()]]
     }
-    use {
-        'akinsho/toggleterm.nvim',
-        keys = {'<Leader>t'},
-        cmd = {'ToggleTerm', 'TermExec'},
-        config = [[require('config').toggleterm()]]
-    }
     --#endregion
 
     --#region Filetypes
     use {
-        'ellisonleao/glow.nvim',
-        ft = {'markdown'},
-        cond = [[vim.fn.executable('glow') == 1]]
+        'andythigpen/nvim-coverage',
+        ft = {'python'},
+        cond = [[vim.fn.executable('coverage') == 1]],
+        config = [[require('config').coverage()]]
     }
     use {
-        'jbyuki/nabla.nvim',
-        ft = {'tex', 'rmd', 'rnoweb'}
-    }
-    use {
-        -- XXX: no alternative
+        -- XXX: no good alternative
         'chrisbra/csv.vim',
         ft = {'csv'}
     }
@@ -261,16 +251,6 @@ local function plugins(use)
         -- XXX: no tree-sitter parser
         'wsdjeg/vim-livescript',
         ft = {'livescript'}
-    }
-    use {
-        -- XXX: tree-sitter-smali is a WIP
-        'dieterplex/vim-smali',
-        ft = {'smali'}
-    }
-    use {
-        -- XXX: no tree-sitter parser
-        'MartinDelille/vim-qmake',
-        ft = {'qmake'}
     }
     use {
         -- XXX: tree-sitter-plantuml is a WIP

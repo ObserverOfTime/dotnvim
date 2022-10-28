@@ -1,1 +1,3 @@
-../c/textobjects.scm
+; extends
+
+(number_literal) @number

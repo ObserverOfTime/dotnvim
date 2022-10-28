@@ -1,2 +1,3 @@
-; Linked to cpp
+; extends
+
 (number_literal) @number

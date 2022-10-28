@@ -10,4 +10,5 @@ syn keyword ngxDirective
             \ ssl_ct
 
 syn keyword ngxListenOptions
-            \ quic http3
+            \ quic
+            \ http3

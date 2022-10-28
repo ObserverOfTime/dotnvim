@@ -8,26 +8,26 @@ local function isfile(file)
 end
 
 local function multiedit(args)
+    local silent = {silent = true}
     if vim.tbl_isempty(args.fargs) then
-        return vim.api.nvim_command('silent tabnew')
+        return vim.cmd.tabnew {mods = silent}
     end
     for _, arg in ipairs(args.fargs) do
-        ---@diagnostic disable-next-line: missing-parameter
         local glob = vim.fn.glob(arg)
         if glob ~= '' then
             local files = vim.tbl_filter(
                 isfile, vim.fn.split(glob, '\n'))
             for _, file in ipairs(files) do
                 -- file = vim.fn.fnamemodify(file, ':.')
-                vim.api.nvim_command('silent tabedit '..file)
+                vim.cmd.tabedit {file, mods = silent}
             end
         else
-            vim.api.nvim_command('silent tabedit '..arg)
+            vim.cmd.tabedit {arg, mods = silent}
         end
     end
 end
 
 vim.api.nvim_create_user_command('E', multiedit, {
     nargs = '*', complete = 'file',
-    desc = 'lua multiedit(...)'
+    desc = 'Edit multiple files in tabs'
 })

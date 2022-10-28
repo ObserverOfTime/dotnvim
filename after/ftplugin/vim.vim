@@ -1,1 +1,1 @@
-set textwidth=0
+setlocal textwidth=0

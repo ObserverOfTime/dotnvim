@@ -20,7 +20,7 @@ vim.opt.undolevels = 250
 --- Number of spaces to use for indent
 vim.opt.shiftwidth = 4
 --- Number of spaces to use for tabs
-vim.opt.tabstop = 4
+vim.opt.softtabstop = 4
 --- Minimum completion menu width
 vim.opt.pumwidth = 5
 --- Don't hide any folds
@@ -34,6 +34,8 @@ vim.opt.background = 'dark'
 vim.opt.colorcolumn = '+1'
 --- Set signcolumn size
 vim.opt.signcolumn = 'auto:1-3'
+--- Set foldcolumn size
+vim.opt.foldcolumn = 'auto:1'
 --- Show substitution preview
 vim.opt.inccommand = 'nosplit'
 -- Show fast spell suggestions
@@ -87,30 +89,38 @@ vim.opt.guicursor = {
 if vim.g.in_term then
     --- Fill characters (:h 'fillchars')
     vim.opt.fillchars = {
-        vert = '┊', fold = '┄'
+        vert = '┊',
+        fold = '┄',
+        foldsep = ' ',
+        foldopen = '',
+        foldclose = ''
     }
     --- List characters (:h 'fillchars')
     vim.opt.listchars = {
-        tab = '‣‣',
-        trail = '·',
-        nbsp = '⍽',
+        tab      = '‣‣',
+        trail    = '·',
+        nbsp     = '⍽',
         precedes = '«',
-        extends = '»'
+        extends  = '»'
     }
     --- Line wrap character
     vim.opt.showbreak = '↪'
 else
     --- Fill characters (:h 'fillchars')
     vim.opt.fillchars = {
-        vert = '|', fold = '-'
+        vert = '|',
+        fold = '-',
+        foldsep = ' ',
+        foldopen = 'v',
+        foldclose = '>'
     }
     --- List characters (:h 'fillchars')
     vim.opt.listchars = {
-        tab = '>>',
-        trail = '~',
-        nbsp = '_',
+        tab      = '>>',
+        trail    = '~',
+        nbsp     = '_',
         precedes = '@',
-        extends = '#'
+        extends  = '#'
     }
     --- Line wrap character
     vim.opt.showbreak = '^'

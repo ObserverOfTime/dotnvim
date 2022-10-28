@@ -111,24 +111,46 @@ local function dap_condition()
     }, dap.set_breakpoint)
 end
 
-map('n', '<Leader>Dc', dap.continue)
-map('n', '<Leader>Do', dap.step_over)
-map('n', '<Leader>Di', dap.step_into)
-map('n', '<Leader>DO', dap.step_out)
-map('n', '<Leader>Db', dap.toggle_breakpoint)
-map('n', '<Leader>DC', dap_condition)
-map('n', '<Leader>DL', dap_log_point)
-map('n', '<Leader>Dr', dap.repl.open)
-map('n', '<Leader>Dl', dap.run_last)
-map('n', '<Leader>DE', dapui_input)
-map({'n', 'x'}, '<Leader>De', dapui_eval)
+map('n', '<Leader>Dc', dap.continue, {
+    desc = 'DAP continue'
+})
+map('n', '<Leader>Do', dap.step_over, {
+    desc = 'DAP step over'
+})
+map('n', '<Leader>Di', dap.step_into, {
+    desc = 'DAP step into'
+})
+map('n', '<Leader>DO', dap.step_out, {
+    desc = 'DAP step out'
+})
+map('n', '<Leader>Db', dap.toggle_breakpoint, {
+    desc = 'DAP breakpoint'
+})
+map('n', '<Leader>DC', dap_condition, {
+    desc = 'DAP condition'
+})
+map('n', '<Leader>DL', dap_log_point, {
+    desc = 'DAP log point'
+})
+map('n', '<Leader>Dr', dap.repl.open, {
+    desc = 'DAP REPL'
+})
+map('n', '<Leader>DR', dap.run_last, {
+    desc = 'DAP run'
+})
+map('n', '<Leader>DE', dapui_input, {
+    desc = 'DAP eval input'
+})
+map({'n', 'x'}, '<Leader>De', dapui_eval, {
+    desc = 'DAP eval text'
+})
 --#endregion
 
 --#region Signs
 local hl = 'GruvboxRed'
-vim.fn.sign_define('DapStopped', {text = '', texthl = hl})
-vim.fn.sign_define('DapLogPoint', {text = '', texthl = hl})
-vim.fn.sign_define('DapBreakpoint', {text = '', texthl = hl})
-vim.fn.sign_define('DapBreakpointCondition', {text = '', texthl = hl})
-vim.fn.sign_define('DapBreakpointRejected', {text = '', texthl = hl})
+vim.fn.sign_define('DapStopped',             {text = '', texthl = hl})
+vim.fn.sign_define('DapLogPoint',            {text = '', texthl = hl})
+vim.fn.sign_define('DapBreakpoint',          {text = '', texthl = hl})
+vim.fn.sign_define('DapBreakpointCondition', {text = '', texthl = hl})
+vim.fn.sign_define('DapBreakpointRejected',  {text = '', texthl = hl})
 --#endregion
