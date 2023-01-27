@@ -1,3 +1,6 @@
+-- Disable for git mergetool
+if vim.g._mergetool then return end
+
 --#region Imports
 local cmp = require 'cmp_nvim_lsp'
 local fzf = require 'fzf-lua'
@@ -199,11 +202,13 @@ new_client({'json', 'jsonc'}, {
                 },
                 {
                     fileMatch = {'contribute.json'},
-                    url = 'https://raw.githubusercontent.com/mozilla/contribute.json/master/schema.json'
+                    url = 'https://raw.githubusercontent.com/mozilla/'..
+                          'contribute.json/master/schema.json'
                 },
                 {
                     fileMatch = {'openapi.json'},
-                    url = 'https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/schemas/v3.0/schema.json'
+                    url = 'https://raw.githubusercontent.com/OAI/'..
+                          'OpenAPI-Specification/main/schemas/v3.0/schema.json'
                 },
                 {
                     fileMatch = {'compile_commands.json'},
@@ -215,7 +220,8 @@ new_client({'json', 'jsonc'}, {
                 },
                 {
                     fileMatch = {'.luarc.json'},
-                    url = 'https://raw.githubusercontent.com/sumneko/vscode-lua/master/setting/schema.json'
+                    url = 'https://raw.githubusercontent.com/sumneko/'..
+                          'vscode-lua/master/setting/schema.json'
                 },
                 {
                     fileMatch = {'pyrightconfig.json'},
@@ -255,10 +261,20 @@ new_client({'xml', 'svg'}, {
                     systemId = 'https://maven.apache.org/xsd/maven-4.0.0.xsd'
                 },
                 {
+                    pattern = 'persistence.xml',
+                    systemId = 'https://www.oracle.com/webfolder/technetwork/'..
+                               'jsc/xml/ns/persistence/persistence_2_2.xsd'
+                },
+                {
                     pattern = 'opensearch.xml',
                     systemId = 'https://gitlab.com/gitlab-org/gitlab-foss/-/'..
                                'raw/ab077b8/spec/fixtures/OpenSearchDescription.xsd'
                 },
+                {
+                    pattern = 'ComicInfo.xml',
+                    systemId = 'https://raw.githubusercontent.com/anansi-project/'..
+                               'comicinfo/main/drafts/v2.1/ComicInfo.xsd'
+                }
             }
         }
     }
@@ -268,12 +284,7 @@ new_client({'lua'}, {
     cmd = {'lua-language-server'},
     root_dir = find_root({'.luarc.json', 'lua', '.git'}, true),
     on_init = function(client)
-        require('neodev.config').setup {
-            setup_jsonls = false,
-            experimental = {
-                pathStrict = true
-            }
-        }
+        require('neodev.config').setup {setup_jsonls = false}
         client.config.settings = vim.tbl_deep_extend(
             'keep', client.config.settings,
             require('neodev.sumneko').setup().settings
@@ -319,7 +330,7 @@ new_client({'python'}, {
 
 new_client({'r', 'rmd'}, {
     name = 'r-languageserver',
-    cmd = {'R', '--slave', '-e', 'languageserver::run()'}
+    cmd = {'R', '--vanilla', '-s', '-e', 'languageserver::run()'}
 })
 
 new_client({'rust'}, {
@@ -347,8 +358,8 @@ new_client({'toml'}, {
             schema = {
                 catalogs = {},
                 associations = {
-                    ['Cargo\\.toml$'] = 'https://taplo.tamasfe.dev/schemas/Cargo.toml.json',
-                    ['pyproject\\.toml$'] = 'https://taplo.tamasfe.dev/schemas/pyproject.toml.json'
+                    ['Cargo\\.toml$'] = 'https://json.schemastore.org/Cargo.json',
+                    ['pyproject\\.toml$'] = 'https://json.schemastore.org/pyproject.json'
                 }
             }
         }
@@ -531,6 +542,8 @@ vim.api.nvim_create_autocmd('LspAttach', {
             )
         end
 
+        caps.semanticTokensProvider = nil
+
         if caps.codeActionProvider then
             map('n', 'gla', fzf.lsp_code_actions, {
                 desc = 'textDocument/codeAction', buffer = args.buf
@@ -603,25 +616,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
         vim.b[args.buf]._lsp_attached = true
     end
 })
---#endregion
-
---#region LspInfo command
-vim.api.nvim_create_user_command('LspInfo', function()
-    local clients = vim.lsp.get_active_clients {bufnr = 0}
-    local msg = 'ID: %d\nName: %s\nInitialized: %s\nRoot: %s'
-    for _, client in ipairs(clients) do
-        vim.notify(
-            msg:format(
-                client.id,
-                client.name,
-                client.initialized,
-                client.config.root_dir
-            ),
-            vim.log.levels.INFO,
-            {title = 'LSP'}
-        )
-    end
-end, {desc = 'Show LSP client info'})
 --#endregion
 
 --#region LspAddWorkspace command

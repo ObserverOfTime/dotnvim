@@ -1,4 +1,7 @@
 local dap = require 'dap'
+local dapui = require 'dapui'
+
+dapui.setup()
 
 --#region C/C++
 dap.adapters.lldb = {
@@ -74,76 +77,52 @@ dap.configurations.javascript = {{
 }}
 --#endregion
 
---#region Listeners
-dap.listeners.after.event_initialized['dapui_config'] = function()
-  package.loaded.dapui.open()
+--#region Lua
+dap.adapters.nlua = function(callback, config)
+    callback {
+        type = 'server',
+        host = config.host or '127.0.0.1',
+        port = config.port or 8086
+    }
 end
+
+dap.configurations.lua = {{
+    type = 'nlua',
+    name = 'Neovim Lua',
+    request = 'attach'
+}}
+--#endregion
+
+--#region Listeners
+dap.listeners.after.event_initialized['dapui_config'] = dapui.open
+dap.listeners.before.event_terminated['dapui_config'] = dapui.close
+dap.listeners.before.event_exited['dapui_config'] = dapui.close
 --#endregion
 
 --#region Mappings
 local map = vim.keymap.set
-
---- Evaluate text with DAP UI
-local function dapui_eval()
-    package.loaded.dapui.eval()
-end
-
---- Evaluate input with DAP UI
-local function dapui_input()
-    vim.ui.input({
-        prompt = 'Expression'
-    }, package.loaded.dapui.eval)
-end
-
---- Set log point
-local function dap_log_point()
-    vim.ui.input({
-        prompt = 'Log point message'
-    }, function(input)
+map('n', '<Leader>Dc', dap.continue, {desc = 'DAP continue'})
+map('n', '<Leader>Do', dap.step_over, {desc = 'DAP step over'})
+map('n', '<Leader>Di', dap.step_into, {desc = 'DAP step into'})
+map('n', '<Leader>DO', dap.step_out, {desc = 'DAP step out'})
+map('n', '<Leader>Db', dap.toggle_breakpoint, {desc = 'DAP breakpoint'})
+map('n', '<Leader>Dr', dap.repl.open, {desc = 'DAP REPL'})
+map('n', '<Leader>DR', dap.run_last, {desc = 'DAP run'})
+map('n', '<Leader>Dl', function()
+    require('osv').run_this()
+end, {desc = 'DAP run Lua plugin'})
+map('n', '<Leader>DC', function()
+    vim.ui.input({prompt = 'Condition'}, dap.set_breakpoint)
+end, {desc = 'DAP condition'})
+map('n', '<Leader>DL', function()
+    vim.ui.input({prompt = 'Log point message'}, function(input)
         dap.set_breakpoint(nil, nil, input)
     end)
-end
-
---- Set breakpoint condition
-local function dap_condition()
-    vim.ui.input({
-        prompt = 'Condition',
-    }, dap.set_breakpoint)
-end
-
-map('n', '<Leader>Dc', dap.continue, {
-    desc = 'DAP continue'
-})
-map('n', '<Leader>Do', dap.step_over, {
-    desc = 'DAP step over'
-})
-map('n', '<Leader>Di', dap.step_into, {
-    desc = 'DAP step into'
-})
-map('n', '<Leader>DO', dap.step_out, {
-    desc = 'DAP step out'
-})
-map('n', '<Leader>Db', dap.toggle_breakpoint, {
-    desc = 'DAP breakpoint'
-})
-map('n', '<Leader>DC', dap_condition, {
-    desc = 'DAP condition'
-})
-map('n', '<Leader>DL', dap_log_point, {
-    desc = 'DAP log point'
-})
-map('n', '<Leader>Dr', dap.repl.open, {
-    desc = 'DAP REPL'
-})
-map('n', '<Leader>DR', dap.run_last, {
-    desc = 'DAP run'
-})
-map('n', '<Leader>DE', dapui_input, {
-    desc = 'DAP eval input'
-})
-map({'n', 'x'}, '<Leader>De', dapui_eval, {
-    desc = 'DAP eval text'
-})
+end, {desc = 'DAP log point'})
+map('n', '<Leader>DE', function()
+    vim.ui.input({prompt = 'Expression'}, dapui.eval)
+end, {desc = 'DAP eval input'})
+map({'n', 'x'}, '<Leader>De', dapui.eval, {desc = 'DAP eval text'})
 --#endregion
 
 --#region Signs

@@ -1,3 +1,3 @@
 ; extends
 
-[(variable_name) (variable_value)] @attribute
+[(variable_name) (variable_value)] @parameter

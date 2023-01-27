@@ -12,6 +12,8 @@ vim.opt.wrap = false
 vim.opt.number = true
 --- Show special characters
 vim.opt.list = true
+--- Enable local configuration
+vim.opt.exrc = true
 --- Use truecolor if available
 vim.opt.termguicolors = vim.env.COLORTERM == 'truecolor'
 
@@ -25,6 +27,8 @@ vim.opt.softtabstop = 4
 vim.opt.pumwidth = 5
 --- Don't hide any folds
 vim.opt.foldlevelstart = 99
+-- Use a single statusline
+vim.opt.laststatus = 3
 
 --- Default folding method
 vim.opt.foldmethod = 'marker'
@@ -65,9 +69,7 @@ vim.opt.grepformat = {
     '%f:%l:%c:%m', '%f:%l:%m'
 }
 --- Display options (:h 'display')
-vim.opt.display = {
-    'truncate', 'msgsep', 'uhex'
-}
+vim.opt.display = {'truncate', 'uhex'}
 --- Session options (:h 'sessionoptions')
 vim.opt.sessionoptions = {
     'buffers',
@@ -124,5 +126,15 @@ else
     }
     --- Line wrap character
     vim.opt.showbreak = '^'
+end
+--#endregion
+
+--#region Git mergetool overrides
+if vim.g._mergetool then
+    vim.opt.laststatus = 3
+    vim.opt.foldcolumn = '0'
+    vim.opt.signcolumn = 'no'
+    vim.opt.colorcolumn = ''
+    vim.opt.undofile = false
 end
 --#endregion

@@ -1,3 +1,6 @@
+-- Disable for git mergetool
+if vim.g._mergetool then return end
+
 local null_ls = require 'null-ls'
 
 --- Check if executable exists
@@ -84,7 +87,6 @@ local cfg = {
 
 --#region Sources
 require('null-ls').setup {
-    debug = true,
     sources = {
         --#region Diagnostics
         null_ls.builtins.diagnostics.djlint.with(cfg.djlint),

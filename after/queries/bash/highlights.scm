@@ -6,3 +6,8 @@
 ((command
    argument: (word) @string.special)
  (#lua-match? @string.special "^-"))
+
+((command
+   argument: (concatenation
+               (word) @string.special))
+ (#lua-match? @string.special "^-"))

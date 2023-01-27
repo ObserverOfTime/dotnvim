@@ -14,3 +14,8 @@
   (info_string (language) @_language)
   (#eq? @_language "ts")
   (code_fence_content) @typescript)
+
+(fenced_code_block
+  (info_string (language) @_language)
+  (#eq? @_language "=latex")
+  (code_fence_content) @latex)

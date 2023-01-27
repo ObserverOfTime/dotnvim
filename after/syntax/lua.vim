@@ -1,2 +1,1 @@
-hi! link luaError None
-hi! link luaParenError None
+hi! link luaParenError Normal

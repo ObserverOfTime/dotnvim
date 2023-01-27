@@ -2,7 +2,7 @@ local config = {}
 
 --- Debuggable filetypes
 config.debug_fts = {
-    'c', 'cpp', 'python', 'java', 'javascript'
+    'c', 'cpp', 'python', 'javascript', 'lua'
 }
 
 --- Colorable filetypes
@@ -158,7 +158,10 @@ end
 function config.notify()
     local notify = require 'notify'
     local icons = require 'config.icons'
-    notify.setup {icons = icons.log}
+    notify.setup {
+        icons = icons.log,
+        background_colour = 'Normal'
+    }
     vim.notify = notify.notify
 end
 
@@ -201,7 +204,8 @@ function config.gitsigns()
             change       = {text = i.hunks.M},
             delete       = {text = i.hunks.D},
             topdelete    = {text = i.hunks.D},
-            changedelete = {text = i.hunks.M}
+            changedelete = {text = i.hunks.M},
+            untracked    = {text = i.hunks.A},
         }
     }
 end
@@ -305,7 +309,9 @@ end
 --- Configure dressing
 function config.dressing()
     require('dressing').setup {
-        input = {winblend = 0},
+        input = {
+            win_options = {winblend = 0}
+        },
         select = {enabled = false}
     }
 end
@@ -346,15 +352,6 @@ function config.neogen()
             }
         }
     }
-end
-
---- Configure EditorConfig
-function config.editorconfig()
-    local ec = require 'editorconfig'
-    -- XXX: editorconfig/editorconfig#315
-    ec.properties.spell_language = function(bufnr, val)
-        vim.bo[bufnr].spelllang = val
-    end
 end
 
 return config

@@ -59,10 +59,6 @@ local function plugins(use)
 
     --#region Miscellanea
     use {
-        'gpanders/editorconfig.nvim',
-        config = [[require('config').editorconfig()]]
-    }
-    use {
         'numToStr/Comment.nvim',
         as = 'comment.nvim',
         config = [[require('config').comment()]]
@@ -82,6 +78,7 @@ local function plugins(use)
     }
     use {
         'ObserverOfTime/nvimcord',
+        cond = [[not vim.g._mergetool]],
         config = [[require('nvimcord').setup()]]
     }
     use {
@@ -104,8 +101,6 @@ local function plugins(use)
     use {
         -- XXX: no alternative
         'tpope/vim-abolish',
-        -- XXX: no alternative
-        'tpope/vim-eunuch',
         -- XXX: no good alternative
         'tpope/vim-fugitive'
     }
@@ -135,15 +130,18 @@ local function plugins(use)
     use {
         'mfussenegger/nvim-dap',
         ft = c.debug_fts,
-        cond = [[vim.g.in_term]],
+        cond = [[vim.g.in_term and not vim.g._mergetool]],
         config = [[require('config.debugger')]]
     }
     use {
         'rcarriga/nvim-dap-ui',
         ft = c.debug_fts,
-        after = {'nvim-dap'},
-        cond = [[vim.g.in_term]],
-        config = [[require('dapui').setup()]]
+        module = 'dapui'
+    }
+    use {
+        'jbyuki/one-small-step-for-vimkind',
+        ft = {'lua'},
+        module = 'osv'
     }
     --#endregion
 
@@ -175,19 +173,27 @@ local function plugins(use)
     --#region LSP
     use {
         'kosayoda/nvim-lightbulb',
-        fts = c.lsp_fts
+        ft = c.lsp_fts,
+        module = 'nvim-lightbulb'
     }
     use {
         'simrat39/symbols-outline.nvim',
-        fts = c.lsp_fts,
+        ft = c.lsp_fts,
+        module = 'symbols-outline',
         config = [[require('config').symbols()]]
     }
     use {
         'lvimuser/lsp-inlayhints.nvim',
         -- XXX: neovim/neovim#20130
         -- branch = 'anticonceal',
-        fts = c.lsp_fts,
+        ft = c.lsp_fts,
+        module = 'lsp-inlayhints',
         config = [[require('lsp-inlayhints').setup()]]
+    }
+    use {
+        'JosefLitos/reform.nvim',
+        run = 'make docfmt',
+        config = [[require('reform').setup()]]
     }
     use {
         'folke/neodev.nvim',

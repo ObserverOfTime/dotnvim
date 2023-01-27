@@ -15,6 +15,11 @@ local function expandtab()
     return vim.bo.expandtab and '' or ''
 end
 
+--- Binary option
+local function binary()
+    return vim.bo.binary and '' or ''
+end
+
 --- Spell option
 local function spell()
     return vim.wo.spell and '' or ''
@@ -61,14 +66,16 @@ end
 
 --#region Components
 local comp = {
+    filetype = {'filetype'},
+    diagnostics = {'diagnostics'},
     mode = {'mode', fmt = mode},
     encoding = {'encoding', fmt = encoding},
     fileformat = {'fileformat', symbols = {unix = ''}},
     branch = {'b:gitsigns_head', icon = ''},
     wordcount = {wordcount, cond = is_text},
     csv_col = {csv_col, cond = is_csv},
-    expandtab = expandtab,
-    trailing = trailing,
+    lines = '%{""} %L',
+    column = '%v',
     filename = {
         'filename',
         path = 1,
@@ -77,6 +84,9 @@ local comp = {
             readonly = ''
         }
     },
+    expandtab = expandtab,
+    trailing = trailing,
+    binary = binary,
     spell = spell,
     paste = paste,
     clock = clock
@@ -86,32 +96,32 @@ local comp = {
 --#region Theme
 local grayscale = {
   normal = {
-    a = {bg = '#8E8E8E', fg = '#252525', gui = 'bold'},
+    a = {bg = '#8E8E8E', fg = '#252525'},
     b = {bg = '#464646', fg = '#E3E3E3'},
     c = {bg = '#252525', fg = '#999999'}
   },
   insert = {
-    a = {bg = '#686868', fg = '#252525', gui = 'bold'},
+    a = {bg = '#686868', fg = '#252525'},
     b = {bg = '#464646', fg = '#E3E3E3'},
     c = {bg = '#252525', fg = '#999999'}
   },
   visual = {
-    a = {bg = '#747474', fg = '#252525', gui = 'bold'},
+    a = {bg = '#747474', fg = '#252525'},
     b = {bg = '#464646', fg = '#E3E3E3'},
     c = {bg = '#252525', fg = '#999999'}
   },
   replace = {
-    a = {bg = '#7C7C7C', fg = '#252525', gui = 'bold'},
+    a = {bg = '#7C7C7C', fg = '#252525'},
     b = {bg = '#464646', fg = '#E3E3E3'},
     c = {bg = '#252525', fg = '#999999'}
   },
   command = {
-    a = {bg = '#8E8E8E', fg = '#252525', gui = 'bold'},
+    a = {bg = '#8E8E8E', fg = '#252525'},
     b = {bg = '#252525', fg = '#999999'},
     c = {bg = '#464646', fg = '#E3E3E3'}
   },
   inactive = {
-    a = {bg = '#252525', fg = '#B9B9B9', gui = 'bold'},
+    a = {bg = '#252525', fg = '#B9B9B9'},
     b = {bg = '#252525', fg = '#B9B9B9'},
     c = {bg = '#252525', fg = '#B9B9B9'}
   }
@@ -154,16 +164,17 @@ require('lualine').setup {
         },
         lualine_b = {
             comp.branch,
-            'diagnostics'
+            comp.diagnostics
         },
         lualine_c = {
             comp.filename,
             comp.csv_col
         },
         lualine_x = {
-            'filetype',
+            comp.filetype,
             comp.encoding,
-            comp.fileformat
+            comp.fileformat,
+            comp.binary
         },
         lualine_y = {
             comp.expandtab,
@@ -171,8 +182,8 @@ require('lualine').setup {
             comp.wordcount
         },
         lualine_z = {
-            '%{""} %L',
-            '%v',
+            comp.lines,
+            comp.column,
             comp.clock
         }
     },

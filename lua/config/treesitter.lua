@@ -7,11 +7,21 @@ require('nvim-treesitter.configs').setup {
     highlight = {enable = true},
     playground = {enable = true},
     query_linter = {enable = true},
-    incremental_selection = {enable = true},
+    incremental_selection = {
+        enable = true,
+        keymaps = {
+            init_selection = '<Leader>si',
+            node_incremental = '<Leader>sn',
+            node_decremental = '<Leader>sm',
+            scope_incremental = '<Leader>ss'
+        }
+    },
     textobjects = {
         select = {
             enable = true,
             keymaps = {
+                ['aB'] = '@block.outer',
+                ['iB'] = '@block.inner',
                 ['af'] = '@function.outer',
                 ['if'] = '@function.inner',
                 ['ac'] = '@class.outer',
@@ -27,7 +37,7 @@ require('nvim-treesitter.configs').setup {
                 ['aC'] = '@comment.outer',
                 ['ar'] = '@regex.outer',
                 ['ir'] = '@regex.inner',
-                ['in'] = '@number',
+                ['in'] = '@number.inner',
             }
         },
         swap = {
@@ -89,13 +99,17 @@ require('nvim-treesitter.configs').setup {
         'comment',
         'cpp',
         'css',
+        'diff',
         'dockerfile',
         'gitattributes',
+        'gitcommit',
         'gitignore',
         'glimmer',
-        -- 'help', FIXME: vigoux/tree-sitter-vimdoc#1
+        -- 'help',
         'html',
+        -- 'htmldjango',
         'http',
+        -- 'ini',
         'java',
         'javascript',
         'jsdoc',
@@ -104,12 +118,11 @@ require('nvim-treesitter.configs').setup {
         'kotlin',
         'latex',
         'lua',
-        'luap',
-        'make',
+        -- 'make',
         'markdown',
         'markdown_inline',
         'nix',
-        -- 'perl', FIXME: ganezdragon/tree-sitter-perl#20
+        -- 'perl',
         'python',
         'query',
         'r',

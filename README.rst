@@ -1,7 +1,7 @@
 My Neovim Configuration
 =======================
 
-**Neovim v0.8.0 is required.**
+**Neovim nightly is required.**
 
 .. contents::
    :local:
@@ -55,14 +55,12 @@ Using packer.nvim_ as the plugin manager.
 * `numToStr/Comment.nvim <https://github.com/numToStr/Comment.nvim>`_
 * `windwp/nvim-autopairs <https://github.com/windwp/nvim-autopairs>`_
 * `kylechui/nvim-surround <https://github.com/kylechui/nvim-surround>`_
-* `gpanders/editorconfig.nvim <https://github.com/gpanders/editorconfig.nvim>`_
 * `lewis6991/gitsigns.nvim <https://github.com/lewis6991/gitsigns.nvim>`_ |P|
 * `ObserverOfTime/nvimcord <https://github.com/ObserverOfTime/nvimcord>`_ |R|
 * `mattn/emmet-vim <https://github.com/mattn/emmet-vim>`_ |V|
 * `AndrewRadev/splitjoin.vim <https://github.com/AndrewRadev/splitjoin.vim>`_ |V|
 * `wsdjeg/vim-fetch <https://github.com/wsdjeg/vim-fetch>`_ |V|
 * `tpope/vim-abolish <https://github.com/tpope/vim-abolish>`_ |V|
-* `tpope/vim-eunuch <https://github.com/tpope/vim-eunuch>`_ |V|
 * `tpope/vim-fugitive <https://github.com/tpope/vim-fugitive>`_ |V|
 * `nvim-treesitter/nvim-treesitter <https://github.com/nvim-treesitter/nvim-treesitter>`_
 
@@ -73,6 +71,7 @@ Using packer.nvim_ as the plugin manager.
 * `mfussenegger/nvim-dap <https://github.com/mfussenegger/nvim-dap>`_
 
   - `rcarriga/nvim-dap-ui <https://github.com/rcarriga/nvim-dap-ui>`_
+  - `jbyuki/one-small-step-for-vimkind <https://github.com/jbyuki/one-small-step-for-vimkind>`_
 * `hrsh7th/nvim-cmp <https://github.com/hrsh7th/nvim-cmp>`_
 
   - `hrsh7th/cmp-path <https://github.com/hrsh7th/cmp-path>`_
@@ -119,6 +118,7 @@ Personal
 
 :dabline: Customise tabline colours and close icon
 :multiedit: Edit multiple files in separate tabs
+:nyx: File utilities (``Move``, ``Copy``, ``Delete``)
 
 Tree-sitter
 -----------
@@ -130,9 +130,13 @@ Tree-sitter
 * comment
 * cpp |T|
 * css |T|
+* diff
 * dockerfile |T|
 * html
 * http
+* gitattributes
+* gitcommit
+* gitignore
 * glimmer
 * java |T|
 * javascript |T|
@@ -142,7 +146,6 @@ Tree-sitter
 * kotlin |T|
 * latex |H|
 * lua |T|
-* make
 * markdown |H| |I|
 * markdown_inline |H|
 * nix |T|

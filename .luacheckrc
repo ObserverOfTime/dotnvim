@@ -1,5 +1,7 @@
 ---@diagnostic disable: undefined-global, lowercase-global
 
+cache = true
+
 stds.nvim = {
     globals = {'vim'}
 }

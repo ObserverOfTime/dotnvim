@@ -1,6 +1,12 @@
 if pcall(require, 'gruvbox') then
     package.loaded.gruvbox.setup {
         overrides = {
+            GruvboxAquaBold = {bold = false},
+            GruvboxGreenBold = {bold = false},
+            GruvboxOrangeBold = {bold = false},
+            GruvboxPurpleBold = {bold = false},
+            GruvboxRedBold = {bold = false},
+            GruvboxYellowBold = {bold = false},
             String = {italic = false},
             WinBar = {bg = '#252525'},
             Folded = {bg = '#1C1C1C'},
@@ -25,16 +31,25 @@ if pcall(require, 'gruvbox') then
             Quote = {link = 'GruvboxOrange'},
             Operator = {link = 'GruvboxGreen'},
             LspInlayHint = {link = 'GruvboxBg4'},
+            CSVDelimiter = {link = 'GruvboxAqua'},
+            CSVColumnEven = {link = 'GruvboxGreen'},
+            CSVColumnOdd = {link = 'GruvboxYellow'},
+            CSVColumnHeaderEven = {link = 'GruvboxRedBold'},
+            CSVColumnHeaderOdd = {link = 'GruvboxOrangeBold'},
             FocusedSymbol = {link = 'GruvboxYellowBold'},
             LightBulbVirtualText = {link = 'DiagnosticVirtualTextHint'},
+            ['@decorator'] = {link = 'PreProc'},
+            ['@namespace'] = {link = 'GruvboxAquaBold'},
             ['@text.todo'] = {link = 'DiagnosticHint'},
             ['@text.note'] = {link = 'DiagnosticInfo'},
             ['@text.warning'] = {link = 'DiagnosticWarn'},
             ['@text.danger'] = {link = 'DiagnosticError'},
             ['@type.qualifier'] = {link = 'StorageClass'},
-            ['@text.mark.checked'] = {link = 'GruvboxGreen'},
-            ['@text.mark.unchecked'] = {link = 'GruvboxRed'},
-            ['@parameter.bash'] = {link = 'Normal'}
+            ['@text.todo.checked'] = {link = 'GruvboxGreen'},
+            ['@text.todo.unchecked'] = {link = 'GruvboxRed'},
+            ['@parameter.bash'] = {link = 'Normal'},
+            ['@function.rst'] = {link = 'GruvboxRed'},
+            ['@text.quote'] = {italic = true},
         }
     }
     vim.cmd.colorscheme('gruvbox')

@@ -71,7 +71,10 @@ cmp.setup {
     sources = {
         {name = 'nvim_lsp'},
         {name = 'snippy'},
-        {name = 'path'},
+        {
+            name = 'path',
+            option = {get_cwd = vim.loop.cwd}
+        },
         {
             name = 'buffer',
             option = {
@@ -121,8 +124,7 @@ cmp.event:on('confirm_done', pairs.on_confirm_done())
 --#endregion
 
 --#region Git
----@diagnostic disable-next-line: undefined-field
-if _G.packer_plugins['cmp-git'].loaded then
+if _G['packer_plugins']['cmp-git'].loaded then
     require('cmp_git').setup {
         enableRemoteUrlRewrites = true
     }
