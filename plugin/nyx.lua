@@ -48,15 +48,15 @@ local function move(args)
 end
 
 vim.api.nvim_create_user_command('Delete', delete, {
-    bang = true, desc = 'Delete the current file'
+    bang = true, desc = 'delete the current file'
 })
 
 vim.api.nvim_create_user_command('Copy', copy, {
     nargs = 1, complete = 'dir', bang = true,
-    desc = 'Copy the current file'
+    desc = 'copy the current file'
 })
 
 vim.api.nvim_create_user_command('Move', move, {
     nargs = 1, complete = 'file', bang = true,
-    desc = 'Move the current file'
+    desc = 'move the current file'
 })

@@ -3,6 +3,8 @@ let g:in_term = $TERM !=? 'linux'
 
 " Load modules {{{
 lua <<EOF
+vim.loader.enable()
+
 require('settings')
 require('filetypes')
 require('mappings')

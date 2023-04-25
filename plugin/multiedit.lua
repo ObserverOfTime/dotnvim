@@ -29,5 +29,5 @@ end
 
 vim.api.nvim_create_user_command('E', multiedit, {
     nargs = '*', complete = 'file',
-    desc = 'Edit multiple files in tabs'
+    desc = 'edit multiple files in tabs'
 })

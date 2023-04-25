@@ -25,11 +25,6 @@ local function spell()
     return vim.wo.spell and '' or ''
 end
 
---- Paste option
-local function paste()
-    return vim.go.paste and '' or ''
-end
-
 --- Trailing whitespace
 local function trailing()
     local trail = vim.fn.search([[\s\+$]], 'nwc')
@@ -88,7 +83,6 @@ local comp = {
     trailing = trailing,
     binary = binary,
     spell = spell,
-    paste = paste,
     clock = clock
 }
 --#endregion
@@ -160,7 +154,6 @@ require('lualine').setup {
         lualine_a = {
             comp.mode,
             comp.spell,
-            comp.paste
         },
         lualine_b = {
             comp.branch,

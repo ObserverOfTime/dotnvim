@@ -1,5 +1,5 @@
 --- Use tree-sitter for folding
-vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
+vim.opt.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
 
 --#region Config
 require('nvim-treesitter.configs').setup {
@@ -105,7 +105,6 @@ require('nvim-treesitter.configs').setup {
         'gitcommit',
         'gitignore',
         'glimmer',
-        -- 'help',
         'html',
         -- 'htmldjango',
         'http',
@@ -118,6 +117,8 @@ require('nvim-treesitter.configs').setup {
         'kotlin',
         'latex',
         'lua',
+        'luadoc',
+        'luap',
         -- 'make',
         'markdown',
         'markdown_inline',
@@ -135,6 +136,7 @@ require('nvim-treesitter.configs').setup {
         'toml',
         'typescript',
         'vim',
+        'vimdoc',
         'yaml'
     }
 }

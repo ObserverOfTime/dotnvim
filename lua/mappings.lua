@@ -64,7 +64,7 @@ map('n', 'ζγ', 'zg')
 -- Show spell suggestions
 map('n', 'z=', function()
     package.loaded['fzf-lua'].spell_suggest()
-end)
+end, {desc = 'spell suggest'})
 
 --- Run in terminal
 map('x', '<Leader>t', ':TermExec<CR>')
@@ -104,11 +104,14 @@ map('n', '<Leader>gb', '<Cmd>Gitsigns toggle_current_line_blame<CR>')
 --#endregion
 
 --#region Diagnostics
+map('n', 'gld', vim.diagnostic.open_float, {
+    desc = 'open diagnostic float'
+})
 map('n', '[d', vim.diagnostic.goto_prev, {
-    desc = 'Goto previous diagnostic'
+    desc = 'go to previous diagnostic'
 })
 map('n', ']d', vim.diagnostic.goto_next, {
-    desc = 'Goto next diagnostic'
+    desc = 'go to next diagnostic'
 })
 map('n', '<Leader>l', function()
     vim.diagnostic.setloclist {open = false}

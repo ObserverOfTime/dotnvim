@@ -1,7 +1,7 @@
 My Neovim Configuration
 =======================
 
-**Neovim nightly is required.**
+**Neovim v0.9.0 is required.**
 
 .. contents::
    :local:
@@ -48,10 +48,11 @@ Using packer.nvim_ as the plugin manager.
 * `ibhagwan/fzf-lua <https://github.com/ibhagwan/fzf-lua>`_
 * `ellisonleao/gruvbox.nvim <https://github.com/ellisonleao/gruvbox.nvim>`_
 * `nvim-lualine/lualine.nvim <https://github.com/nvim-lualine/lualine.nvim>`_
+* `luukvbaal/statuscol.nvim <https://github.com/luukvbaal/statuscol.nvim>`_
 * `lukas-reineke/virt-column.nvim <https://github.com/lukas-reineke/virt-column.nvim>`_
 * `anuvyklack/pretty-fold.nvim <https://github.com/anuvyklack/pretty-fold.nvim>`_
 * `folke/todo-comments.nvim <https://github.com/folke/todo-comments.nvim>`_
-* `NvChad/nvim-colorizer.lua <https://github.com/NvChad/nvim-colorizer.lua>`_
+* `uga-rosa/ccc.nvim <https://github.com/uga-rosa/ccc.nvim>`_
 * `numToStr/Comment.nvim <https://github.com/numToStr/Comment.nvim>`_
 * `windwp/nvim-autopairs <https://github.com/windwp/nvim-autopairs>`_
 * `kylechui/nvim-surround <https://github.com/kylechui/nvim-surround>`_
@@ -66,7 +67,6 @@ Using packer.nvim_ as the plugin manager.
 
   - `nvim-treesitter/nvim-treesitter-refactor <https://github.com/nvim-treesitter/nvim-treesitter-refactor>`_
   - `nvim-treesitter/nvim-treesitter-textobjects <https://github.com/nvim-treesitter/nvim-treesitter-textobjects>`_
-  - `nvim-treesitter/playground <https://github.com/nvim-treesitter/playground>`_
   - `stsewd/sphinx.nvim <https://github.com/stsewd/sphinx.nvim>`_ |R|
 * `mfussenegger/nvim-dap <https://github.com/mfussenegger/nvim-dap>`_
 
@@ -98,7 +98,6 @@ Using packer.nvim_ as the plugin manager.
 * `kchmck/vim-coffee-script <https://github.com/kchmck/vim-coffee-script>`_ |S|
 * `wsdjeg/vim-livescript <https://github.com/wsdjeg/vim-livescript>`_ |S|
 * `aklt/plantuml-syntax <https://github.com/aklt/plantuml-syntax>`_ |S|
-* `sayak-k/vim-log-highlighting <https://github.com/sayak-k/vim-log-highlighting>`_ |S|
 
 | |S| Syntax file plugin
 | |V| Legacy VimL plugin
@@ -146,6 +145,8 @@ Tree-sitter
 * kotlin |T|
 * latex |H|
 * lua |T|
+* luadoc
+* luap
 * markdown |H| |I|
 * markdown_inline |H|
 * nix |T|
@@ -161,6 +162,7 @@ Tree-sitter
 * toml |T|
 * typescript |T|
 * vim |T|
+* vimdoc
 * yaml |T|
 
 | |I| Custom injections

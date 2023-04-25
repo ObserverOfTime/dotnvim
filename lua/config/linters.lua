@@ -55,6 +55,9 @@ local cfg = {
     pylint = {
         condition = is_executable('pylint')
     },
+    ruff = {
+        condition = is_executable('ruff')
+    },
     shellcheck = {
         extra_args = {
             '-e', 'SC1090,SC2034,SC2128,SC2148,SC2164',
@@ -97,6 +100,7 @@ require('null-ls').setup {
         null_ls.builtins.diagnostics.puglint.with(cfg.puglint),
         null_ls.builtins.diagnostics.pylint.with(cfg.pylint),
         null_ls.builtins.diagnostics.rstcheck.with(cfg.rstcheck),
+        null_ls.builtins.diagnostics.ruff.with(cfg.ruff),
         null_ls.builtins.diagnostics.shellcheck.with(cfg.shellcheck),
         null_ls.builtins.diagnostics.stylelint.with(cfg.stylelint),
         null_ls.builtins.diagnostics.stylint.with(cfg.stylint),
@@ -109,6 +113,7 @@ require('null-ls').setup {
         null_ls.builtins.formatting.eslint_d.with(cfg.eslint_d),
         null_ls.builtins.formatting.isort.with(cfg.isort),
         null_ls.builtins.formatting.perltidy,
+        null_ls.builtins.formatting.ruff.with(cfg.ruff),
         null_ls.builtins.formatting.shfmt.with(cfg.shfmt),
         null_ls.builtins.formatting.stylelint.with(cfg.stylelint),
         null_ls.builtins.formatting.stylua,
@@ -118,7 +123,11 @@ require('null-ls').setup {
 
         --#region Code actions
         null_ls.builtins.code_actions.eslint_d.with(cfg.eslint_d),
-        null_ls.builtins.code_actions.shellcheck.with(cfg.shellcheck)
+        null_ls.builtins.code_actions.shellcheck.with(cfg.shellcheck),
+        --#endregion
+
+        --#region Hover
+        null_ls.builtins.hover.printenv
         --#endregion
     }
 }

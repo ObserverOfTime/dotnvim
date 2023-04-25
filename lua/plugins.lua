@@ -38,6 +38,11 @@ local function plugins(use)
         config = [[require('config.statusline')]]
     }
     use {
+        'luukvbaal/statuscol.nvim',
+        cond = [[vim.g.in_term]],
+        config = [[require('config').statuscol()]]
+    }
+    use {
         'lukas-reineke/virt-column.nvim',
         cond = [[vim.g.in_term]],
         config = [[require('config').virtcolumn()]]
@@ -51,9 +56,9 @@ local function plugins(use)
         config = [[require('config').todocomments()]]
     }
     use {
-        'NvChad/nvim-colorizer.lua',
-        ft = c.color_fts,
-        config = [[require('config'):colorizer()]]
+        'uga-rosa/ccc.nvim',
+        module = 'ccc.highlighter',
+        config = [[require('ccc').setup()]]
     }
     --#endregion
 
@@ -115,10 +120,6 @@ local function plugins(use)
     use {
         'nvim-treesitter/nvim-treesitter-refactor',
         'nvim-treesitter/nvim-treesitter-textobjects',
-    }
-    use {
-        'nvim-treesitter/playground',
-        cmd = {'TSPlaygroundToggle'}
     }
     use {
         'stsewd/sphinx.nvim',

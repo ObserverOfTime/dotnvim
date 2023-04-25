@@ -27,10 +27,14 @@ vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(
     vim.lsp.handlers.signature_help, {border = border}
 )
 
-vim.diagnostic.config {float = {border = 'single'}}
+vim.diagnostic.config {
+    float = {border = 'single'},
+    virtual_text = {severity = vim.diagnostic.severity.ERROR}
+}
 --#endregion
 
 --#region Notifications
+---@diagnostic disable-next-line: duplicate-set-field
 vim.lsp.handlers['window/showMessage'] = function(_, result, ctx)
     local client = vim.lsp.get_client_by_id(ctx.client_id)
     local lvl = ({'ERROR', 'WARN', 'INFO', 'DEBUG'})[result.type]
@@ -238,6 +242,27 @@ new_client({'json', 'jsonc'}, {
     }
 })
 
+new_client({'kotlin'}, {
+    cmd = {'kotlin-language-server'},
+    root_dir = find_root({'build.gradle', 'build.gradle.kts', '.git'}),
+    settings = {
+        kotlin = {
+            completion = {
+                snippets = {
+                    enabled = true
+                }
+            },
+            indexing = {
+                enabled = true
+            },
+            externalSources = {
+                useKlsScheme = true,
+                autoConvertToKotlin = false
+            }
+        }
+    }
+})
+
 new_client({'xml', 'svg'}, {
     cmd = {'lemminx'},
     settings = {
@@ -287,7 +312,7 @@ new_client({'lua'}, {
         require('neodev.config').setup {setup_jsonls = false}
         client.config.settings = vim.tbl_deep_extend(
             'keep', client.config.settings,
-            require('neodev.sumneko').setup().settings
+            require('neodev.luals').setup().settings
         )
         client.notify('workspace/didChangeConfiguration', {
             settings = client.config.settings
@@ -542,8 +567,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
             )
         end
 
-        caps.semanticTokensProvider = nil
-
         if caps.codeActionProvider then
             map('n', 'gla', fzf.lsp_code_actions, {
                 desc = 'textDocument/codeAction', buffer = args.buf
@@ -611,6 +634,10 @@ vim.api.nvim_create_autocmd('LspAttach', {
             })
         end
 
+        if caps.colorProvider then
+            require('ccc.highlighter'):enable(args.buf)
+        end
+
         require('lsp-inlayhints').on_attach(client, args.buf, false)
 
         vim.b[args.buf]._lsp_attached = true
@@ -623,6 +650,6 @@ vim.api.nvim_create_user_command('LspAddWorkspace', function(args)
     vim.lsp.buf.add_workspace_folder(args.args)
 end, {
     nargs = 1, complete = 'dir',
-    desc = 'Add a workspace folder'
+    desc = 'add a workspace folder'
 })
 --#endregion

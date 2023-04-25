@@ -5,13 +5,6 @@ config.debug_fts = {
     'c', 'cpp', 'python', 'javascript', 'lua'
 }
 
---- Colorable filetypes
-config.color_fts = {
-    'css', 'html', 'htmldjango',
-    'javascript', 'less', 'pug',
-    'scss', 'stylus', 'svg', 'svelte'
-}
-
 --- Text filetypes
 config.text_fts = {
     'asciidoc', 'mail', 'markdown',
@@ -128,11 +121,61 @@ end
 vim.g.discord_activate_on_enter = false
 --#endregion
 
---- Configure Colorizer
-function config:colorizer()
-    require('colorizer').setup {
-        filetypes = self.color_fts,
-        user_default_options = {css = true}
+--- Configure statuscol
+function config.statuscol()
+    local b = require 'statuscol.builtin'
+    require('statuscol').setup {
+        clickmod = 'a',
+        segments = {
+            {
+                sign = {
+                    name = {'coverage*'},
+                    maxwidth = 1,
+                    auto = true
+                },
+                click = 'v:lua.ScSa'
+            },
+            {
+                text = {b.foldfunc},
+                click = 'v:lua.ScFa'
+            },
+            {
+                sign = {
+                    name = {'.*'},
+                    maxwidth = 1,
+                    auto = false
+                },
+                click = 'v:lua.ScSa'
+            },
+            {
+                sign = {
+                    name = {'Diagnostic'},
+                    maxwidth = 1,
+                    auto = true
+                },
+                click = 'v:lua.ScSa'
+            },
+            {
+                sign = {
+                    name = {'GitSigns'},
+                    maxwidth = 1,
+                    auto = true
+                },
+                click = 'v:lua.ScSa'
+            },
+            {
+                sign = {
+                    name = {'Dap'},
+                    maxwidth = 1,
+                    auto = true
+                },
+                click = 'v:lua.ScSa'
+            },
+            {
+                text = {b.lnumfunc, ' '},
+                click = 'v:lua.ScLa'
+            }
+        }
     }
 end
 
@@ -185,6 +228,9 @@ function config.autopairs()
         Rule('{%', '%}', 'htmldjango')
             :set_end_pair_length(2)
             :replace_endpair(function() return '  %' end),
+        Rule('{#', '#}', 'htmldjango')
+            :set_end_pair_length(2)
+            :replace_endpair(function() return '  #' end),
         Rule('{{', '}}', 'htmldjango')
             :set_end_pair_length(2)
             :replace_endpair(function() return '  }' end),

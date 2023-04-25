@@ -78,11 +78,11 @@ dap.configurations.javascript = {{
 --#endregion
 
 --#region Lua
-dap.adapters.nlua = function(callback, config)
+dap.adapters.nlua = function(callback)
     callback {
         type = 'server',
-        host = config.host or '127.0.0.1',
-        port = config.port or 8086
+        host = '127.0.0.1',
+        port = 8086
     }
 end
 
