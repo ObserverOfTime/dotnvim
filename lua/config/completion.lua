@@ -50,6 +50,9 @@ cmp.setup {
     enabled = true,
     formatting = {format = format},
     completion = {keyword_length = 1},
+    experimental = {
+        ghost_text = {hl_group = 'GruvboxBg4'}
+    },
     mapping = cmp.mapping.preset.insert {
         ['<CR>'] = cmp.mapping.confirm {select = false},
         ['<Tab>'] = cmp.mapping(forward, {'i', 's'}),
@@ -104,20 +107,6 @@ cmp.setup.filetype('gitcommit', {
         {name = 'path'},
         {name = 'buffer'}
     }
-})
-
-cmp.setup.filetype('query', {
-    sources = {
-        {name = 'omni'},
-        {name = 'buffer'}
-    }
-})
-
-cmp.setup.filetype('dap-repl', {
-    sources = {{
-        name = 'omni',
-        trigger_characters = {'.'}
-    }}
 })
 
 cmp.event:on('confirm_done', pairs.on_confirm_done())

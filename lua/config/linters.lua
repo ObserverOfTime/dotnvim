@@ -95,6 +95,7 @@ require('null-ls').setup {
         null_ls.builtins.diagnostics.djlint.with(cfg.djlint),
         null_ls.builtins.diagnostics.eslint_d.with(cfg.eslint_d),
         null_ls.builtins.diagnostics.flake8.with(cfg.flake8),
+        null_ls.builtins.diagnostics.hadolint,
         null_ls.builtins.diagnostics.luacheck,
         null_ls.builtins.diagnostics.mypy.with(cfg.mypy),
         null_ls.builtins.diagnostics.puglint.with(cfg.puglint),
@@ -124,10 +125,6 @@ require('null-ls').setup {
         --#region Code actions
         null_ls.builtins.code_actions.eslint_d.with(cfg.eslint_d),
         null_ls.builtins.code_actions.shellcheck.with(cfg.shellcheck),
-        --#endregion
-
-        --#region Hover
-        null_ls.builtins.hover.printenv
         --#endregion
     }
 }

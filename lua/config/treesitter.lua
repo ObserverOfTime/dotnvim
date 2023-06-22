@@ -5,8 +5,6 @@ vim.opt.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
 require('nvim-treesitter.configs').setup {
     indent = {enable = true},
     highlight = {enable = true},
-    playground = {enable = true},
-    query_linter = {enable = true},
     incremental_selection = {
         enable = true,
         keymaps = {
@@ -96,7 +94,6 @@ require('nvim-treesitter.configs').setup {
         'bibtex',
         'c',
         'cmake',
-        'comment',
         'cpp',
         'css',
         'diff',
@@ -117,7 +114,6 @@ require('nvim-treesitter.configs').setup {
         'kotlin',
         'latex',
         'lua',
-        'luadoc',
         'luap',
         -- 'make',
         'markdown',

@@ -114,6 +114,7 @@ local function plugins(use)
     --#region Tree-sitter
     use {
         'nvim-treesitter/nvim-treesitter',
+        -- branch = 'main',
         run = ':TSUpdate',
         config = [[require('config.treesitter')]]
     }
@@ -157,10 +158,6 @@ local function plugins(use)
         'hrsh7th/cmp-nvim-lsp'
     }
     use {
-        'hrsh7th/cmp-omni',
-        ft = {'query', 'dap-repl'}
-    }
-    use {
         'petertriho/cmp-git',
         ft = {'gitcommit'}
     }
@@ -184,15 +181,8 @@ local function plugins(use)
         config = [[require('config').symbols()]]
     }
     use {
-        'lvimuser/lsp-inlayhints.nvim',
-        -- XXX: neovim/neovim#20130
-        -- branch = 'anticonceal',
-        ft = c.lsp_fts,
-        module = 'lsp-inlayhints',
-        config = [[require('lsp-inlayhints').setup()]]
-    }
-    use {
         'JosefLitos/reform.nvim',
+        opt = true,
         run = 'make docfmt',
         config = [[require('reform').setup()]]
     }
@@ -208,7 +198,7 @@ local function plugins(use)
 
     --#region Commands
     use {
-        -- XXX: nvim-lua/wishlist#21
+        -- XXX: no alternative
         'mbbill/undotree',
         cmd = {'UndotreeToggle'}
     }

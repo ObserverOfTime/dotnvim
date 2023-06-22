@@ -141,6 +141,7 @@ new_client({'c', 'cpp'}, {
     end
 
     vim.keymap.set('n', 'gls', function()
+        ---@diagnostic disable-next-line: invisible
         client.request('textDocument/switchSourceHeader', {
             uri = vim.uri_from_bufnr(bufnr)
         }, nil, bufnr)
@@ -226,6 +227,11 @@ new_client({'json', 'jsonc'}, {
                     fileMatch = {'.luarc.json'},
                     url = 'https://raw.githubusercontent.com/sumneko/'..
                           'vscode-lua/master/setting/schema.json'
+                },
+                {
+                    fileMatch = {'packspec.json'},
+                    url = 'https://raw.githubusercontent.com/nvim-lua/'..
+                          'nvim-package-specification/master/schema/packspec_schema.json'
                 },
                 {
                     fileMatch = {'pyrightconfig.json'},
@@ -320,6 +326,10 @@ new_client({'lua'}, {
     end,
     settings = {
         Lua = {
+            hint = {
+                enable = true,
+                paramName = 'Disable'
+            },
             telemetry = {enable = false},
             completion = {showWord = 'Disable'},
             workspace = {checkThirdParty = false}
@@ -472,6 +482,7 @@ new_client({'bib', 'tex', 'rnoweb'}, {
             textDocument = {uri = vim.uri_from_bufnr(bufnr)},
             position = {line = vim.fn.line('.') - 1, character = vim.fn.col('.') },
         }
+        ---@diagnostic disable-next-line: invisible
         client.request('textDocument/forwardSearch', params, nil, bufnr)
     end, {buffer = bufnr, desc = 'textDocument/forwardSearch'})
 
@@ -479,6 +490,7 @@ new_client({'bib', 'tex', 'rnoweb'}, {
         local params = {
             textDocument = {uri = vim.uri_from_bufnr(bufnr)}
         }
+        ---@diagnostic disable-next-line: invisible
         client.request('textDocument/build', params, nil, bufnr)
     end, {buffer = bufnr, desc = 'textDocument/build'})
 end)
@@ -489,6 +501,16 @@ new_client({'javascript', 'typescript'}, {
         'package.json', 'tsconfig.json',
         'jsconfig.json', '.git'
     }),
+    settings = {
+        javascript = {
+            inlayHints = {
+                includeInlayVariableTypeHints = true,
+                includeInlayFunctionParameterTypeHints = true,
+                includeInlayFunctionLikeReturnTypeHints = true,
+                includeInlayPropertyDeclarationTypeHints = true
+            }
+        }
+    },
     init_options = {
         hostInfo = 'neovim'
     }
@@ -543,7 +565,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
     callback = function(args)
         local map = vim.keymap.set
         local client = vim.lsp.get_client_by_id(args.data.client_id)
-        local caps = client.server_capabilities
 
         if not vim.b[args.buf]._lsp_attached then
             local lightbulb = require 'nvim-lightbulb'
@@ -567,78 +588,80 @@ vim.api.nvim_create_autocmd('LspAttach', {
             )
         end
 
-        if caps.codeActionProvider then
+        if client.supports_method('textDocument/inlayHint', {bufnr=args.buf}) then
+            vim.lsp.buf.inlay_hint(args.buf, true)
+        end
+
+        if client.supports_method('textDocument/codeAction', {bufnr=args.buf}) then
             map('n', 'gla', fzf.lsp_code_actions, {
                 desc = 'textDocument/codeAction', buffer = args.buf
             })
         end
 
-        if caps.renameProvider then
+        if client.supports_method('textDocument/rename', {bufnr=args.buf}) then
             map('n', 'glr', vim.lsp.buf.rename, {
                 desc = 'textDocument/rename', buffer = args.buf
             })
         end
 
-        if caps.referencesProvider then
+        if client.supports_method('textDocument/references', {bufnr=args.buf}) then
             map('n', 'glR', fzf.lsp_references, {
                 desc = 'textDocument/references', buffer = args.buf
             })
         end
 
-        if caps.implementationProvider then
+        if client.supports_method('textDocument/implementation', {bufnr=args.buf}) then
             map('n', 'gli', vim.lsp.buf.implementation, {
                 desc = 'textDocument/implementation', buffer = args.buf
             })
         end
 
-        if caps.signatureHelpProvider then
+        if client.supports_method('textDocument/signatureHelp', {bufnr=args.buf}) then
             map('n', 'glh', vim.lsp.buf.signature_help, {
                 desc = 'textDocument/signatureHelp', buffer = args.buf
             })
         end
 
-        if caps.typeDefinitionProvider then
+        if client.supports_method('textDocument/typeDefinition', {bufnr=args.buf}) then
             map('n', 'glT', vim.lsp.buf.type_definition, {
                 desc = 'textDocument/typeDefinition', buffer = args.buf
             })
         end
 
-        if caps.documentFormattingProvider then
+        if client.supports_method('textDocument/formatting', {bufnr=args.buf}) then
             map({'n', 'v'}, 'glf', function() vim.lsp.buf.format() end, {
                 desc = 'textDocument/formatting', buffer = args.buf
             })
         end
 
-        if caps.documentSymbolProvider then
+        if client.supports_method('textDocument/documentSymbol', {bufnr=args.buf}) then
             local symbols = require 'symbols-outline'
             map('n', 'gO', symbols.open_outline, {
                 desc = 'symbols outline', buffer = args.buf
             })
         end
 
-        if caps.declarationProvider then
+        if client.supports_method('textDocument/declaration', {bufnr=args.buf}) then
             map('n', 'gD', vim.lsp.buf.declaration, {
                 desc = 'textDocument/declaration', buffer = args.buf
             })
         end
 
-        if caps.definitionProvider then
+        if client.supports_method('textDocument/definition', {bufnr=args.buf}) then
             map('n', 'gd', fzf.lsp_definitions, {
                 desc = 'textDocument/definition', buffer = args.buf
             })
         end
 
-        if caps.hoverProvider then
+        if client.supports_method('textDocument/hover', {bufnr=args.buf}) then
             map('n', 'K', vim.lsp.buf.hover, {
                 desc = 'textDocument/hover', buffer = args.buf
             })
         end
 
-        if caps.colorProvider then
-            require('ccc.highlighter'):enable(args.buf)
+        if client.supports_method('textDocument/documentColor', {bufnr=args.buf}) then
+            require('ccc.highlighter').new(false):enable(args.buf)
         end
-
-        require('lsp-inlayhints').on_attach(client, args.buf, false)
 
         vim.b[args.buf]._lsp_attached = true
     end

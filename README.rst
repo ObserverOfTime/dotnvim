@@ -1,7 +1,7 @@
 My Neovim Configuration
 =======================
 
-**Neovim v0.9.0 is required.**
+**Neovim nightly is required.**
 
 .. contents::
    :local:
@@ -57,7 +57,7 @@ Using packer.nvim_ as the plugin manager.
 * `windwp/nvim-autopairs <https://github.com/windwp/nvim-autopairs>`_
 * `kylechui/nvim-surround <https://github.com/kylechui/nvim-surround>`_
 * `lewis6991/gitsigns.nvim <https://github.com/lewis6991/gitsigns.nvim>`_ |P|
-* `ObserverOfTime/nvimcord <https://github.com/ObserverOfTime/nvimcord>`_ |R|
+* `ObserverOfTime/nvimcord <https://github.com/ObserverOfTime/nvimcord>`_
 * `mattn/emmet-vim <https://github.com/mattn/emmet-vim>`_ |V|
 * `AndrewRadev/splitjoin.vim <https://github.com/AndrewRadev/splitjoin.vim>`_ |V|
 * `wsdjeg/vim-fetch <https://github.com/wsdjeg/vim-fetch>`_ |V|
@@ -75,7 +75,6 @@ Using packer.nvim_ as the plugin manager.
 * `hrsh7th/nvim-cmp <https://github.com/hrsh7th/nvim-cmp>`_
 
   - `hrsh7th/cmp-path <https://github.com/hrsh7th/cmp-path>`_
-  - `hrsh7th/cmp-omni <https://github.com/hrsh7th/cmp-omni>`_
   - `hrsh7th/cmp-buffer <https://github.com/hrsh7th/cmp-buffer>`_
   - `hrsh7th/cmp-nvim-lsp <https://github.com/hrsh7th/cmp-nvim-lsp>`_
   - `petertriho/cmp-git <https://github.com/petertriho/cmp-git>`_ |P|
@@ -84,7 +83,6 @@ Using packer.nvim_ as the plugin manager.
     + `ObserverOfTime/nvim-snippy <https://github.com/ObserverOfTime/nvim-snippy>`_
 * `kosayoda/nvim-lightbulb <https://github.com/kosayoda/nvim-lightbulb>`_
 * `simrat39/symbols-outline.nvim <https://github.com/simrat39/symbols-outline.nvim>`_
-* `lvimuser/lsp-inlayhints.nvim <https://github.com/lvimuser/lsp-inlayhints.nvim>`_
 * `folke/neodev.nvim <https://github.com/folke/neodev.nvim>`_
 * `jose-elias-alvarez/null-ls.nvim <https://github.com/jose-elias-alvarez/null-ls.nvim>`_ |P|
 * `mbbill/undotree <https://github.com/mbbill/undotree>`_ |V|
@@ -126,7 +124,6 @@ Tree-sitter
 * bibtex
 * c |T|
 * cmake
-* comment
 * cpp |T|
 * css |T|
 * diff
@@ -154,8 +151,8 @@ Tree-sitter
 * query
 * r |T|
 * regex
-* rst |I|
 * rnoweb
+* rst |I|
 * rust |T|
 * scss |T|
 * svelte

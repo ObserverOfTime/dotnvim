@@ -101,6 +101,7 @@ map('n', '<Leader>ga', '<Cmd>Gitsigns stage_hunk<CR>')
 map('n', '<Leader>gr', '<Cmd>Gitsigns reset_hunk<CR>')
 map('n', '<Leader>gs', '<Cmd>Gitsigns select_hunk<CR>')
 map('n', '<Leader>gb', '<Cmd>Gitsigns toggle_current_line_blame<CR>')
+map('n', '<Leader>gp', '<Cmd>Gitsigns preview_hunk_inline<CR>')
 --#endregion
 
 --#region Diagnostics
