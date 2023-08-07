@@ -30,6 +30,8 @@ vim.opt.foldlevelstart = 99
 -- Use a single statusline
 vim.opt.laststatus = 3
 
+--- Default commentstring
+vim.opt.commentstring = '# %s'
 --- Default folding method
 vim.opt.foldmethod = 'marker'
 --- Use dark background

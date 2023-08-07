@@ -81,7 +81,6 @@ Using packer.nvim_ as the plugin manager.
   - `dcampos/cmp-snippy <https://github.com/dcampos/cmp-snippy>`_
 
     + `ObserverOfTime/nvim-snippy <https://github.com/ObserverOfTime/nvim-snippy>`_
-* `kosayoda/nvim-lightbulb <https://github.com/kosayoda/nvim-lightbulb>`_
 * `simrat39/symbols-outline.nvim <https://github.com/simrat39/symbols-outline.nvim>`_
 * `folke/neodev.nvim <https://github.com/folke/neodev.nvim>`_
 * `jose-elias-alvarez/null-ls.nvim <https://github.com/jose-elias-alvarez/null-ls.nvim>`_ |P|

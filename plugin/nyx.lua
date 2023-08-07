@@ -5,26 +5,33 @@
 
 local wrap = vim.schedule_wrap
 
+---@param err string
 local function notify_error(err)
     vim.notify(err, vim.log.levels.ERROR, {title = 'nyx.nvim'})
 end
 
+---@class CommandArgs
+---@field args string
+---@field bang boolean
+
+---@param args CommandArgs
 local function delete(args)
     local buf = vim.api.nvim_get_current_buf()
     local file = vim.api.nvim_buf_get_name(buf)
     vim.api.nvim_buf_delete(buf, {force = args.bang})
     if not vim.api.nvim_buf_is_loaded(buf) then
-        vim.loop.fs_unlink(file, wrap(function(err)
+        vim.uv.fs_unlink(file, wrap(function(err)
             if err ~= nil then return notify_error(err) end
         end))
     end
 end
 
+---@param args CommandArgs
 local function copy(args)
     local cow = vim.g.nyx_cow or false
     local buf = vim.api.nvim_get_current_buf()
     local file = vim.api.nvim_buf_get_name(buf)
-    vim.loop.fs_copyfile(file, args.args, {
+    vim.uv.fs_copyfile(file, args.args, {
         excl = not args.bang,
         ficlone_force = cow
     }, wrap(function(err)
@@ -33,14 +40,15 @@ local function copy(args)
     end))
 end
 
+---@param args CommandArgs
 local function move(args)
     local buf = vim.api.nvim_get_current_buf()
     local file = vim.api.nvim_buf_get_name(buf)
-    if not args.bang and vim.loop.fs_stat(args.args) then
+    if not args.bang and vim.uv.fs_stat(args.args) then
         local msg = 'EEXIST: file already exists: %s'
         return notify_error(msg:format(file, args.args))
     end
-    vim.loop.fs_rename(file, args.args, wrap(function(err)
+    vim.uv.fs_rename(file, args.args, wrap(function(err)
         if err ~= nil then return notify_error(err) end
         vim.api.nvim_buf_delete(buf, {force = args.bang})
         vim.cmd.edit {args.args, bang = args.bang}

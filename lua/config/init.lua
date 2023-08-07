@@ -212,10 +212,10 @@ end
 function config.comment()
     local ft = require 'Comment.ft'
     require('Comment').setup()
-    ft.set('pug', {'//-%s'})
-    ft.set('htmldjango', {
+    ft.pug = {'//-%s'}
+    ft.htmldjango = {
         '{#%s#}', '{% comment %}%s{% endcomment %}'
-    })
+    }
 end
 
 -- Configure AutoPairs

@@ -4,7 +4,7 @@ if vim.g._mergetool then return end
 --#region Imports
 local cmp = require 'cmp_nvim_lsp'
 local fzf = require 'fzf-lua'
-local i = require('config.icons')
+local i = require 'config.icons'
 --#endregion
 
 --#region Borders
@@ -27,6 +27,8 @@ vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(
     vim.lsp.handlers.signature_help, {border = border}
 )
 
+vim.lsp.handlers['textDocument/diagnostic'] = vim.lsp.diagnostic.on_diagnostic
+
 vim.diagnostic.config {
     float = {border = 'single'},
     virtual_text = {severity = vim.diagnostic.severity.ERROR}
@@ -36,9 +38,9 @@ vim.diagnostic.config {
 --#region Notifications
 ---@diagnostic disable-next-line: duplicate-set-field
 vim.lsp.handlers['window/showMessage'] = function(_, result, ctx)
-    local client = vim.lsp.get_client_by_id(ctx.client_id)
+    local client = assert(vim.lsp.get_client_by_id(ctx.client_id))
     local lvl = ({'ERROR', 'WARN', 'INFO', 'DEBUG'})[result.type]
-    vim.notify(result.message, lvl, {title = 'LSP ('..client.name..')'})
+    vim.notify(result.message, lvl, {title = ('LSP (%s)'):format(client.name)})
 end
 --#endregion
 
@@ -56,11 +58,19 @@ local lsp = vim.api.nvim_create_augroup('LSP', {clear = true})
 local capabilities = cmp.default_capabilities()
 capabilities.offsetEncoding = {'utf-8', 'utf-16'}
 
+---@class ClientConfig: lsp.ClientConfig
+---@field cmd string[]
+---@field root_dir string|nil
+
 --- Create an LSP client
-local function new_client(ft, opts, func)
+---@param fts string[]
+---@param opts ClientConfig
+---@param func? fun(client_id: integer, bufnr: integer)
+local function new_client(fts, opts, func)
+    if opts.root_dir == nil then return end
     vim.api.nvim_create_autocmd('FileType', {
         group = lsp,
-        pattern = ft,
+        pattern = fts,
         callback = function(args)
             local client_id = vim.lsp.start(
                 vim.tbl_deep_extend('keep', opts, {
@@ -76,14 +86,21 @@ local function new_client(ft, opts, func)
 end
 
 --- Find the root directory
+---@param files? string[]
+---@param base? boolean
+---@return string
 local function find_root(files, base)
     local u = require 'null-ls.utils'
+    -- TODO: use vim.fs.find
+    ---@diagnostic disable-next-line: param-type-mismatch
     return u.root_pattern(files or {'.git'})(
-        base and vim.api.nvim_buf_get_name(0)
-    ) or vim.loop.cwd()
+        base and vim.api.nvim_buf_get_name(0) or vim.uv.cwd()
+    ) or vim.uv.cwd()
 end
 
 --- Find a file using fd
+---@param args string
+---@return string|nil
 local function find_file(args)
     local exec = 'fd --max-results 1 -d 3 '
     local res = vim.fn.systemlist(exec..args)
@@ -104,10 +121,7 @@ new_client({'c', 'cpp'}, {
         'clangd', '--clang-tidy',
         '--completion-style=detailed'
     },
-    root_dir = find_root({
-        '.clangd', 'Makefile',
-        'CMakeLists.txt', '.git'
-    }),
+    root_dir = find_root({'.clangd', 'Makefile', 'CMakeLists.txt'}),
     capabilities = {
         textDocument = {
             completion = {
@@ -150,9 +164,14 @@ end)
 
 new_client({'cmake'}, {
     cmd = {'neocmakelsp', 'stdio'},
-    root_dir = find_root({
-        'CMakeLists.txt', '.git'
-    }),
+    root_dir = find_root({'CMakeLists.txt'}),
+    capabilities = {
+        workspace = {
+            didChangeWatchedFiles = {
+                dynamicRegistration = true
+            }
+        }
+    }
 })
 
 new_client({'css', 'scss', 'less'}, {
@@ -191,6 +210,7 @@ new_client({'html'}, {
 
 new_client({'json', 'jsonc'}, {
     cmd = {'vscode-json-languageserver', '--stdio'},
+    root_dir = find_root(),
     init_options = {
         provideFormatter = true
     },
@@ -242,6 +262,16 @@ new_client({'json', 'jsonc'}, {
                     fileMatch = {'grammar.json'},
                     url = 'https://raw.githubusercontent.com/tree-sitter/'..
                           'tree-sitter/master/cli/src/generate/grammar-schema.json'
+                },
+                {
+                    fileMatch = {'deno.json', 'deno.jsonc'},
+                    url = 'https://raw.githubusercontent.com/denoland/'..
+                          'deno/main/cli/schemas/config-file.v1.json'
+                },
+                {
+                    fileMatch = {'conventionalcommit.json'},
+                    url = 'https://raw.githubusercontent.com/lppedd/idea-conventional-commit/'..
+                          'master/src/main/resources/defaults/conventionalcommit.schema.json'
                 }
             }
         }
@@ -250,7 +280,7 @@ new_client({'json', 'jsonc'}, {
 
 new_client({'kotlin'}, {
     cmd = {'kotlin-language-server'},
-    root_dir = find_root({'build.gradle', 'build.gradle.kts', '.git'}),
+    root_dir = find_root({'build.gradle', 'build.gradle.kts'}),
     settings = {
         kotlin = {
             completion = {
@@ -271,6 +301,7 @@ new_client({'kotlin'}, {
 
 new_client({'xml', 'svg'}, {
     cmd = {'lemminx'},
+    root_dir = find_root(),
     settings = {
         xml = {
             server = {
@@ -313,12 +344,17 @@ new_client({'xml', 'svg'}, {
 
 new_client({'lua'}, {
     cmd = {'lua-language-server'},
-    root_dir = find_root({'.luarc.json', 'lua', '.git'}, true),
+    root_dir = find_root({'.luarc.json', 'lua', '.luacheckrc'}, true),
     on_init = function(client)
         require('neodev.config').setup {setup_jsonls = false}
+        local settings = require('neodev.luals').setup().settings
+        ---@cast settings table
+        table.insert(
+            settings.Lua.workspace.library,
+            vim.fn.stdpath('config')..'/lua'
+        )
         client.config.settings = vim.tbl_deep_extend(
-            'keep', client.config.settings,
-            require('neodev.luals').setup().settings
+            'keep', client.config.settings, settings
         )
         client.notify('workspace/didChangeConfiguration', {
             settings = client.config.settings
@@ -330,7 +366,9 @@ new_client({'lua'}, {
                 enable = true,
                 paramName = 'Disable'
             },
-            telemetry = {enable = false},
+            diagnostics = {
+                disable = {'missing-fields'}
+            },
             completion = {showWord = 'Disable'},
             workspace = {checkThirdParty = false}
         }
@@ -342,7 +380,7 @@ new_client({'python'}, {
     cmd = {'pyright-langserver', '--stdio'},
     root_dir = find_root({
         'setup.py', 'pyproject.toml',
-        'pyrightconfig.json', '.git'
+        'pyrightconfig.json'
     }),
     settings = {
         python = {
@@ -365,6 +403,7 @@ new_client({'python'}, {
 
 new_client({'r', 'rmd'}, {
     name = 'r-languageserver',
+    root_dir = find_root(),
     cmd = {'R', '--vanilla', '-s', '-e', 'languageserver::run()'}
 })
 
@@ -382,7 +421,7 @@ new_client({'rust'}, {
 
 new_client({'svelte'}, {
     cmd = {'svelteserver', '--stdio'},
-    root_dir = find_root({'package.json', '.git'})
+    root_dir = find_root({'package.json'})
 })
 
 new_client({'toml'}, {
@@ -403,7 +442,7 @@ new_client({'toml'}, {
 
 new_client({'bib', 'tex', 'rnoweb'}, {
     cmd = {'texlab'},
-    root_dir = find_root(),
+    root_dir = find_root({'.latexmkrc'}, true),
     on_init = function(client)
         local rc = find_file('-H .latexmkrc')
         if rc ~= nil then
@@ -495,20 +534,44 @@ new_client({'bib', 'tex', 'rnoweb'}, {
     end, {buffer = bufnr, desc = 'textDocument/build'})
 end)
 
+--[[
+new_client({'typescript'}, {
+    cmd = {'deno', 'lsp'},
+    cmd_env = {
+        NO_COLOR = true
+    },
+    root_dir = find_root({'deno.json', 'deno.jsonc'}),
+    settings = {
+        deno = {
+            enable = true,
+            inlayHints = {
+                parameterNames = {
+                    enabled = 'literals'
+                },
+            },
+            suggest = {
+                autoImports = true,
+                completeFunctionCalls = true,
+                names = true,
+                paths = true
+            },
+            lint = true
+        }
+    }
+})
+--]]
+
 new_client({'javascript', 'typescript'}, {
     cmd = {'typescript-language-server', '--stdio'},
-    root_dir = find_root({
-        'package.json', 'tsconfig.json',
-        'jsconfig.json', '.git'
-    }),
+    root_dir = find_root({'package.json', 'tsconfig.json', 'jsconfig.json'}),
     settings = {
         javascript = {
-            inlayHints = {
-                includeInlayVariableTypeHints = true,
-                includeInlayFunctionParameterTypeHints = true,
-                includeInlayFunctionLikeReturnTypeHints = true,
-                includeInlayPropertyDeclarationTypeHints = true
-            }
+            -- inlayHints = {
+            --     includeInlayVariableTypeHints = true,
+            --     includeInlayFunctionParameterTypeHints = true,
+            --     includeInlayFunctionLikeReturnTypeHints = true,
+            --     includeInlayPropertyDeclarationTypeHints = true
+            -- }
         }
     },
     init_options = {
@@ -549,6 +612,8 @@ new_client({'yaml'}, {
                 ['https://json.schemastore.org/appveyor.json'] = 'appveyor.yml',
                 ['https://json.schemastore.org/jekyll.json'] = '_config.yml',
                 ['https://json.schemastore.org/codecov.json'] = 'codecov.yml',
+                ['https://json.schemastore.org/clangd.json'] = '.clangd',
+                ['https://json.schemastore.org/clang-format.json'] = '.clang-format',
                 ['https://gitlab.com/gitlab-org/gitlab/-/raw/master/app/assets/javascripts/editor/schema/ci.json'] =
                     '.gitlab-ci.yml',
                 ['https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json'] =
@@ -564,32 +629,15 @@ vim.api.nvim_create_autocmd('LspAttach', {
     group = lsp,
     callback = function(args)
         local map = vim.keymap.set
-        local client = vim.lsp.get_client_by_id(args.data.client_id)
+        local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
 
         if not vim.b[args.buf]._lsp_attached then
-            local lightbulb = require 'nvim-lightbulb'
-
             vim.bo[args.buf].tagfunc = 'v:lua.vim.lsp.tagfunc'
             vim.bo[args.buf].formatexpr = 'v:lua.vim.lsp.buf.formatexpr'
-
-            vim.api.nvim_create_autocmd(
-                {'CursorHold', 'CursorHoldI'}, {
-                    group = lsp, buffer = args.buf,
-                    callback = function()
-                        lightbulb.update_lightbulb {
-                            sign = {enabled = false},
-                            virtual_text = {
-                                enabled = true,
-                                text = i.lsp.hint
-                            }
-                        }
-                    end
-                }
-            )
         end
 
         if client.supports_method('textDocument/inlayHint', {bufnr=args.buf}) then
-            vim.lsp.buf.inlay_hint(args.buf, true)
+            vim.lsp.inlay_hint(args.buf, true)
         end
 
         if client.supports_method('textDocument/codeAction', {bufnr=args.buf}) then

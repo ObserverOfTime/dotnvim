@@ -6,7 +6,13 @@ local i = require 'config.icons'
 --#endregion
 
 --#region Utilities
+---@class cmp.CompletionItem: lsp.CompletionItem
+---@field menu? string
+
 --- Menu format
+---@param entry cmp.Entry
+---@param item cmp.CompletionItem
+---@return cmp.CompletionItem
 local function format(entry, item)
     item.kind = i.lsp.kind[item.kind]
     item.menu = i.cmp[entry.source.name]
@@ -21,6 +27,7 @@ local function has_words_before()
 end
 
 --- Jump forward
+---@param fallback fun()
 local function forward(fallback)
     if cmp.visible() then
         cmp.select_next_item()
@@ -34,6 +41,7 @@ local function forward(fallback)
 end
 
 --- Jump backward
+---@param fallback fun()
 local function backward(fallback)
     if cmp.visible() then
         cmp.select_prev_item()
@@ -76,7 +84,7 @@ cmp.setup {
         {name = 'snippy'},
         {
             name = 'path',
-            option = {get_cwd = vim.loop.cwd}
+            option = {get_cwd = vim.uv.cwd}
         },
         {
             name = 'buffer',

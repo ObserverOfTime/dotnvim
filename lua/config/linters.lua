@@ -4,6 +4,8 @@ if vim.g._mergetool then return end
 local null_ls = require 'null-ls'
 
 --- Check if executable exists
+---@param cmd string
+---@return fun(): boolean
 local function is_executable(cmd)
     return function()
         return vim.fn.executable(cmd) == 1
@@ -11,6 +13,8 @@ local function is_executable(cmd)
 end
 
 --- Check if node binary exists
+---@param cmd string
+---@return fun(utils: ConditionalUtils): boolean
 local function has_node_bin(cmd)
     return function(utils)
         return utils.root_has_file('node_modules/.bin/'..cmd)
@@ -89,7 +93,7 @@ local cfg = {
 --#endregion
 
 --#region Sources
-require('null-ls').setup {
+null_ls.setup {
     sources = {
         --#region Diagnostics
         null_ls.builtins.diagnostics.djlint.with(cfg.djlint),

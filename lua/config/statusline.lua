@@ -37,11 +37,13 @@ local function wordcount()
 end
 
 --- File mode
+---@param name string
 local function mode(name)
     return name:sub(1, 1)
 end
 
 --- File encoding
+---@param name string
 local function encoding(name)
     return name == 'utf-8' and '' or name:upper()
 end
@@ -137,7 +139,7 @@ if not _G._clock_timer then
         vim.cmd.redrawstatus()
     end)
 
-    _G._clock_timer = vim.loop.new_timer()
+    _G._clock_timer = vim.uv.new_timer()
     _G._clock_timer:start(0, 3e4, refresh)
 end
 --#endregion

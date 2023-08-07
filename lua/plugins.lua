@@ -1,4 +1,20 @@
 --- Plugins
+
+---@class PluginSpec
+---@field cond? string
+---@field config? string
+---@field as? string
+---@field ft? string[]
+---@field run? string
+---@field branch? string
+---@field module? string
+---@field requires? string[]
+---@field opt? boolean
+---@field cmd? string[]
+---@field keys? string[]
+---@field commit? string
+
+---@param use fun(spec: PluginSpec)
 local function plugins(use)
     local c = require 'config'
 
@@ -169,11 +185,6 @@ local function plugins(use)
     --#endregion
 
     --#region LSP
-    use {
-        'kosayoda/nvim-lightbulb',
-        ft = c.lsp_fts,
-        module = 'nvim-lightbulb'
-    }
     use {
         'simrat39/symbols-outline.nvim',
         ft = c.lsp_fts,

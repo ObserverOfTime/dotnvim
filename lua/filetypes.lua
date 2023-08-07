@@ -2,6 +2,9 @@
 local extension = {}
 
 --- Convert buffer
+---@param cmd string
+---@param path string
+---@param bufnr integer
 local function convert(cmd, path, bufnr)
     vim.cmd('silent %!'..cmd:format(path))
     vim.bo[bufnr].modifiable = false
@@ -32,10 +35,7 @@ end
 vim.filetype.add {
     extension = extension,
     filename = {
-        ['.lintr']               = 'debcontrol',
-        ['dev-requirements.txt'] = 'requirements',
-        ['MANIFEST.in']          = 'pymanifest',
-        ['requirements.txt']     = 'requirements',
+        ['.lintr'] = 'debcontrol'
     }
 }
 --#endregion

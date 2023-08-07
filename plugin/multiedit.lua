@@ -3,10 +3,13 @@
 -- @license MIT-0
 -- @author ObserverOfTime
 
+---@param file string
+---@return boolean
 local function isfile(file)
     return vim.fn.filereadable(file) == 1
 end
 
+---@param args {fargs: string[]}
 local function multiedit(args)
     local silent = {silent = true}
     if vim.tbl_isempty(args.fargs) then
