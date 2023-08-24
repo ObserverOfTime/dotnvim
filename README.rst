@@ -83,7 +83,7 @@ Using packer.nvim_ as the plugin manager.
     + `ObserverOfTime/nvim-snippy <https://github.com/ObserverOfTime/nvim-snippy>`_
 * `simrat39/symbols-outline.nvim <https://github.com/simrat39/symbols-outline.nvim>`_
 * `folke/neodev.nvim <https://github.com/folke/neodev.nvim>`_
-* `jose-elias-alvarez/null-ls.nvim <https://github.com/jose-elias-alvarez/null-ls.nvim>`_ |P|
+* `henrywallace/null-ls.nvim <https://github.com/henrywallace/null-ls.nvim>`_ |P|
 * `mbbill/undotree <https://github.com/mbbill/undotree>`_ |V|
 * `kg8m/vim-simple-align <https://github.com/kg8m/vim-simple-align>`_ |V|
 * `chrisbra/unicode.vim <https://github.com/chrisbra/unicode.vim>`_ |V|
@@ -119,55 +119,53 @@ Personal
 Tree-sitter
 -----------
 
+* awk
 * bash |H|
 * bibtex
-* c |T|
+* c
 * cmake
-* cpp |T|
-* css |T|
+* cpp
+* css
 * diff
-* dockerfile |T|
+* dockerfile
 * html
 * http
 * gitattributes
 * gitcommit
 * gitignore
 * glimmer
-* java |T|
-* javascript |T|
+* java
+* javascript
 * jsdoc
-* json |H| |T|
-* jsonc |H| |T|
-* kotlin |T|
+* json
+* jsonc
+* kotlin
 * latex |H|
-* lua |T|
+* lua
 * luadoc
 * luap
 * markdown |H| |I|
 * markdown_inline |H|
-* nix |T|
-* python |T|
+* python
 * query
-* r |T|
+* r
 * regex
 * rnoweb
-* rst |I|
-* rust |T|
-* scss |T|
+* rst
+* rust
+* scss |H|
 * svelte
-* toml |T|
-* typescript |T|
-* vim |T|
+* toml
+* typescript
+* vim
 * vimdoc
-* yaml |T|
+* yaml
 
 | |I| Custom injections
 | |H| Custom highlights
-| |T| Custom text objects
 
 .. |H| replace:: :sup:`H`
 .. |I| replace:: :sup:`I`
-.. |T| replace:: :sup:`T`
 
 Language Servers
 ----------------
@@ -183,8 +181,10 @@ Language Servers
 :json: vscode-json-languageserver_
 :less: vscode-css-languageserver_
 :lua: lua-language-server_
+:perl: perl-language-server_
 :python: pyright_
 :r: `r-languageserver`_
+:rmd: `r-languageserver`_
 :rnoweb: texlab_
 :rst: esbonio_
 :rust: rust-analyzer_
@@ -213,9 +213,9 @@ Linters
    | flake8_
    | mypy_
    | pylint_
+   | ruff_
 :rst: rstcheck_
 :scss: stylelint_
-:sh: shellcheck_
 :stylus: stylint_
 :svelte:
    | eslint_d_
@@ -232,7 +232,6 @@ Formatters
 :kotlin: ktlint_
 :less: stylelint_
 :lua: stylua_
-:perl: perltidy_
 :python:
    | autopep8_
    | isort_
@@ -274,14 +273,14 @@ Debuggers
 .. _luacheck: https://luacheck.readthedocs.io/
 .. _mypy: https://mypy.readthedocs.io/
 .. _neocmakelsp: https://github.com/Decodetalkers/neocmakelsp
-.. _perltidy: https://metacpan.org/dist/Perl-Tidy/view/bin/perltidy
+.. _perl-language-server: https://github.com/FractalBoy/perl-language-server
 .. _pug-lint: https://github.com/pugjs/pug-lint
 .. _pylint: https://pylint.org/
 .. _pyright: https://github.com/microsoft/pyright
 .. _`r-languageserver`: https://github.com/REditorSupport/languageserver
 .. _rstcheck: https://github.com/myint/rstcheck
+.. _ruff: https://beta.ruff.rs/
 .. _rust-analyzer: https://github.com/rust-lang/rust-analyzer
-.. _shellcheck: https://github.com/koalaman/shellcheck
 .. _shfmt: https://github.com/mvdan/sh
 .. _stylelint: https://stylelint.io/
 .. _stylint: https://simenb.github.io/stylint/

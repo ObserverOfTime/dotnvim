@@ -135,9 +135,7 @@ require('lualine.extensions.quickfix').sections.lualine_a = {
 
 --#region Clock
 if not _G._clock_timer then
-    local refresh = vim.schedule_wrap(function()
-        vim.cmd.redrawstatus()
-    end)
+    local refresh = vim.schedule_wrap(vim.cmd.redrawstatus)
 
     _G._clock_timer = vim.uv.new_timer()
     _G._clock_timer:start(0, 3e4, refresh)

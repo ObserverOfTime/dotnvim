@@ -19,14 +19,17 @@ local border = {
       {'┃', 'FloatBorder'},
 }
 
+---@type lsp-handler
 vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(
     vim.lsp.handlers.hover, {border = border}
 )
 
+---@type lsp-handler
 vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(
     vim.lsp.handlers.signature_help, {border = border}
 )
 
+---@type lsp-handler
 vim.lsp.handlers['textDocument/diagnostic'] = vim.lsp.diagnostic.on_diagnostic
 
 vim.diagnostic.config {
@@ -36,7 +39,7 @@ vim.diagnostic.config {
 --#endregion
 
 --#region Notifications
----@diagnostic disable-next-line: duplicate-set-field
+---@type lsp-handler
 vim.lsp.handlers['window/showMessage'] = function(_, result, ctx)
     local client = assert(vim.lsp.get_client_by_id(ctx.client_id))
     local lvl = ({'ERROR', 'WARN', 'INFO', 'DEBUG'})[result.type]
@@ -58,13 +61,9 @@ local lsp = vim.api.nvim_create_augroup('LSP', {clear = true})
 local capabilities = cmp.default_capabilities()
 capabilities.offsetEncoding = {'utf-8', 'utf-16'}
 
----@class ClientConfig: lsp.ClientConfig
----@field cmd string[]
----@field root_dir string|nil
-
 --- Create an LSP client
 ---@param fts string[]
----@param opts ClientConfig
+---@param opts LSPClientConfig
 ---@param func? fun(client_id: integer, bufnr: integer)
 local function new_client(fts, opts, func)
     if opts.root_dir == nil then return end
@@ -92,10 +91,10 @@ end
 local function find_root(files, base)
     local u = require 'null-ls.utils'
     -- TODO: use vim.fs.find
-    ---@diagnostic disable-next-line: param-type-mismatch
-    return u.root_pattern(files or {'.git'})(
-        base and vim.api.nvim_buf_get_name(0) or vim.uv.cwd()
-    ) or vim.uv.cwd()
+    local cwd = assert(vim.uv.cwd())
+    return u.root_pattern(unpack(files or {'.git'}))(
+        base and vim.api.nvim_buf_get_name(0) or cwd
+    ) or cwd
 end
 
 --- Find a file using fd
@@ -109,9 +108,14 @@ end
 
 new_client({'sh'}, {
     cmd = {'bash-language-server', 'start'},
-    cmd_env = {
-        GLOB_PATTERN = '*.sh',
-        SHELLCHECK_PATH = ''
+    settings = {
+        bashIde = {
+            globPattern = '*.sh',
+            shellcheckArguments = {
+                '-e', 'SC1090,SC2034,SC2128,SC2148,SC2164',
+                '-o', 'add-default-case,require-double-brackets'
+            }
+        }
     },
     root_dir = find_root()
 })
@@ -130,6 +134,7 @@ new_client({'c', 'cpp'}, {
         }
     },
     handlers = {
+        ---@type lsp-handler
         ['textDocument/switchSourceHeader'] = function(err, res)
             if err then
                 vim.notify(
@@ -307,16 +312,14 @@ new_client({'xml', 'svg'}, {
             server = {
                 workDir = vim.env.XDG_CACHE_HOME..'/lemminx'
             },
+            validation = {
+                noGrammar = 'ignore'
+            },
             fileAssociations = {
                 {
                     pattern = '**/*.svg',
                     systemId = 'https://raw.githubusercontent.com/'..
                                'dumistoklus/svg-xsd-schema/master/svg.xsd'
-                },
-                {
-                    pattern = 'AndroidManifest.xml',
-                    systemId = 'https://gist.github.com/ObserverOfTime/'..
-                               '4bd03e49a3c267281cfa88853be53b1e/raw/AndroidManifest.xsd'
                 },
                 {
                     pattern = 'pom.xml',
@@ -345,13 +348,14 @@ new_client({'xml', 'svg'}, {
 new_client({'lua'}, {
     cmd = {'lua-language-server'},
     root_dir = find_root({'.luarc.json', 'lua', '.luacheckrc'}, true),
+    ---@param client lsp.Client
     on_init = function(client)
         require('neodev.config').setup {setup_jsonls = false}
         local settings = require('neodev.luals').setup().settings
         ---@cast settings table
         table.insert(
             settings.Lua.workspace.library,
-            vim.fn.stdpath('config')..'/lua'
+            client.config.root_dir..'/lua'
         )
         client.config.settings = vim.tbl_deep_extend(
             'keep', client.config.settings, settings
@@ -375,6 +379,24 @@ new_client({'lua'}, {
     }
 })
 
+new_client({'perl'}, {
+    name = 'perl-languageserver',
+    cmd = {'pls'},
+    root_dir = find_root(),
+    settings = {
+        perl = {
+            syntax = {enabled = true},
+            perlcritic = {enabled = false}
+        }
+    }
+}, function(client_id, bufnr)
+    -- HACK: don't run PLS on latexmkrc files
+    local name = vim.api.nvim_buf_get_name(bufnr)
+    if vim.fs.basename(name) == '.latexmkrc' then
+        vim.lsp.stop_client(client_id)
+    end
+end)
+
 new_client({'python'}, {
     name = 'pyright',
     cmd = {'pyright-langserver', '--stdio'},
@@ -397,7 +419,6 @@ new_client({'python'}, {
                 }
             }
         }
-
     }
 })
 
@@ -443,6 +464,7 @@ new_client({'toml'}, {
 new_client({'bib', 'tex', 'rnoweb'}, {
     cmd = {'texlab'},
     root_dir = find_root({'.latexmkrc'}, true),
+    ---@param client lsp.Client
     on_init = function(client)
         local rc = find_file('-H .latexmkrc')
         if rc ~= nil then
@@ -458,6 +480,7 @@ new_client({'bib', 'tex', 'rnoweb'}, {
         })
     end,
     handlers = {
+        ---@type lsp-handler
         ['textDocument/forwardSearch'] = function(err, res)
             if err then
                 vim.notify(
@@ -478,6 +501,7 @@ new_client({'bib', 'tex', 'rnoweb'}, {
                 )
             end
         end,
+        ---@type lsp-handler
         ['textDocument/build'] = function(err, res)
             if err then
                 vim.notify(
@@ -519,9 +543,8 @@ new_client({'bib', 'tex', 'rnoweb'}, {
     vim.keymap.set('n', 'gls', function()
         local params = {
             textDocument = {uri = vim.uri_from_bufnr(bufnr)},
-            position = {line = vim.fn.line('.') - 1, character = vim.fn.col('.') },
+            position = {line = vim.fn.line('.') - 1, character = vim.fn.col('.')},
         }
-        ---@diagnostic disable-next-line: invisible
         client.request('textDocument/forwardSearch', params, nil, bufnr)
     end, {buffer = bufnr, desc = 'textDocument/forwardSearch'})
 
@@ -529,7 +552,6 @@ new_client({'bib', 'tex', 'rnoweb'}, {
         local params = {
             textDocument = {uri = vim.uri_from_bufnr(bufnr)}
         }
-        ---@diagnostic disable-next-line: invisible
         client.request('textDocument/build', params, nil, bufnr)
     end, {buffer = bufnr, desc = 'textDocument/build'})
 end)
@@ -627,6 +649,7 @@ new_client({'yaml'}, {
 --#region LspAttach callback
 vim.api.nvim_create_autocmd('LspAttach', {
     group = lsp,
+    ---@param args LspAttachArgs
     callback = function(args)
         local map = vim.keymap.set
         local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
@@ -636,78 +659,78 @@ vim.api.nvim_create_autocmd('LspAttach', {
             vim.bo[args.buf].formatexpr = 'v:lua.vim.lsp.buf.formatexpr'
         end
 
-        if client.supports_method('textDocument/inlayHint', {bufnr=args.buf}) then
+        if client.supports_method('textDocument/inlayHint', {bufnr = args.buf}) then
             vim.lsp.inlay_hint(args.buf, true)
         end
 
-        if client.supports_method('textDocument/codeAction', {bufnr=args.buf}) then
+        if client.supports_method('textDocument/codeAction', {bufnr = args.buf}) then
             map('n', 'gla', fzf.lsp_code_actions, {
                 desc = 'textDocument/codeAction', buffer = args.buf
             })
         end
 
-        if client.supports_method('textDocument/rename', {bufnr=args.buf}) then
+        if client.supports_method('textDocument/rename', {bufnr = args.buf}) then
             map('n', 'glr', vim.lsp.buf.rename, {
                 desc = 'textDocument/rename', buffer = args.buf
             })
         end
 
-        if client.supports_method('textDocument/references', {bufnr=args.buf}) then
+        if client.supports_method('textDocument/references', {bufnr = args.buf}) then
             map('n', 'glR', fzf.lsp_references, {
                 desc = 'textDocument/references', buffer = args.buf
             })
         end
 
-        if client.supports_method('textDocument/implementation', {bufnr=args.buf}) then
+        if client.supports_method('textDocument/implementation', {bufnr = args.buf}) then
             map('n', 'gli', vim.lsp.buf.implementation, {
                 desc = 'textDocument/implementation', buffer = args.buf
             })
         end
 
-        if client.supports_method('textDocument/signatureHelp', {bufnr=args.buf}) then
+        if client.supports_method('textDocument/signatureHelp', {bufnr = args.buf}) then
             map('n', 'glh', vim.lsp.buf.signature_help, {
                 desc = 'textDocument/signatureHelp', buffer = args.buf
             })
         end
 
-        if client.supports_method('textDocument/typeDefinition', {bufnr=args.buf}) then
+        if client.supports_method('textDocument/typeDefinition', {bufnr = args.buf}) then
             map('n', 'glT', vim.lsp.buf.type_definition, {
                 desc = 'textDocument/typeDefinition', buffer = args.buf
             })
         end
 
-        if client.supports_method('textDocument/formatting', {bufnr=args.buf}) then
+        if client.supports_method('textDocument/formatting', {bufnr = args.buf}) then
             map({'n', 'v'}, 'glf', function() vim.lsp.buf.format() end, {
                 desc = 'textDocument/formatting', buffer = args.buf
             })
         end
 
-        if client.supports_method('textDocument/documentSymbol', {bufnr=args.buf}) then
+        if client.supports_method('textDocument/documentSymbol', {bufnr = args.buf}) then
             local symbols = require 'symbols-outline'
             map('n', 'gO', symbols.open_outline, {
                 desc = 'symbols outline', buffer = args.buf
             })
         end
 
-        if client.supports_method('textDocument/declaration', {bufnr=args.buf}) then
+        if client.supports_method('textDocument/declaration', {bufnr = args.buf}) then
             map('n', 'gD', vim.lsp.buf.declaration, {
                 desc = 'textDocument/declaration', buffer = args.buf
             })
         end
 
-        if client.supports_method('textDocument/definition', {bufnr=args.buf}) then
+        if client.supports_method('textDocument/definition', {bufnr = args.buf}) then
             map('n', 'gd', fzf.lsp_definitions, {
                 desc = 'textDocument/definition', buffer = args.buf
             })
         end
 
-        if client.supports_method('textDocument/hover', {bufnr=args.buf}) then
+        if client.supports_method('textDocument/hover', {bufnr = args.buf}) then
             map('n', 'K', vim.lsp.buf.hover, {
                 desc = 'textDocument/hover', buffer = args.buf
             })
         end
 
-        if client.supports_method('textDocument/documentColor', {bufnr=args.buf}) then
+        if client.supports_method('textDocument/documentColor', {bufnr = args.buf}) then
             require('ccc.highlighter').new(false):enable(args.buf)
         end
 
@@ -717,6 +740,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 --#endregion
 
 --#region LspAddWorkspace command
+---@param args CommandArgs
 vim.api.nvim_create_user_command('LspAddWorkspace', function(args)
     vim.lsp.buf.add_workspace_folder(args.args)
 end, {

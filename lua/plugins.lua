@@ -1,19 +1,5 @@
 --- Plugins
 
----@class PluginSpec
----@field cond? string
----@field config? string
----@field as? string
----@field ft? string[]
----@field run? string
----@field branch? string
----@field module? string
----@field requires? string[]
----@field opt? boolean
----@field cmd? string[]
----@field keys? string[]
----@field commit? string
-
 ---@param use fun(spec: PluginSpec)
 local function plugins(use)
     local c = require 'config'
@@ -136,7 +122,11 @@ local function plugins(use)
     }
     use {
         'nvim-treesitter/nvim-treesitter-refactor',
+        cond = [[pcall(require, 'nvim-treesitter.configs')]]
+    }
+    use {
         'nvim-treesitter/nvim-treesitter-textobjects',
+        cond = [[pcall(require, 'nvim-treesitter.configs')]]
     }
     use {
         'stsewd/sphinx.nvim',
@@ -202,7 +192,7 @@ local function plugins(use)
         ft = {'lua'}
     }
     use {
-        'jose-elias-alvarez/null-ls.nvim',
+        'henrywallace/null-ls.nvim',
         config = [[require('config.linters')]]
     }
     -- }}}

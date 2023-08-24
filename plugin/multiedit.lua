@@ -9,7 +9,7 @@ local function isfile(file)
     return vim.fn.filereadable(file) == 1
 end
 
----@param args {fargs: string[]}
+---@param args CommandArgs
 local function multiedit(args)
     local silent = {silent = true}
     if vim.tbl_isempty(args.fargs) then

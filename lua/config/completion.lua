@@ -6,9 +6,6 @@ local i = require 'config.icons'
 --#endregion
 
 --#region Utilities
----@class cmp.CompletionItem: lsp.CompletionItem
----@field menu? string
-
 --- Menu format
 ---@param entry cmp.Entry
 ---@param item cmp.CompletionItem

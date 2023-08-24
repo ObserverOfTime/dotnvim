@@ -10,10 +10,6 @@ local function notify_error(err)
     vim.notify(err, vim.log.levels.ERROR, {title = 'nyx.nvim'})
 end
 
----@class CommandArgs
----@field args string
----@field bang boolean
-
 ---@param args CommandArgs
 local function delete(args)
     local buf = vim.api.nvim_get_current_buf()

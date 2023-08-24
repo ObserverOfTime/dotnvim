@@ -13,6 +13,12 @@ require('lsp')
 EOF
 " }}}
 
+" Disable unused providers {{{
+let g:loaded_ruby_provider = 0
+let g:loaded_node_provider = 0
+let g:loaded_perl_provider = 0
+" }}}
+
 " Define custom commands {{{
 " Copy file to the clipboard
 command! CopyFile :silent %y+

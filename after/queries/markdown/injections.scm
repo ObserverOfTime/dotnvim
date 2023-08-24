@@ -1,21 +1,25 @@
 ; extends
 
-(fenced_code_block
+((fenced_code_block
   (info_string (language) @_language)
+  (code_fence_content) @injection.content)
   (#any-of? @_language "sh" "shell")
-  (code_fence_content) @bash)
+  (#set! injection.language "bash"))
 
-(fenced_code_block
+((fenced_code_block
   (info_string (language) @_language)
-  (#eq? @_language "js")
-  (code_fence_content) @javascript)
+  (code_fence_content) @injection.content)
+  (#any-of? @_language "js")
+  (#set! injection.language "javascript"))
 
-(fenced_code_block
+((fenced_code_block
   (info_string (language) @_language)
-  (#eq? @_language "ts")
-  (code_fence_content) @typescript)
+  (code_fence_content) @injection.content)
+  (#any-of? @_language "ts")
+  (#set! injection.language "typescript"))
 
-(fenced_code_block
+((fenced_code_block
   (info_string (language) @_language)
-  (#eq? @_language "=latex")
-  (code_fence_content) @latex)
+  (code_fence_content) @injection.content)
+  (#any-of? @_language "=latex")
+  (#set! injection.language "latex"))

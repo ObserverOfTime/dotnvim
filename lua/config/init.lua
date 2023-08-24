@@ -98,7 +98,7 @@ vim.g.user_emmet_settings = {
 --#endregion
 
 --#region CSV
-vim.g.csv_delim = ','
+vim.g.csv_delim_test = ',|'
 vim.g.csv_hiGroup = 'IncSearch'
 vim.g.csv_no_conceal = true
 vim.g.csv_strict_columns = true
@@ -190,8 +190,9 @@ function config.virtcolumn()
     vim.api.nvim_create_autocmd('FileType', {
         pattern = 'qf',
         group = 'VirtColumnAutogroup',
-        callback = function()
-            package.loaded['virt-column'].clear_buf(0)
+        ---@param args AutocmdArgs
+        callback = function(args)
+            package.loaded['virt-column'].clear_buf(args.buf)
         end
     })
 end
@@ -278,7 +279,6 @@ end
 -- Configure PrettyFold
 function config.prettyfold()
     local char = vim.opt.fillchars:get().fold or '-'
-
     require('pretty-fold').setup {
         fill_char = char,
         remove_fold_markers = true,

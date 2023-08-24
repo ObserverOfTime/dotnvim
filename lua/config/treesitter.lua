@@ -2,7 +2,78 @@
 vim.opt.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
 
 --#region Config
-require('nvim-treesitter.configs').setup {
+local ok, nvimts = pcall(require, 'nvim-treesitter.configs')
+
+local install_dir = vim.fn.stdpath('data')..'/site/parser'
+
+local langs = {
+    'awk',
+    'bash',
+    'bibtex',
+    'c',
+    'cmake',
+    'cpp',
+    'css',
+    'diff',
+    'dockerfile',
+    'gitattributes',
+    'gitcommit',
+    'gitignore',
+    'html',
+    -- 'htmldjango',
+    'http',
+    -- 'ini',
+    'java',
+    'javascript',
+    'jsdoc',
+    'json',
+    'jsonc',
+    'kotlin',
+    'latex',
+    'lua',
+    'luap',
+    -- 'make',
+    'markdown',
+    'markdown_inline',
+    'perl',
+    'po',
+    'python',
+    'query',
+    'r',
+    'regex',
+    'rnoweb',
+    'rst',
+    'rust',
+    'scss',
+    'svelte',
+    'toml',
+    'typescript',
+    'vim',
+    'vimdoc',
+    'yaml'
+}
+
+if not ok then
+    ---@diagnostic disable-next-line: redundant-parameter
+    require('nvim-treesitter').setup {
+        ensure_install = langs,
+        auto_install = false,
+        install_dir = install_dir
+    }
+    vim.opt.indentexpr = [[v:lua.require('nvim-treesitter').indentexpr()]]
+    vim.api.nvim_create_autocmd('FileType', {
+      pattern = langs,
+      ---@param args AutocmdArgs
+      callback = function(args)
+        vim.treesitter.start(args.buf)
+      end,
+    })
+    return
+end
+
+nvimts.setup {
+    auto_install = false,
+    install_dir = install_dir,
     indent = {enable = true},
     highlight = {enable = true},
     incremental_selection = {
@@ -89,51 +160,6 @@ require('nvim-treesitter.configs').setup {
             }
         }
     },
-    ensure_installed = {
-        'bash',
-        'bibtex',
-        'c',
-        'cmake',
-        'cpp',
-        'css',
-        'diff',
-        'dockerfile',
-        'gitattributes',
-        'gitcommit',
-        'gitignore',
-        'html',
-        -- 'htmldjango',
-        'http',
-        -- 'ini',
-        'java',
-        'javascript',
-        'jsdoc',
-        'json',
-        'jsonc',
-        'kotlin',
-        'latex',
-        'lua',
-        'luap',
-        -- 'make',
-        'markdown',
-        'markdown_inline',
-        'nix',
-        'perl',
-        'po',
-        'python',
-        'query',
-        'r',
-        'regex',
-        'rnoweb',
-        'rst',
-        'rust',
-        'scss',
-        'svelte',
-        'toml',
-        'typescript',
-        'vim',
-        'vimdoc',
-        'yaml'
-    }
+    ensure_installed = langs
 }
 --#endregion
