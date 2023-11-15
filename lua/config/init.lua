@@ -157,7 +157,7 @@ function config.statuscol()
             },
             {
                 sign = {
-                    name = {'GitSigns'},
+                    namespace = {'gitsign'},
                     maxwidth = 1,
                     auto = true
                 },
@@ -182,19 +182,6 @@ end
 --- Configure VirtColumn
 function config.virtcolumn()
     require('virt-column').setup {char = '│'}
-    vim.api.nvim_create_autocmd('BufEnter', {
-        once = true, pattern = '*',
-        group = 'VirtColumnAutogroup',
-        command = 'VirtColumnRefresh'
-    })
-    vim.api.nvim_create_autocmd('FileType', {
-        pattern = 'qf',
-        group = 'VirtColumnAutogroup',
-        ---@param args AutocmdArgs
-        callback = function(args)
-            package.loaded['virt-column'].clear_buf(args.buf)
-        end
-    })
 end
 -- }}}
 
@@ -253,7 +240,11 @@ function config.gitsigns()
             topdelete    = {text = i.hunks.D},
             changedelete = {text = i.hunks.M},
             untracked    = {text = i.hunks.A},
-        }
+        },
+        worktrees = {{
+            toplevel = vim.env.HOME,
+            gitdir = vim.env.XDG_CONFIG_HOME..'/dotfiles.git'
+        }}
     }
 end
 

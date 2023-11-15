@@ -102,7 +102,7 @@ end
 ---@return string|nil
 local function find_file(args)
     local exec = 'fd --max-results 1 -d 3 '
-    local res = vim.fn.systemlist(exec..args)
+    local res = assert(vim.fn.systemlist(exec..args))
     return vim.tbl_isempty(res) and nil or res[1]
 end
 
@@ -299,6 +299,10 @@ new_client({'kotlin'}, {
             externalSources = {
                 useKlsScheme = true,
                 autoConvertToKotlin = false
+            },
+            inlayHints = {
+                typeHints = true,
+                parameterHints = true
             }
         }
     }
@@ -344,6 +348,55 @@ new_client({'xml', 'svg'}, {
         }
     }
 })
+
+new_client({'tex'}, {
+    name = 'ltex',
+    cmd = {'ltex-ls'},
+    root_dir = find_root({'.latexmkrc'}, true),
+    get_language_id = function() return 'latex' end,
+    settings = {
+        ltex = {
+            language = 'en-US',
+            motherTongue = 'el-GR',
+            completionEnabled = true,
+            checkFrequency = 'save',
+            latex = {
+                commands = {
+                    ['\\setmainfont[]{}'] = 'ignore',
+                    ['\\setsansfont[]{}'] = 'ignore',
+                    ['\\setmonofont{}'] = 'ignore',
+                    ['\\setminted{}'] = 'ignore',
+                    ['\\setmintedinline{}'] = 'ignore',
+                    ['\\newmintinline[]{}{}'] = 'ignore',
+                    ['\\newmintedfile[]{}{}'] = 'ignore',
+                    ['\\titleformat{}[]{}{}{}'] = 'ignore',
+                    ['\\nocite{}'] = 'ignore',
+                    ['\\ktfile[]{}'] = 'ignore',
+                    ['\\android{}'] = 'ignore',
+                    ['\\jdk{}'] = 'ignore',
+                    ['\\IfLanguageName{}{}{}'] = 'ignore',
+                    ['\\citefield{}{}'] = 'dummy',
+                }
+            },
+            disabledRules = {
+                ['en-US'] = {'REP_PASSIVE_VOICE'}
+            },
+            dictionary = {
+                ['en-US'] = vim.fn.readfile(
+                    vim.fn.stdpath('config')..'/spell/en.utf-8.add'
+                )
+            },
+            java = {
+                path = '/usr/lib/jvm/default'
+            },
+            ['ltex-ls'] = {
+                path = '/usr/share/ltex-ls'
+            }
+        }
+    }
+}, function()
+    require('ltex_extra').setup { path = '.idea/ltex' }
+end)
 
 new_client({'lua'}, {
     cmd = {'lua-language-server'},
@@ -468,7 +521,9 @@ new_client({'bib', 'tex', 'rnoweb'}, {
     on_init = function(client)
         local rc = find_file('-H .latexmkrc')
         if rc ~= nil then
-            client.config.settings.texlab.build.args = {'-r', rc}
+            client.config.settings.texlab.build = {
+                args = {'-r', rc}
+            }
         end
         local aux = find_file('--no-ignore -e aux')
         if aux ~= nil then

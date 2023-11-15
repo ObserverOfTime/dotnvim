@@ -159,6 +159,7 @@ Tree-sitter
 * typescript
 * vim
 * vimdoc
+* xml
 * yaml
 
 | |I| Custom injections
@@ -192,7 +193,7 @@ Language Servers
 :sh: bash-language-server_
 :svelte: svelteserver_
 :svg: lemminx_
-:tex: texlab_
+:tex: texlab_ & ltex-ls_
 :toml: taplo_
 :typescript: typescript-language-server_
 :vim: `vim-language-server`_
@@ -269,7 +270,8 @@ Debuggers
 .. _ktlint: https://ktlint.github.io/
 .. _lemminx: https://github.com/eclipse/lemminx
 .. _lldb-vscode: https://github.com/llvm/llvm-project/tree/main/lldb/tools/lldb-vscode
-.. _lua-language-server: https://github.com/sumneko/lua-language-server/
+.. _ltex-ls: https://github.com/valentjn/ltex-ls
+.. _lua-language-server: https://github.com/sumneko/lua-language-server
 .. _luacheck: https://luacheck.readthedocs.io/
 .. _mypy: https://mypy.readthedocs.io/
 .. _neocmakelsp: https://github.com/Decodetalkers/neocmakelsp

@@ -182,6 +182,10 @@ local function plugins(use)
         config = [[require('config').symbols()]]
     }
     use {
+        'barreiroleo/ltex_extra.nvim',
+        module = 'ltex_extra'
+    }
+    use {
         'JosefLitos/reform.nvim',
         opt = true,
         run = 'make docfmt',

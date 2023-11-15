@@ -42,6 +42,8 @@ augroup VimInit
     au!
     " Set formatoptions (:h 'formatoptions')
     au FileType * set formatoptions=cqn1j
+    " Set signcolumn (:h 'signcolumn')
+    au VimEnter * set signcolumn=auto:1-3
     " Jump to last cursor position
     au BufWinEnter * try | exec 'norm g`"' | catch | endtry
     " Fix cursor on exit

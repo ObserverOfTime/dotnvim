@@ -12,7 +12,7 @@ end
 
 --- Expandtab option
 local function expandtab()
-    return vim.bo.expandtab and '' or ''
+    return vim.bo.expandtab and '' or '󰌒'
 end
 
 --- Binary option
@@ -22,7 +22,7 @@ end
 
 --- Spell option
 local function spell()
-    return vim.wo.spell and '' or ''
+    return vim.wo.spell and '󰍕' or ''
 end
 
 --- Trailing whitespace
@@ -33,7 +33,7 @@ end
 
 --- Word count
 local function wordcount()
-    return ' '..vim.fn.wordcount().words
+    return '󰈭 '..vim.fn.wordcount().words
 end
 
 --- File mode

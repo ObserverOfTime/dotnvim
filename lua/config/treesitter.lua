@@ -4,7 +4,7 @@ vim.opt.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
 --#region Config
 local ok, nvimts = pcall(require, 'nvim-treesitter.configs')
 
-local install_dir = vim.fn.stdpath('data')..'/site/parser'
+local install_dir = vim.fn.stdpath('data')..'/site'
 
 local langs = {
     'awk',
@@ -50,6 +50,7 @@ local langs = {
     'typescript',
     'vim',
     'vimdoc',
+    'xml',
     'yaml'
 }
 
@@ -73,7 +74,7 @@ end
 
 nvimts.setup {
     auto_install = false,
-    install_dir = install_dir,
+    install_dir = install_dir..'/parser',
     indent = {enable = true},
     highlight = {enable = true},
     incremental_selection = {
