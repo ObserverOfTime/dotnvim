@@ -1,14 +1,16 @@
---- Like :tabedit but with multiple arguments
--- @module multiedit
--- @license MIT-0
--- @author ObserverOfTime
+---Like `:tabedit` but with multiple arguments
+---@module 'multiedit'
+---@license MIT-0
+---@author ObserverOfTime
 
 ---@param file string
 ---@return boolean
+---@private
 local function isfile(file)
     return vim.fn.filereadable(file) == 1
 end
 
+---Edit multiple files in tabs
 ---@param args CommandArgs
 local function multiedit(args)
     local silent = {silent = true}

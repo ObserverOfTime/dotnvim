@@ -1,78 +1,78 @@
---- Append newline to file
+---Append newline to file
 vim.opt.fixendofline = true
---- Do smart autoindenting
+---Do smart autoindenting
 vim.opt.smartindent = true
---- Convert tabs to spaces
+---Convert tabs to spaces
 vim.opt.expandtab = true
---- Save undo history to a file
+---Save undo history to a file
 vim.opt.undofile = true
---- Don't wrap lines
+---Don't wrap lines
 vim.opt.wrap = false
---- Show line numbers
+---Show line numbers
 vim.opt.number = true
---- Show special characters
+---Show special characters
 vim.opt.list = true
---- Enable local configuration
+---Enable local configuration
 vim.opt.exrc = true
---- Use truecolor if available
+---Use truecolor if available
 vim.opt.termguicolors = vim.env.COLORTERM == 'truecolor'
 
---- Maximum number of undoable changes
+---Maximum number of undoable changes
 vim.opt.undolevels = 250
---- Number of spaces to use for indent
+---Number of spaces to use for indent
 vim.opt.shiftwidth = 4
---- Number of spaces to use for tabs
+---Number of spaces to use for tabs
 vim.opt.softtabstop = 4
---- Minimum completion menu width
+---Minimum completion menu width
 vim.opt.pumwidth = 5
---- Don't hide any folds
+---Don't hide any folds
 vim.opt.foldlevelstart = 99
 -- Use a single statusline
 vim.opt.laststatus = 3
 
---- Default commentstring
+---Default commentstring
 vim.opt.commentstring = '# %s'
---- Default folding method
+---Default folding method
 vim.opt.foldmethod = 'marker'
---- Use dark background
+---Use dark background
 vim.opt.background = 'dark'
---- Set colorcolumn to textwidth
+---Set colorcolumn to textwidth
 vim.opt.colorcolumn = '+1'
---- Set signcolumn size
+---Set signcolumn size
 vim.opt.signcolumn = 'auto:1-3'
---- Set foldcolumn size
+---Set foldcolumn size
 vim.opt.foldcolumn = 'auto:1'
---- Show substitution preview
+---Show substitution preview
 vim.opt.inccommand = 'nosplit'
 -- Show fast spell suggestions
 vim.opt.spellsuggest = 'fast'
---- Disable right click menu
+---Disable right click menu
 vim.opt.mousemodel = 'extend'
---- Use ripgrep as grep
+---Use ripgrep as grep
 vim.opt.grepprg = [[rg -S --vimgrep --no-heading $*]]
 
---- Enable mouse in all modes
+---Enable mouse in all modes
 vim.opt.mouse = 'ar'
---- Short message options (:h 'shortmess')
+---Short message options (`:h 'shortmess'`)
 vim.opt.shortmess = 'aoOtTcF'
 
---- Spellcheck languages
+---Spellcheck languages
 vim.opt.spelllang = {'en', 'el'}
 -- Set backup directory
 vim.opt.backupdir = {
     vim.fn.stdpath('state')..'/backup'
 }
---- Switch to open buffers or tabs
+---Switch to open buffers or tabs
 vim.opt.switchbuf = {
     'useopen', 'usetab'
 }
---- Grep output format (:h 'grepformat')
+---Grep output format (`:h 'grepformat'`)
 vim.opt.grepformat = {
     '%f:%l:%c:%m', '%f:%l:%m'
 }
---- Display options (:h 'display')
+---Display options (`:h 'display'`)
 vim.opt.display = {'truncate', 'uhex'}
---- Session options (:h 'sessionoptions')
+---Session options (`:h 'sessionoptions'`)
 vim.opt.sessionoptions = {
     'buffers',
     'curdir',
@@ -82,7 +82,7 @@ vim.opt.sessionoptions = {
     'terminal',
     'winsize'
 }
---- Cursor styling (:h 'guicursor')
+---Cursor styling (`:h 'guicursor'`)
 vim.opt.guicursor = {
     'v-sm:block',
     'i-ci-ve:ver10',
@@ -90,8 +90,8 @@ vim.opt.guicursor = {
 }
 
 --#region Special characters
-if vim.g.in_term then
-    --- Fill characters (:h 'fillchars')
+if vim.g._in_term then
+    ---Fill characters (`:h 'fillchars'`)
     vim.opt.fillchars = {
         vert = '┊',
         fold = '┄',
@@ -99,7 +99,7 @@ if vim.g.in_term then
         foldopen = '',
         foldclose = ''
     }
-    --- List characters (:h 'fillchars')
+    ---List characters (`:h 'fillchars'`)
     vim.opt.listchars = {
         tab      = '‣‣',
         trail    = '·',
@@ -107,10 +107,10 @@ if vim.g.in_term then
         precedes = '«',
         extends  = '»'
     }
-    --- Line wrap character
+    ---Line wrap character
     vim.opt.showbreak = '↪'
 else
-    --- Fill characters (:h 'fillchars')
+    ---Fill characters (`:h 'fillchars'`)
     vim.opt.fillchars = {
         vert = '|',
         fold = '-',
@@ -118,7 +118,7 @@ else
         foldopen = 'v',
         foldclose = '>'
     }
-    --- List characters (:h 'fillchars')
+    ---List characters (`:h 'fillchars'`)
     vim.opt.listchars = {
         tab      = '>>',
         trail    = '~',
@@ -126,7 +126,7 @@ else
         precedes = '@',
         extends  = '#'
     }
-    --- Line wrap character
+    ---Line wrap character
     vim.opt.showbreak = '^'
 end
 --#endregion

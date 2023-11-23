@@ -1,0 +1,148 @@
+local c = require 'config'
+
+---Menu format
+---@param entry cmp.Entry
+---@param item vim.CompletedItem
+---@return vim.CompletedItem
+local function format(entry, item)
+    item.kind = c.icons.lsp.kind[item.kind]
+    item.menu = c.icons.cmp[entry.source.name]
+    return item
+end
+
+---Check if cursor is after words
+local function has_words_before()
+    local lnum, col = unpack(vim.api.nvim_win_get_cursor(0))
+    local line = vim.api.nvim_buf_get_lines(0, lnum - 1, lnum, true)[1]
+    return col ~= 0 and line:sub(col, col):match('%s') == nil
+end
+
+---Jump forward
+---@param fallback fun()
+local function forward(fallback)
+    local cmp = package.loaded.cmp
+    local snip = package.loaded.snippy
+
+    if cmp.visible() then
+        cmp.select_next_item()
+    elseif snip.can_expand_or_advance() then
+        snip.expand_or_advance()
+    elseif has_words_before() then
+        cmp.complete()
+    else
+        fallback()
+    end
+end
+
+---Jump backward
+---@param fallback fun()
+local function backward(fallback)
+    local cmp = package.loaded.cmp
+    local snip = package.loaded.snippy
+
+    if cmp.visible() then
+        cmp.select_prev_item()
+    elseif snip.can_jump(-1) then
+        snip.previous()
+    else
+        fallback()
+    end
+end
+
+---@type LazyPluginSpec[]
+return {
+    {
+        'hrsh7th/nvim-cmp',
+        event = {'InsertEnter'},
+        config = function()
+            local cmp = require 'cmp'
+            local snip = require 'snippy'
+            local pairs = require 'nvim-autopairs.completion.cmp'
+
+            cmp.setup {
+                enabled = true,
+                formatting = {format = format},
+                completion = {keyword_length = 1},
+                experimental = {
+                    ghost_text = {hl_group = 'GruvboxBg4'}
+                },
+                mapping = cmp.mapping.preset.insert {
+                    ['<CR>'] = cmp.mapping.confirm {select = false},
+                    ['<Tab>'] = cmp.mapping(forward, {'i', 's'}),
+                    ['<S-Tab>'] = cmp.mapping(backward, {'i', 's'}),
+                    ['<C-Space>'] = cmp.mapping.complete {},
+                    ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+                    ['<C-f>'] = cmp.mapping.scroll_docs(4)
+                },
+                snippet = {
+                    expand = function(args)
+                        snip.expand_snippet(args.body)
+                    end
+                },
+                window = {
+                    documentation = {
+                        border = {'┌', '─', '┐', '│', '┘', '─', '└', '│'}
+                    }
+                },
+                sources = {
+                    {name = 'nvim_lsp'},
+                    {name = 'snippy'},
+                    {
+                        name = 'path',
+                        option = {get_cwd = vim.uv.cwd}
+                    },
+                    {
+                        name = 'buffer',
+                        option = {
+                            keyword_pattern = [[\k\+]],
+                            get_bufnrs = function()
+                                return vim.tbl_map(
+                                    vim.api.nvim_win_get_buf,
+                                    vim.api.nvim_tabpage_list_wins(0)
+                                )
+                            end
+                        },
+                    }
+                }
+            }
+
+            cmp.setup.filetype('gitcommit', {
+                sorting = {
+                    comparators = {
+                        cmp.config.compare.offset,
+                        cmp.config.compare.exact,
+                        cmp.config.compare.sort_text,
+                        cmp.config.compare.order
+                    }
+                },
+                sources = {
+                    {name = 'git'},
+                    {name = 'path'},
+                    {name = 'buffer'}
+                }
+            })
+
+            cmp.event:on('confirm_done', pairs.on_confirm_done())
+        end,
+        dependencies = {
+            'hrsh7th/cmp-path',
+            'hrsh7th/cmp-buffer',
+            'hrsh7th/cmp-nvim-lsp',
+            'dcampos/cmp-snippy'
+        }
+    },
+    {
+        'petertriho/cmp-git',
+        ft = {'gitcommit'},
+        opts = {
+            enableRemoteUrlRewrites = true
+        },
+        dependencies = {'plenary.nvim'}
+    },
+    {
+        'ObserverOfTime/nvim-snippy',
+        lazy = true,
+        dev = true,
+        config = true
+    }
+}

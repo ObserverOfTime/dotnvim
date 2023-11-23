@@ -6,7 +6,7 @@ function dabline#tabline()
     for l:i in range(1, tabpagenr('$'))
         let l:buflist = tabpagebuflist(l:i)
         let l:winnr = tabpagewinnr(l:i)
-        let l:label = bufname(buflist[winnr - 1])
+        let l:label = bufname(l:buflist[l:winnr - 1])
         let l:bg = l:i == l:page ? 'Light' : 'Dark'
         let l:tabs .= '%#DabLine'.l:bg.'#%'.i.'T　'.l:label
     endfor

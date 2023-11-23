@@ -40,9 +40,9 @@ Plugins
 Packages
 ^^^^^^^^
 
-Using packer.nvim_ as the plugin manager.
+Using lazy.nvim_ as the plugin manager.
 
-* `kyazdani42/nvim-web-devicons <https://github.com/kyazdani42/nvim-web-devicons>`_
+* `nvim-tree/nvim-web-devicons <https://github.com/nvim-tree/nvim-web-devicons>`_
 * `rcarriga/nvim-notify <https://github.com/rcarriga/nvim-notify>`_
 * `stevearc/dressing.nvim <https://github.com/stevearc/dressing.nvim>`_
 * `ibhagwan/fzf-lua <https://github.com/ibhagwan/fzf-lua>`_
@@ -67,11 +67,9 @@ Using packer.nvim_ as the plugin manager.
 
   - `nvim-treesitter/nvim-treesitter-refactor <https://github.com/nvim-treesitter/nvim-treesitter-refactor>`_
   - `nvim-treesitter/nvim-treesitter-textobjects <https://github.com/nvim-treesitter/nvim-treesitter-textobjects>`_
-  - `stsewd/sphinx.nvim <https://github.com/stsewd/sphinx.nvim>`_ |R|
 * `mfussenegger/nvim-dap <https://github.com/mfussenegger/nvim-dap>`_
 
   - `rcarriga/nvim-dap-ui <https://github.com/rcarriga/nvim-dap-ui>`_
-  - `jbyuki/one-small-step-for-vimkind <https://github.com/jbyuki/one-small-step-for-vimkind>`_
 * `hrsh7th/nvim-cmp <https://github.com/hrsh7th/nvim-cmp>`_
 
   - `hrsh7th/cmp-path <https://github.com/hrsh7th/cmp-path>`_
@@ -81,11 +79,12 @@ Using packer.nvim_ as the plugin manager.
   - `dcampos/cmp-snippy <https://github.com/dcampos/cmp-snippy>`_
 
     + `ObserverOfTime/nvim-snippy <https://github.com/ObserverOfTime/nvim-snippy>`_
+* `stsewd/sphinx.nvim <https://github.com/stsewd/sphinx.nvim>`_ |R|
 * `simrat39/symbols-outline.nvim <https://github.com/simrat39/symbols-outline.nvim>`_
 * `folke/neodev.nvim <https://github.com/folke/neodev.nvim>`_
 * `henrywallace/null-ls.nvim <https://github.com/henrywallace/null-ls.nvim>`_ |P|
 * `mbbill/undotree <https://github.com/mbbill/undotree>`_ |V|
-* `kg8m/vim-simple-align <https://github.com/kg8m/vim-simple-align>`_ |V|
+* `mg979/vim-lion <https://github.com/mg979/vim-lion>`_ |V|
 * `chrisbra/unicode.vim <https://github.com/chrisbra/unicode.vim>`_ |V|
 * `danymat/neogen <https://github.com/danymat/neogen>`_
 * `andythigpen/nvim-coverage <https://github.com/andythigpen/nvim-coverage>`_ |P|
@@ -106,7 +105,7 @@ Using packer.nvim_ as the plugin manager.
 .. |R| replace:: :sup:`R`
 .. |P| replace:: :sup:`P`
 
-.. _packer.nvim: https://github.com/wbthomason/packer.nvim
+.. _lazy.nvim: https://github.com/folke/lazy.nvim
 .. _plenary.nvim: https://github.com/nvim-lua/plenary.nvim
 
 Personal

@@ -1,5 +1,5 @@
 " Running in a proper terminal
-let g:in_term = $TERM !=? 'linux'
+let g:_in_term = $TERM !=? 'linux'
 
 " Load modules {{{
 lua <<EOF
@@ -14,9 +14,33 @@ EOF
 " }}}
 
 " Disable unused providers {{{
-let g:loaded_ruby_provider = 0
-let g:loaded_node_provider = 0
-let g:loaded_perl_provider = 0
+let g:loaded_ruby_provider = v:false
+let g:loaded_node_provider = v:false
+let g:loaded_perl_provider = v:false
+" }}}
+
+" Python host program
+let g:python3_host_prog = '/usr/bin/python3'
+
+" Zip extensions
+let g:zipPlugin_ext = '*.zip,*.jar,*.war,*.cbz,*.epub,*.whl,*.aix'
+
+" Shell folding
+let g:sh_fold_enabled = 3
+
+" TeX flavour
+let g:tex_flavor = 'latex'
+
+" C header syntax
+let g:c_syntax_for_h = v:true
+
+" Netrw {{{
+let g:netrw_banner = 0
+let g:netrw_winsize = 25
+let g:netrw_liststyle = 3
+let g:netrw_sizestyle = 'H'
+let g:netrw_browse_split = 4
+let g:netrw_home = stdpath('state')
 " }}}
 
 " Define custom commands {{{

@@ -1,12 +1,6 @@
 -- Disable for git mergetool
 if vim.g._mergetool then return end
 
---#region Imports
-local cmp = require 'cmp_nvim_lsp'
-local fzf = require 'fzf-lua'
-local i = require 'config.icons'
---#endregion
-
 --#region Borders
 local border = {
       {'┏', 'FloatBorder'},
@@ -48,7 +42,7 @@ end
 --#endregion
 
 --#region Signs
-for type, icon in pairs(i.lsp.diag) do
+for type, icon in pairs(package.loaded.config.icons.lsp.diag) do
     local hl = 'DiagnosticSign'..type
     vim.api.nvim_set_hl(0, hl, {background = nil})
     vim.fn.sign_define(hl, {text = icon, texthl = hl})
@@ -58,18 +52,19 @@ end
 --#region Clients
 local lsp = vim.api.nvim_create_augroup('LSP', {clear = true})
 
-local capabilities = cmp.default_capabilities()
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
 capabilities.offsetEncoding = {'utf-8', 'utf-16'}
 
---- Create an LSP client
+---Create an LSP client
 ---@param fts string[]
----@param opts LSPClientConfig
+---@param opts lsp.ClientConfig
 ---@param func? fun(client_id: integer, bufnr: integer)
 local function new_client(fts, opts, func)
     if opts.root_dir == nil then return end
     vim.api.nvim_create_autocmd('FileType', {
         group = lsp,
         pattern = fts,
+        ---@param args AutocmdArgs
         callback = function(args)
             local client_id = vim.lsp.start(
                 vim.tbl_deep_extend('keep', opts, {
@@ -84,7 +79,7 @@ local function new_client(fts, opts, func)
     })
 end
 
---- Find the root directory
+---Find the root directory
 ---@param files? string[]
 ---@param base? boolean
 ---@return string
@@ -97,7 +92,7 @@ local function find_root(files, base)
     ) or cwd
 end
 
---- Find a file using fd
+---Find a file using fd
 ---@param args string
 ---@return string|nil
 local function find_file(args)
@@ -254,9 +249,9 @@ new_client({'json', 'jsonc'}, {
                           'vscode-lua/master/setting/schema.json'
                 },
                 {
-                    fileMatch = {'packspec.json'},
-                    url = 'https://raw.githubusercontent.com/nvim-lua/'..
-                          'nvim-package-specification/master/schema/packspec_schema.json'
+                    fileMatch = {'pkg.json', 'packspec.json'},
+                    url = 'https://raw.githubusercontent.com/neovim/'..
+                          'packspec/master/schema/packspec_schema.json'
                 },
                 {
                     fileMatch = {'pyrightconfig.json'},
@@ -706,6 +701,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
     group = lsp,
     ---@param args LspAttachArgs
     callback = function(args)
+        local fzf = require 'fzf-lua'
         local map = vim.keymap.set
         local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
 

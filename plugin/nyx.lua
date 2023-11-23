@@ -1,15 +1,17 @@
---- Unix utilities
--- @module nyx
--- @license MIT-0
--- @author ObserverOfTime
+--Unix utilities
+---@module 'nyx'
+---@license MIT-0
+---@author ObserverOfTime
 
 local wrap = vim.schedule_wrap
 
+---@private
 ---@param err string
 local function notify_error(err)
     vim.notify(err, vim.log.levels.ERROR, {title = 'nyx.nvim'})
 end
 
+---Delete a file
 ---@param args CommandArgs
 local function delete(args)
     local buf = vim.api.nvim_get_current_buf()
@@ -22,6 +24,7 @@ local function delete(args)
     end
 end
 
+---Copy a file
 ---@param args CommandArgs
 local function copy(args)
     local cow = vim.g.nyx_cow or false
@@ -36,6 +39,7 @@ local function copy(args)
     end))
 end
 
+---Move a file
 ---@param args CommandArgs
 local function move(args)
     local buf = vim.api.nvim_get_current_buf()

@@ -61,48 +61,11 @@ map('n', 'ζ=', 'z=')
 map('n', 'ζγ', 'zg')
 --#endregion
 
--- Show spell suggestions
-map('n', 'z=', function()
-    package.loaded['fzf-lua'].spell_suggest()
-end, {desc = 'spell suggest'})
-
---- Run in terminal
+-- Run in terminal
 map('x', '<Leader>t', ':TermExec<CR>')
 
 -- Escape terminal
 map('t', '<Esc>', [[<C-\><C-n>]], {noremap = true})
-
--- Open undo tree
-map('n', '<Leader>u', '<Cmd>UndotreeToggle<CR>')
-
--- Open todo list
-map('n', '<Leader>Q', '<Cmd>TodoQuickFix<CR>')
-
--- Generate docs
-map('n', '<Leader>d', '<Cmd>Neogen<CR>')
-
---#region Coverage
-map('n', '<Leader>cl', function()
-    package.loaded.coverage.load(true)
-end, {desc = 'load coverage'})
-map('n', '<Leader>cs', function()
-    package.loaded.coverage.summary()
-end, {desc = 'show coverage summary'})
-map('n', '<Leader>ct', function()
-    package.loaded.coverage.toggle()
-end, {desc = 'toggle coverage'})
---#endregion
-
---#region Git
-map('n', '[h', '<Cmd>Gitsigns prev_hunk<CR>')
-map('n', ']h', '<Cmd>Gitsigns next_hunk<CR>')
-map('n', '<Leader>gd', '<Cmd>Gitsigns diffthis<CR>')
-map('n', '<Leader>ga', '<Cmd>Gitsigns stage_hunk<CR>')
-map('n', '<Leader>gr', '<Cmd>Gitsigns reset_hunk<CR>')
-map('n', '<Leader>gs', '<Cmd>Gitsigns select_hunk<CR>')
-map('n', '<Leader>gb', '<Cmd>Gitsigns toggle_current_line_blame<CR>')
-map('n', '<Leader>gp', '<Cmd>Gitsigns preview_hunk_inline<CR>')
---#endregion
 
 --#region Diagnostics
 map('n', 'gld', vim.diagnostic.open_float, {
@@ -116,6 +79,6 @@ map('n', ']d', vim.diagnostic.goto_next, {
 })
 map('n', '<Leader>l', function()
     vim.diagnostic.setloclist {open = false}
-    package.loaded['fzf-lua'].loclist()
+    require('fzf-lua').loclist()
 end, {desc = 'list diagnostics'})
 --#endregion

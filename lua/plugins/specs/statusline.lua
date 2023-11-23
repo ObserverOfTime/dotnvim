@@ -1,0 +1,217 @@
+--#region Utilities
+local in_term = require('config').in_term
+
+local text_fts = {
+    'asciidoc', 'mail', 'markdown',
+    'rmd', 'rnoweb', 'rst', 'tex', 'text'
+}
+
+---Check if file is text
+local function is_text()
+    return vim.tbl_contains(text_fts, vim.bo.filetype)
+end
+
+---Check if file is CSV
+local function is_csv()
+    return vim.bo.filetype == 'csv'
+end
+
+---Expandtab option
+local function expandtab()
+    return vim.bo.expandtab and '' or '󰌒'
+end
+
+---Binary option
+local function binary()
+    return vim.bo.binary and '' or ''
+end
+
+---Spell option
+local function spell()
+    return vim.wo.spell and '󰍕' or ''
+end
+
+---Trailing whitespace
+local function trailing()
+    local trail = vim.fn.search([[\s\+$]], 'nwc')
+    return trail == 0 and '' or '✹ '..trail
+end
+
+---Word count
+local function wordcount()
+    return '󰈭 '..vim.fn.wordcount().words
+end
+
+---File mode
+---@param name string
+local function mode(name)
+    return ({
+        ['NORMAL'] = '',
+        ['VISUAL'] = '',
+        ['INSERT'] = '',
+        ['COMMAND'] = '',
+        ['REPLACE'] = '',
+        ['TERMINAL'] = '',
+        ['O-PENDING'] = '',
+        ['V-LINE'] = '',
+        ['V-BLOCK'] = '',
+        ['V-REPLACE'] = '',
+        ['SELECT'] = '',
+        ['V-SELECT'] = '',
+        ['S-LINE'] = '',
+        ['S-BLOCK'] = '',
+        ['EX'] = '',
+        ['MORE'] = '󰍻',
+        ['CONFIRM'] = '',
+        ['SHELL'] = '',
+    })[name]
+end
+
+---File encoding
+---@param name string
+local function encoding(name)
+    return name == 'utf-8' and '' or name:upper()
+end
+
+---Clock (HH:MM)
+local function clock()
+    return os.date('%H:%M')
+end
+
+---CSV column name & number
+local function csv_col()
+    return ('[%s%s]'):format(
+        vim.fn.CSV_WCol('Name'),
+        vim.fn.CSV_WCol()
+    )
+end
+--#endregion
+
+--#region Components
+local comp = {
+    filetype = {'filetype'},
+    diagnostics = {'diagnostics'},
+    mode = {'mode', fmt = mode},
+    encoding = {'encoding', fmt = encoding},
+    fileformat = {'fileformat', symbols = {unix = ''}},
+    branch = {'b:gitsigns_head', icon = ''},
+    wordcount = {wordcount, cond = is_text},
+    csv_col = {csv_col, cond = is_csv},
+    lines = '%{""} %L',
+    column = '%v',
+    filename = {
+        'filename',
+        path = 1,
+        symbols = {
+            modified = '',
+            readonly = ''
+        }
+    },
+    expandtab = expandtab,
+    trailing = trailing,
+    binary = binary,
+    spell = spell,
+    clock = clock
+}
+--#endregion
+
+--#region Theme
+local grayscale = {
+  normal = {
+    a = {bg = '#8E8E8E', fg = '#252525'},
+    b = {bg = '#464646', fg = '#E3E3E3'},
+    c = {bg = '#252525', fg = '#999999'}
+  },
+  insert = {
+    a = {bg = '#686868', fg = '#252525'},
+    b = {bg = '#464646', fg = '#E3E3E3'},
+    c = {bg = '#252525', fg = '#999999'}
+  },
+  visual = {
+    a = {bg = '#747474', fg = '#252525'},
+    b = {bg = '#464646', fg = '#E3E3E3'},
+    c = {bg = '#252525', fg = '#999999'}
+  },
+  replace = {
+    a = {bg = '#7C7C7C', fg = '#252525'},
+    b = {bg = '#464646', fg = '#E3E3E3'},
+    c = {bg = '#252525', fg = '#999999'}
+  },
+  command = {
+    a = {bg = '#8E8E8E', fg = '#252525'},
+    b = {bg = '#252525', fg = '#999999'},
+    c = {bg = '#464646', fg = '#E3E3E3'}
+  },
+  inactive = {
+    a = {bg = '#252525', fg = '#B9B9B9'},
+    b = {bg = '#252525', fg = '#B9B9B9'},
+    c = {bg = '#252525', fg = '#B9B9B9'}
+  }
+}
+--#endregion
+
+---@type LazyPluginSpec[]
+return {
+    {
+        'nvim-lualine/lualine.nvim',
+        cond = in_term,
+        opts = {
+            options = {
+                theme = grayscale,
+                component_separators = {left = '', right = ''},
+                section_separators = {left = '', right = ''},
+            },
+            extensions = {'quickfix'},
+            sections = {
+                lualine_a = {
+                    comp.mode,
+                    comp.spell,
+                },
+                lualine_b = {
+                    comp.branch,
+                    comp.diagnostics
+                },
+                lualine_c = {
+                    comp.filename,
+                    comp.csv_col
+                },
+                lualine_x = {
+                    comp.filetype,
+                    comp.encoding,
+                    comp.fileformat,
+                    comp.binary
+                },
+                lualine_y = {
+                    comp.expandtab,
+                    comp.trailing,
+                    comp.wordcount
+                },
+                lualine_z = {
+                    comp.lines,
+                    comp.column,
+                    comp.clock
+                }
+            },
+            inactive_sections = {
+                lualine_c = {comp.filename}
+            }
+        },
+        config = function(_, opts)
+            if not _G._clock_timer then
+                local refresh = vim.schedule_wrap(vim.cmd.redrawstatus)
+
+                _G._clock_timer = vim.uv.new_timer()
+                _G._clock_timer:start(0, 3e4, refresh)
+            end
+
+            require('lualine').setup(opts)
+
+            require('lualine.extensions.quickfix').sections.lualine_a = {
+                function()
+                    local loclist = vim.fn.getloclist(0, {filewinid = 1})
+                    return loclist.filewinid == 0 and '󰁨' or ''
+                end
+            }
+        end
+    }
+}
