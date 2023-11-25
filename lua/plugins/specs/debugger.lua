@@ -1,4 +1,134 @@
 local c = require 'config'
+local hl = 'GruvboxRed'
+local map = vim.keymap.set
+
+---@type table<string, Adapter>
+local adapters = {}
+---@type table<string, Configuration[]>
+local configurations = {}
+
+--#region C/C++
+---@type ExecutableAdapter
+adapters.lldb = {
+    type = 'executable',
+    command = 'lldb-vscode',
+    name = 'lldb'
+}
+
+configurations.c = {{
+    type = 'lldb',
+    name = 'LLDB',
+    request = 'launch',
+    cwd = '${workspaceFolder}',
+    program = function()
+        local co = assert(coroutine.running())
+        vim.schedule(function()
+            vim.ui.input({
+                prompt = 'Program',
+                completion = 'file'
+            }, function(input)
+                coroutine.resume(co, input)
+            end)
+        end)
+        return coroutine.yield()
+    end,
+    env = function()
+        local variables = {}
+        for k, v in pairs(vim.fn.environ()) do
+          table.insert(variables, k..'='..v)
+        end
+        return variables
+    end
+}}
+
+configurations.cpp = configurations.c
+--#endregion
+
+--#region Python
+---@type ExecutableAdapter
+adapters.python = {
+    type = 'executable',
+    command = vim.g.python3_host_prog,
+    args = {'-m', 'debugpy.adapter'},
+    options = {source_filetype = 'python'}
+}
+
+configurations.python = {{
+    type = 'python',
+    name = 'Python',
+    request = 'launch',
+    program = '${file}',
+    pythonPath = function()
+        local venv = vim.env.VIRTUAL_ENV
+        return (venv or '/usr')..'/bin/python'
+    end
+}}
+--#endregion
+
+--#region JavaScript/TypeScript
+---@type ServerAdapter
+adapters['pwa-node'] = {
+    type = 'server',
+    host = 'localhost',
+    port = 8123,
+    executable = {
+        command = 'node',
+        args = {
+            '/opt/js-debug/src/dapDebugServer.js'
+        }
+    }
+}
+
+configurations.javascript = {{
+    type = 'pwa-node',
+    name = 'JavaScript',
+    request = 'launch',
+    program = '${file}',
+    cwd = '${workspaceFolder}'
+}}
+
+configurations.typescript = {{
+    type = 'pwa-node',
+    name = 'TypeScript',
+    request = 'launch',
+    program = '${file}',
+    cwd = '${workspaceFolder}',
+    runtimeExecutable = 'deno',
+    runtimeArgs = {
+        'run',
+        '--inspect-wait',
+        '--allow-all'
+    },
+    attachSimplePort = 9229
+}}
+--#endregion
+
+--#region Lua
+---@type ExecutableAdapter
+adapters['local-lua'] = {
+    type = 'executable',
+    command = 'local-lua-dbg',
+    enrich_config = function(config, on_config)
+        if not config['extensionPath'] then
+            local path = '/usr/lib/node_modules/local-lua-debugger-vscode'
+            on_config(vim.tbl_extend('force', config, {extensionPath = path}))
+        else
+            on_config(config)
+        end
+    end
+}
+
+configurations.lua = {{
+    type = 'local-lua',
+    name = 'Lua',
+    request = 'launch',
+    cwd = '${workspaceFolder}',
+    program = {
+      lua = '/usr/local/bin/nlua',
+      file = '${file}'
+    }
+}}
+--#endregion
 
 ---@type LazyPluginSpec[]
 return {
@@ -14,91 +144,13 @@ return {
 
             dapui.setup()
 
-            --#region C/C++
-            dap.adapters.lldb = {
-                type = 'executable',
-                command = 'lldb-vscode',
-                name = 'lldb'
-            }
+            dap.adapters = adapters
+            dap.configurations = configurations
 
-            dap.configurations.c = {{
-                type = 'lldb',
-                name = 'LLDB',
-                request = 'launch',
-                cwd = '${workspaceFolder}',
-                program = function()
-                    local co = assert(coroutine.running())
-                    vim.schedule(function()
-                        vim.ui.input({
-                            prompt = 'Program',
-                            completion = 'file'
-                        }, function(input)
-                            coroutine.resume(co, input)
-                        end)
-                    end)
-                    return coroutine.yield()
-                end,
-                env = function()
-                    local variables = {}
-                    for k, v in pairs(vim.fn.environ()) do
-                      table.insert(variables, k..'='..v)
-                    end
-                    return variables
-                end
-            }}
-
-            dap.configurations.cpp = dap.configurations.c
-            --#endregion
-
-            --#region Python
-            dap.adapters.python = {
-              type = 'executable',
-              command = vim.g.python3_host_prog,
-              args = {'-m', 'debugpy.adapter'}
-            }
-
-            dap.configurations.python = {{
-                type = 'python',
-                name = 'Python',
-                request = 'launch',
-                program = '${file}',
-                pythonPath = function()
-                    local venv = vim.env.VIRTUAL_ENV
-                    return (venv or '/usr')..'/bin/python'
-                end
-            }}
-            --#endregion
-
-            --#region JavaScript
-            dap.adapters.node2 = {
-                type = 'executable',
-                command = 'node',
-                args = {
-                    '--inspect',
-                    '/opt/vscode-node-debug2/out/src/nodeDebug.js'
-                }
-            }
-
-            dap.configurations.javascript = {{
-                type = 'node2',
-                name = 'Node',
-                request = 'launch',
-                program = '${file}',
-                cwd = vim.uv.cwd(),
-                sourceMaps = true,
-                protocol = 'inspector',
-                console = 'integratedTerminal'
-            }}
-            --#endregion
-
-            --#region Listeners
             dap.listeners.after.event_initialized['dapui_config'] = dapui.open
             dap.listeners.before.event_terminated['dapui_config'] = dapui.close
             dap.listeners.before.event_exited['dapui_config'] = dapui.close
-            --#endregion
 
-            --#region Mappings
-            local map = vim.keymap.set
             map('n', '<Leader>Dc', dap.continue, {desc = 'DAP continue'})
             map('n', '<Leader>Do', dap.step_over, {desc = 'DAP step over'})
             map('n', '<Leader>Di', dap.step_into, {desc = 'DAP step into'})
@@ -118,16 +170,12 @@ return {
                 vim.ui.input({prompt = 'Expression'}, dapui.eval)
             end, {desc = 'DAP eval input'})
             map({'n', 'x'}, '<Leader>De', dapui.eval, {desc = 'DAP eval text'})
-            --#endregion
 
-            --#region Signs
-            local hl = 'GruvboxRed'
             vim.fn.sign_define('DapStopped',             {text = '', texthl = hl})
             vim.fn.sign_define('DapLogPoint',            {text = '', texthl = hl})
             vim.fn.sign_define('DapBreakpoint',          {text = '', texthl = hl})
             vim.fn.sign_define('DapBreakpointCondition', {text = '', texthl = hl})
             vim.fn.sign_define('DapBreakpointRejected',  {text = '', texthl = hl})
-            --#endregion
         end,
         dependencies = {'rcarriga/nvim-dap-ui'}
     }

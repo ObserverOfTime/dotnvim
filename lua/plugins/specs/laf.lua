@@ -6,6 +6,7 @@ local fold_char = vim.opt.fillchars:get().fold or '-'
 return {
     {
         'luukvbaal/statuscol.nvim',
+        branch = '0.10',
         cond = c.in_term,
         config = function()
             local b = require 'statuscol.builtin'
@@ -108,5 +109,5 @@ return {
                 after = ''
             }
         }
-    },
+    }
 }

@@ -204,14 +204,14 @@ return {
                 _G._clock_timer:start(0, 3e4, refresh)
             end
 
-            require('lualine').setup(opts)
-
             require('lualine.extensions.quickfix').sections.lualine_a = {
                 function()
                     local loclist = vim.fn.getloclist(0, {filewinid = 1})
                     return loclist.filewinid == 0 and '󰁨' or ''
                 end
             }
+
+            require('lualine').setup(opts)
         end
     }
 }

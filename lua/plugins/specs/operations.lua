@@ -26,23 +26,55 @@ return {
     {
         'kylechui/nvim-surround',
         keys = {
-            {'ys', mode = 'n', desc = 'add surrounding pair'},
-            {'yss', mode = 'n', desc = 'add surrounding pair (line)'},
-            {'<C-g>s', mode = 'i', desc = 'add surrounding pair (insert)'},
-            {'S', mode = 'x', desc = 'add surrounding pair (visual)'},
-            {'ds', mode = 'n', desc = 'delete surrounding pair'},
-            {'cs', mode = 'n', desc = 'change surrounding pair'}
+            {
+                'ys', '<Plug>(nvim-surround-normal)',
+                mode = 'n', desc = 'add surrounding pair'
+            },
+            {
+                'yss', '<Plug>(nvim-surround-normal-cur)',
+                mode = 'n', desc = 'add surrounding pair (line)'
+            },
+            {
+                '<C-g>s', '<Plug>(nvim-surround-insert)',
+                mode = 'i', desc = 'add surrounding pair (insert)'},
+            {
+                'S', '<Plug>(nvim-surround-visual)',
+                mode = 'x', desc = 'add surrounding pair (visual)'},
+            {
+                'ds', '<Plug>(nvim-surround-delete)',
+                mode = 'n', desc = 'delete surrounding pair'},
+            {
+                'cs', '<Plug>(nvim-surround-change)',
+                mode = 'n', desc = 'change surrounding pair'
+            }
         },
         ---@type user_options
         opts = {
             move_cursor = false,
             keymaps = {
+                insert = false,
                 insert_line = false,
+                normal = false,
+                normal_cur = false,
                 normal_line = false,
                 normal_cur_line = false,
+                visual = false,
                 visual_line = false,
+                delete = false,
+                change = false,
                 change_line = false
             }
+        }
+    },
+    {
+        'Wansmer/treesj',
+        enabled = true,
+        keys = {
+            {'gS', '<Cmd>TSJSplit<CR>', desc = 'split node'},
+            {'gJ', '<Cmd>TSJJoin<CR>', desc = 'join node'}
+        },
+        opts = {
+            use_default_keymaps = false
         }
     },
     {
@@ -58,27 +90,11 @@ return {
         end
     },
     {
-        -- TODO: choose an alternative?
-        'AndrewRadev/splitjoin.vim',
-        keys = {
-            {'gS', desc = 'split code'},
-            {'gJ', desc = 'join code'}
-        },
-        init = function()
-            vim.g.splitjoin_quiet = 1
-            vim.g.splitjoin_trailing_comma = 0
-            vim.g.splitjoin_curly_brace_padding = 0
-            vim.g.splitjoin_html_attributes_hanging = 1
-        end
-    },
-    {
-        -- TODO: choose an alternative?
+        -- XXX: no good alternative
         'mg979/vim-lion',
         keys = {
             {'g]', mode = {'n', 'x'}, desc = 'align left'},
-            {'g[', mode = {'n', 'x'}, desc = 'align right'},
-            {'g}', mode = {'n', 'x'}, desc = 'squeeze left'},
-            {'g{', mode = {'n', 'x'}, desc = 'squeeze right'},
+            {'g[', mode = {'n', 'x'}, desc = 'align right'}
         }
     }
 }

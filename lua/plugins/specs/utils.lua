@@ -56,7 +56,7 @@ return {
                 desc = 'spell suggest'
             }
         },
-        config = function (_, opts)
+        config = function(_, opts)
             local fzf = require 'fzf-lua'
             fzf.setup(opts)
             fzf.register_ui_select()
@@ -101,6 +101,16 @@ return {
                   ['T'] = {icon = status.T, color = 'blue'},
                   ['U'] = {icon = status.R, color = 'cyan'}
                 }
+            }
+        }
+    },
+    {
+        'smjonas/live-command.nvim',
+        lazy = true,
+        main = 'live-command',
+        opts = {
+            commands = {
+                S = {cmd = 'Subvert'}
             }
         }
     }

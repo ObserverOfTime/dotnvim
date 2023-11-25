@@ -1,6 +1,8 @@
 local c = require 'config'
 local kind = c.icons.lsp.kind
 
+---@param val string
+---@return {icon: string}
 local function symbol(val)
     return {icon = val}
 end

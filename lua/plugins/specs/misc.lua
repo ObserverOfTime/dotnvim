@@ -153,7 +153,21 @@ return {
     {
         -- XXX: no alternative
         'tpope/vim-abolish',
-        event = {'VeryLazy'}
+        event = {'VeryLazy'},
+        keys = {
+            {
+                'cr', '<Plug>(abolish-coerce-word)',
+                mode = 'n', desc = 'coerce case (word)'
+            },
+            {
+                'R', '<Plug>(abolish-coerce)',
+                mode = 'v', desc = 'coerce case (visual)'
+            }
+        },
+        init = function()
+            vim.g.abolish_no_mappings = 1
+        end,
+        dependencies = {'live-command.nvim'}
     },
     {
         -- XXX: no good alternative

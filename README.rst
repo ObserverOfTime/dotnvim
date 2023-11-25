@@ -58,31 +58,32 @@ Using lazy.nvim_ as the plugin manager.
 * `kylechui/nvim-surround <https://github.com/kylechui/nvim-surround>`_
 * `lewis6991/gitsigns.nvim <https://github.com/lewis6991/gitsigns.nvim>`_ |P|
 * `ObserverOfTime/nvimcord <https://github.com/ObserverOfTime/nvimcord>`_
-* `mattn/emmet-vim <https://github.com/mattn/emmet-vim>`_ |V|
-* `AndrewRadev/splitjoin.vim <https://github.com/AndrewRadev/splitjoin.vim>`_ |V|
 * `wsdjeg/vim-fetch <https://github.com/wsdjeg/vim-fetch>`_ |V|
 * `tpope/vim-abolish <https://github.com/tpope/vim-abolish>`_ |V|
+
+   - `smjonas/live-command.nvim <https://github.com/smjonas/live-command.nvim>`_
 * `tpope/vim-fugitive <https://github.com/tpope/vim-fugitive>`_ |V|
 * `nvim-treesitter/nvim-treesitter <https://github.com/nvim-treesitter/nvim-treesitter>`_
 
   - `nvim-treesitter/nvim-treesitter-refactor <https://github.com/nvim-treesitter/nvim-treesitter-refactor>`_
   - `nvim-treesitter/nvim-treesitter-textobjects <https://github.com/nvim-treesitter/nvim-treesitter-textobjects>`_
+* `Wansmer/treesj <https://github.com/Wansmer/treesj>`_
+* `stsewd/sphinx.nvim <https://github.com/stsewd/sphinx.nvim>`_ |R|
 * `mfussenegger/nvim-dap <https://github.com/mfussenegger/nvim-dap>`_
 
   - `rcarriga/nvim-dap-ui <https://github.com/rcarriga/nvim-dap-ui>`_
 * `hrsh7th/nvim-cmp <https://github.com/hrsh7th/nvim-cmp>`_
 
-  - `hrsh7th/cmp-path <https://github.com/hrsh7th/cmp-path>`_
+  - `FelipeLema/cmp-async-path <https://github.com/FelipeLema/cmp-async-path>`_
   - `hrsh7th/cmp-buffer <https://github.com/hrsh7th/cmp-buffer>`_
   - `hrsh7th/cmp-nvim-lsp <https://github.com/hrsh7th/cmp-nvim-lsp>`_
   - `petertriho/cmp-git <https://github.com/petertriho/cmp-git>`_ |P|
   - `dcampos/cmp-snippy <https://github.com/dcampos/cmp-snippy>`_
 
     + `ObserverOfTime/nvim-snippy <https://github.com/ObserverOfTime/nvim-snippy>`_
-* `stsewd/sphinx.nvim <https://github.com/stsewd/sphinx.nvim>`_ |R|
 * `simrat39/symbols-outline.nvim <https://github.com/simrat39/symbols-outline.nvim>`_
 * `folke/neodev.nvim <https://github.com/folke/neodev.nvim>`_
-* `henrywallace/null-ls.nvim <https://github.com/henrywallace/null-ls.nvim>`_ |P|
+* `nvimtools/none-ls.nvim <https://github.com/nvimtools/none-ls.nvim>`_ |P|
 * `mbbill/undotree <https://github.com/mbbill/undotree>`_ |V|
 * `mg979/vim-lion <https://github.com/mg979/vim-lion>`_ |V|
 * `chrisbra/unicode.vim <https://github.com/chrisbra/unicode.vim>`_ |V|
@@ -174,29 +175,31 @@ Language Servers
 :c: clangd_
 :cmake: neocmakelsp_
 :cpp: clangd_
-:css: vscode-css-languageserver_
+:css: vscode-css-languageserver_ & emmet-language-server_
 :dockerfile: docker-langserver_
-:html: vscode-html-languageserver_
+:html: vscode-html-languageserver_ & emmet-language-server_
+:htmldjango: emmet-language-server_
 :javascript: typescript-language-server_
 :json: vscode-json-languageserver_
-:less: vscode-css-languageserver_
+:less: vscode-css-languageserver_ & emmet-language-server_
 :lua: lua-language-server_
-:perl: perl-language-server_
 :python: pyright_
+:pug: emmet-language-server_
 :r: `r-languageserver`_
 :rmd: `r-languageserver`_
 :rnoweb: texlab_
 :rst: esbonio_
 :rust: rust-analyzer_
-:scss: vscode-css-languageserver_
+:scss: vscode-css-languageserver_ & emmet-language-server_
 :sh: bash-language-server_
-:svelte: svelteserver_
-:svg: lemminx_
+:stylus: emmet-language-server_
+:svelte: svelteserver_ & emmet-language-server_
+:svg: lemminx_ & emmet-language-server_
 :tex: texlab_ & ltex-ls_
 :toml: taplo_
 :typescript: typescript-language-server_
 :vim: `vim-language-server`_
-:xml: lemminx_
+:xml: lemminx_ & emmet-language-server_
 :yaml: yaml-language-server_
 
 Linters
@@ -249,7 +252,9 @@ Debuggers
 
 :c: lldb-vscode_
 :cpp: lldb-vscode_
-:javascript: vscode-node-debug2_
+:javascript: vscode-js-debug_
+:typescript: vscode-js-debug_
+:lua: local-lua-debugger-vscode_
 :python: debugpy_
 
 .. footer::
@@ -262,19 +267,20 @@ Debuggers
 .. _debugpy: https://github.com/microsoft/debugpy
 .. _djlint: https://djlint.com/
 .. _docker-langserver: https://github.com/rcjsuen/dockerfile-language-server-nodejs
+.. _emmet-language-server: https://github.com/olrtg/emmet-language-server
 .. _esbonio: https://github.com/swyddfa/esbonio
 .. _eslint_d: https://github.com/mantoni/eslint_d.js
 .. _flake8: https://flake8.pycqa.org/
 .. _isort: https://pycqa.github.io/isort/
 .. _ktlint: https://ktlint.github.io/
 .. _lemminx: https://github.com/eclipse/lemminx
-.. _lldb-vscode: https://github.com/llvm/llvm-project/tree/main/lldb/tools/lldb-vscode
+.. _lldb-vscode: https://github.com/llvm/llvm-project/tree/main/lldb/tools/lldb-dap
+.. _local-lua-debugger-vscode: https://github.com/tomblind/local-lua-debugger-vscode
 .. _ltex-ls: https://github.com/valentjn/ltex-ls
 .. _lua-language-server: https://github.com/sumneko/lua-language-server
 .. _luacheck: https://luacheck.readthedocs.io/
 .. _mypy: https://mypy.readthedocs.io/
 .. _neocmakelsp: https://github.com/Decodetalkers/neocmakelsp
-.. _perl-language-server: https://github.com/FractalBoy/perl-language-server
 .. _pug-lint: https://github.com/pugjs/pug-lint
 .. _pylint: https://pylint.org/
 .. _pyright: https://github.com/microsoft/pyright
@@ -296,6 +302,6 @@ Debuggers
 .. _vscode-css-languageserver: https://github.com/microsoft/vscode/tree/main/extensions/css-language-features/server
 .. _vscode-html-languageserver: https://github.com/microsoft/vscode/tree/main/extensions/html-language-features/server
 .. _vscode-json-languageserver: https://github.com/microsoft/vscode/tree/main/extensions/json-language-features/server
-.. _vscode-node-debug2: https://github.com/microsoft/vscode-node-debug2/tree/v1.42.10
+.. _vscode-js-debug: https://github.com/microsoft/vscode-js-debug
 .. _xmllint: https://gnome.pages.gitlab.gnome.org/libxml2/xmllint.html
 .. _yaml-language-server: https://github.com/redhat-developer/yaml-language-server

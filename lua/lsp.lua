@@ -55,6 +55,8 @@ local lsp = vim.api.nvim_create_augroup('LSP', {clear = true})
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 capabilities.offsetEncoding = {'utf-8', 'utf-16'}
 
+local map = vim.keymap.set
+
 ---Create an LSP client
 ---@param fts string[]
 ---@param opts lsp.ClientConfig
@@ -187,6 +189,19 @@ new_client({'css', 'scss', 'less'}, {
 new_client({'dockerfile'}, {
     cmd = {'docker-langserver', '--stdio'},
     root_dir = find_root({'Dockerfile'}, true)
+})
+
+new_client({
+    'html', 'xml', 'pug',
+    'css', 'less', 'scss', 'stylus',
+    'htmldjango', 'svelte', 'svg'
+}, {
+    cmd = {'emmet-language-server', '--stdio'},
+    root_dir = find_root(),
+    init_options = {
+        showSuggestionsAsSnippets = true,
+        variables = {charset = 'UTF-8'}
+    }
 })
 
 new_client({'rst'}, {
@@ -427,24 +442,6 @@ new_client({'lua'}, {
     }
 })
 
-new_client({'perl'}, {
-    name = 'perl-languageserver',
-    cmd = {'pls'},
-    root_dir = find_root(),
-    settings = {
-        perl = {
-            syntax = {enabled = true},
-            perlcritic = {enabled = false}
-        }
-    }
-}, function(client_id, bufnr)
-    -- HACK: don't run PLS on latexmkrc files
-    local name = vim.api.nvim_buf_get_name(bufnr)
-    if vim.fs.basename(name) == '.latexmkrc' then
-        vim.lsp.stop_client(client_id)
-    end
-end)
-
 new_client({'python'}, {
     name = 'pyright',
     cmd = {'pyright-langserver', '--stdio'},
@@ -638,12 +635,12 @@ new_client({'javascript', 'typescript'}, {
     root_dir = find_root({'package.json', 'tsconfig.json', 'jsconfig.json'}),
     settings = {
         javascript = {
-            -- inlayHints = {
-            --     includeInlayVariableTypeHints = true,
-            --     includeInlayFunctionParameterTypeHints = true,
-            --     includeInlayFunctionLikeReturnTypeHints = true,
-            --     includeInlayPropertyDeclarationTypeHints = true
-            -- }
+            inlayHints = {
+                includeInlayVariableTypeHints = true,
+                includeInlayFunctionParameterTypeHints = true,
+                includeInlayFunctionLikeReturnTypeHints = true,
+                includeInlayPropertyDeclarationTypeHints = true
+            }
         }
     },
     init_options = {
@@ -677,7 +674,7 @@ new_client({'yaml'}, {
             schemas = {
                 -- FIXME: redhat-developer/yaml-language-server#422
                 -- ['https://json.schemastore.org/github-issue-forms.json'] = '.github/ISSUE_TEMPLATE/*.yml',
-                -- ['https://json.schemastore.org/github-issue-config.json'] = '.github/ISSUE_TEMPLATE/config.yml',
+                ['https://json.schemastore.org/github-issue-config.json'] = '.github/ISSUE_TEMPLATE/config.yml',
                 ['https://json.schemastore.org/github-workflow.json'] = '.github/workflows/*',
                 ['https://json.schemastore.org/github-funding.json'] = '.github/FUNDING.yml',
                 ['https://json.schemastore.org/github-action.json'] = 'action.yml',
@@ -702,7 +699,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
     ---@param args LspAttachArgs
     callback = function(args)
         local fzf = require 'fzf-lua'
-        local map = vim.keymap.set
         local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
 
         if not vim.b[args.buf]._lsp_attached then
@@ -711,7 +707,13 @@ vim.api.nvim_create_autocmd('LspAttach', {
         end
 
         if client.supports_method('textDocument/inlayHint', {bufnr = args.buf}) then
-            vim.lsp.inlay_hint(args.buf, true)
+            vim.lsp.inlay_hint.enable(args.buf, true)
+            map('n', 'glH', function()
+                local toggle = vim.lsp.inlay_hint.is_enabled(args.buf)
+                vim.lsp.inlay_hint.enable(args.buf, not toggle)
+            end, {
+                desc = 'toggle inlay hints', buffer = args.buf
+            })
         end
 
         if client.supports_method('textDocument/codeAction', {bufnr = args.buf}) then

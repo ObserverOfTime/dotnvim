@@ -85,14 +85,22 @@ return {
                     }
                 },
                 sources = {
-                    {name = 'nvim_lsp'},
-                    {name = 'snippy'},
                     {
-                        name = 'path',
+                        name = 'nvim_lsp',
+                        priority = 3
+                    },
+                    {
+                        name = 'snippy',
+                        priority = 2
+                    },
+                    {
+                        name = 'async_path',
+                        priority = 1,
                         option = {get_cwd = vim.uv.cwd}
                     },
                     {
                         name = 'buffer',
+                        priority = 1,
                         option = {
                             keyword_pattern = [[\k\+]],
                             get_bufnrs = function()
@@ -116,16 +124,16 @@ return {
                     }
                 },
                 sources = {
-                    {name = 'git'},
-                    {name = 'path'},
-                    {name = 'buffer'}
+                    {name = 'git', priority = 2},
+                    {name = 'async_path', priority = 1},
+                    {name = 'buffer', priority = 1}
                 }
             })
 
             cmp.event:on('confirm_done', pairs.on_confirm_done())
         end,
         dependencies = {
-            'hrsh7th/cmp-path',
+            'FelipeLema/cmp-async-path',
             'hrsh7th/cmp-buffer',
             'hrsh7th/cmp-nvim-lsp',
             'dcampos/cmp-snippy'

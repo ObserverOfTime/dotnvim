@@ -10,10 +10,6 @@ require('lazy').setup('plugins.specs', {
     install = {
         colorscheme = {'gruvbox', 'desert'}
     },
-    custom_keys = {
-        ['<localleader>l'] = false,
-        ['<localleader>t'] = false
-    },
     change_detection = {
         enabled = false
     },

@@ -5,7 +5,8 @@ return {
     {
         'ellisonleao/gruvbox.nvim',
         cond = in_term,
-        priority = 60,
+        lazy = false,
+        priority = 90,
         ---@type GruvboxConfig
         opts = {
             overrides = {
@@ -21,12 +22,13 @@ return {
                 diffRemoved = {fg = '#FF0000'},
                 diffChanged = {fg = '#D78700'},
                 WinBar = {bg = '#252525'},
+                WinBarNC = {bg = '#353535'},
                 Folded = {bg = '#1C1C1C'},
                 Visual = {bg = '#3A3A3A'},
                 MatchParen = {bg = '#353535'},
                 Pmenu = {bg = '#121212'},
                 PmenuSel = {
-                    bg = '#444444',
+                    bg = '#3A3A3A',
                     fg = '#EEEEEE'
                 },
                 WinSeparator = {fg = '#BDAE93'},
@@ -48,7 +50,6 @@ return {
                 CSVColumnHeaderEven = {link = 'GruvboxRedBold'},
                 CSVColumnHeaderOdd = {link = 'GruvboxOrangeBold'},
                 FocusedSymbol = {link = 'GruvboxYellowBold'},
-                LightBulbVirtualText = {link = 'DiagnosticVirtualTextHint'},
                 ['@decorator'] = {link = 'PreProc'},
                 ['@namespace'] = {link = 'GruvboxAquaBold'},
                 ['@lsp.type.class'] = {link = '@type'},

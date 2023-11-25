@@ -10,7 +10,7 @@ function dabline#tabline()
         let l:bg = l:i == l:page ? 'Light' : 'Dark'
         let l:tabs .= '%#DabLine'.l:bg.'#%'.i.'T　'.l:label
     endfor
-    return l:tabs.'%#DabLineDark#%T%=%999X '
+    return l:tabs.'%#DabLineDark#%T%=%999X󰅖 '
 endfunction
 
 hi DabLineLight guibg=#252525 guifg=#E3E3E3

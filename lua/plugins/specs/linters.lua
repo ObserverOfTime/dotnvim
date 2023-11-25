@@ -78,15 +78,19 @@ local cfg = {
         filetypes = {'xml', 'svg'}
     },
     vint = {
-        extra_args = {'--enable-neovim'}
+        extra_args = {'--enable-neovim'},
+        ---@param utils ConditionalUtils
+        condition = function(utils)
+            return utils.root_has_file_matches('init%.vim')
+        end
     }
 }
 
 ---@type LazyPluginSpec[]
 return {
     {
-        -- TODO: choose an alternative?
-        'henrywallace/null-ls.nvim',
+        'nvimtools/none-ls.nvim',
+        name = 'null-ls.nvim',
         cond = not_mergetool,
         config = function()
             local null_ls = require 'null-ls'
@@ -105,7 +109,7 @@ return {
                     null_ls.builtins.diagnostics.stylelint.with(cfg.stylelint),
                     null_ls.builtins.diagnostics.stylint.with(cfg.stylint),
                     null_ls.builtins.diagnostics.tidy.with(cfg.tidy),
-                    -- null_ls.builtins.diagnostics.vint.with(cfg.vint),
+                    null_ls.builtins.diagnostics.vint.with(cfg.vint),
 
                     null_ls.builtins.formatting.autopep8.with(cfg.autopep8),
                     null_ls.builtins.formatting.eslint_d.with(cfg.eslint_d),
