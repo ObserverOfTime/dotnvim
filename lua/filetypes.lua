@@ -12,7 +12,9 @@ end
 
 ---Convert `pdf -> text`
 extension.pdf = function(path, bufnr)
-    if package.loaded.cmp.visible() then return end
+    ---@module 'cmp'
+    local cmp = package.loaded.cmp
+    if cmp and cmp.visible() then return end
     convert('pdftotext -nopgbrk -layout %q -', path, bufnr)
     return 'text'
 end

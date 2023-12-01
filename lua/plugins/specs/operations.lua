@@ -15,13 +15,17 @@ return {
             {'gbc', mode = {'n'}, desc = 'toggle comment in current block'}
         },
         config = function()
-            require('Comment').setup()
+            local tsccms = require 'ts_context_commentstring.integrations.comment_nvim'
+            require('Comment').setup {
+               pre_hook = tsccms.create_pre_hook()
+            }
             local ft = require 'Comment.ft'
             ft.pug = {'//-%s'}
             ft.htmldjango = {
                 '{#%s#}', '{% comment %}%s{% endcomment %}'
             }
-        end
+        end,
+        dependencies = {'nvim-ts-context-commentstring'}
     },
     {
         'kylechui/nvim-surround',

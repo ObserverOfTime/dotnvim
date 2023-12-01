@@ -44,7 +44,7 @@ Using lazy.nvim_ as the plugin manager.
 
 * `nvim-tree/nvim-web-devicons <https://github.com/nvim-tree/nvim-web-devicons>`_
 * `rcarriga/nvim-notify <https://github.com/rcarriga/nvim-notify>`_
-* `stevearc/dressing.nvim <https://github.com/stevearc/dressing.nvim>`_
+* `rohit-s8/floating-input.nvim <https://github.com/rohit-s8/floating-input.nvim>`_
 * `ibhagwan/fzf-lua <https://github.com/ibhagwan/fzf-lua>`_
 * `ellisonleao/gruvbox.nvim <https://github.com/ellisonleao/gruvbox.nvim>`_
 * `nvim-lualine/lualine.nvim <https://github.com/nvim-lualine/lualine.nvim>`_
@@ -54,9 +54,11 @@ Using lazy.nvim_ as the plugin manager.
 * `folke/todo-comments.nvim <https://github.com/folke/todo-comments.nvim>`_
 * `uga-rosa/ccc.nvim <https://github.com/uga-rosa/ccc.nvim>`_
 * `numToStr/Comment.nvim <https://github.com/numToStr/Comment.nvim>`_
+
+   - `JoosepAlviste/nvim-ts-context-commentstring <https://github.com/JoosepAlviste/nvim-ts-context-commentstring>`_
 * `windwp/nvim-autopairs <https://github.com/windwp/nvim-autopairs>`_
 * `kylechui/nvim-surround <https://github.com/kylechui/nvim-surround>`_
-* `lewis6991/gitsigns.nvim <https://github.com/lewis6991/gitsigns.nvim>`_ |P|
+* `lewis6991/gitsigns.nvim <https://github.com/lewis6991/gitsigns.nvim>`_
 * `ObserverOfTime/nvimcord <https://github.com/ObserverOfTime/nvimcord>`_
 * `wsdjeg/vim-fetch <https://github.com/wsdjeg/vim-fetch>`_ |V|
 * `tpope/vim-abolish <https://github.com/tpope/vim-abolish>`_ |V|

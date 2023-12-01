@@ -38,8 +38,6 @@ vim.opt.foldmethod = 'marker'
 vim.opt.background = 'dark'
 ---Set colorcolumn to textwidth
 vim.opt.colorcolumn = '+1'
----Set signcolumn size
-vim.opt.signcolumn = 'auto:1-3'
 ---Set foldcolumn size
 vim.opt.foldcolumn = 'auto:1'
 ---Show substitution preview

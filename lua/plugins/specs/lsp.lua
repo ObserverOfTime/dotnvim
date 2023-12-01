@@ -12,7 +12,7 @@ return {
     {
         'simrat39/symbols-outline.nvim',
         lazy = true,
-        cond = c.not_mergetool,
+        enabled = c.not_mergetool,
         opts = {
             preview_bg_highlight = 'NormalFloat',
             symbols = vim.tbl_map(symbol, kind)
@@ -21,7 +21,7 @@ return {
     {
         'barreiroleo/ltex_extra.nvim',
         lazy = true,
-        cond = c.not_mergetool
+        enabled = c.not_mergetool
     },
     {
         'JosefLitos/reform.nvim',
@@ -36,7 +36,7 @@ return {
     {
         'uga-rosa/ccc.nvim',
         lazy = true,
-        cond = c.not_mergetool,
+        enabled = c.not_mergetool,
         config = true
     }
 }

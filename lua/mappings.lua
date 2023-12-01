@@ -8,6 +8,9 @@ map('n', '<DOWN>', 'gj')
 -- Clear search highlighting
 map('n', '<Leader>/', '<Cmd>nohlsearch<CR>')
 
+-- Fix file indentation
+map('n', '<Leader><Tab>', [[m`gg=Gg``]])
+
 -- Close file
 map('n', '<C-q>', '<Cmd>quit<CR>', {noremap = true})
 
@@ -16,9 +19,6 @@ map({'n', 'i'}, '<C-s>', '<Cmd>write ++p<CR>', {noremap = true})
 
 -- Undo
 map({'n', 'i'}, '<C-z>', '<Cmd>undo<CR>', {noremap = true})
-
--- Fix file indentation
-map('n', '<Leader><Tab>', 'mIgg=G`I', {noremap = true})
 
 --#region Copy to clipboard
 map('v', '<C-c>', '"+y', {noremap = true})
@@ -61,8 +61,11 @@ map('n', 'ζ=', 'z=')
 map('n', 'ζγ', 'zg')
 --#endregion
 
+-- Open file explorer
+map('n', '<Leader>e', '<Cmd>Lexplore<CR>')
+
 -- Run in terminal
-map('x', '<Leader>t', ':TermExec<CR>')
+map('x', '<Leader>t', '<Cmd>TermExec<CR>')
 
 -- Escape terminal
 map('t', '<Esc>', [[<C-\><C-n>]], {noremap = true})

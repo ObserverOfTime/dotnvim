@@ -43,11 +43,11 @@ return {
             }
         },
         cmp = {
+            async_path  = '󰝰',
             buffer      = '',
             git         = '',
             nvim_lsp    = '',
             omni        = '',
-            async_path  = '󰝰',
             snippy      = '',
         },
         lsp = {

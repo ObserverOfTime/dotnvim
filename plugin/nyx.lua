@@ -1,5 +1,4 @@
---Unix utilities
----@module 'nyx'
+---Unix utilities
 ---@license MIT-0
 ---@author ObserverOfTime
 
@@ -35,7 +34,8 @@ local function copy(args)
         ficlone_force = cow
     }, wrap(function(err)
         if err ~= nil then return notify_error(err) end
-        vim.cmd.edit {args.args, bang = args.bang}
+        local fname = vim.fn.fnameescape(args.args)
+        vim.cmd.edit {fname, bang = args.bang}
     end))
 end
 
@@ -50,8 +50,9 @@ local function move(args)
     end
     vim.uv.fs_rename(file, args.args, wrap(function(err)
         if err ~= nil then return notify_error(err) end
+        local fname = vim.fn.fnameescape(args.args)
+        vim.cmd.edit {fname, bang = args.bang}
         vim.api.nvim_buf_delete(buf, {force = args.bang})
-        vim.cmd.edit {args.args, bang = args.bang}
     end))
 end
 

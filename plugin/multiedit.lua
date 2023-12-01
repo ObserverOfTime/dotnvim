@@ -1,5 +1,4 @@
 ---Like `:tabedit` but with multiple arguments
----@module 'multiedit'
 ---@license MIT-0
 ---@author ObserverOfTime
 

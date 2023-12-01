@@ -34,15 +34,9 @@ return {
         module = false
     },
     {
-        'stevearc/dressing.nvim',
+        'rohit-s8/floating-input.nvim',
         event = {'VeryLazy'},
-        cond = c.in_term,
-        opts = {
-            input = {
-                win_options = {winblend = 0}
-            },
-            select = {enabled = false}
-        }
+        cond = c.in_term
     },
     {
         'ibhagwan/fzf-lua',
@@ -79,7 +73,22 @@ return {
                     ['<S-Down>'] = 'preview-page-down',
                     ['<S-Up>']   = 'preview-page-up',
                     ['<C-r>']    = 'preview-page-reset'
+                },
+                fzf = {
+                    ['ctrl-w']    = 'toggle-preview-wrap',
+                    ['ctrl-p']    = 'toggle-preview'
                 }
+            },
+            previewers = {
+                builtin = {
+                    extensions = {
+                        class = {'cfr'},
+                        png = {'identify', '-verbose'},
+                        jpg = {'identify', '-verbose'},
+                        jpeg = {'identify', '-verbose'}
+                    }
+                },
+                git_diff = {pager = 'diff-so-fancy'}
             },
             lsp = {
                 async_or_timeout = 3000,
@@ -100,7 +109,11 @@ return {
                   ['R'] = {icon = status.R, color = 'cyan'},
                   ['T'] = {icon = status.T, color = 'blue'},
                   ['U'] = {icon = status.R, color = 'cyan'}
-                }
+                },
+                branches = {cmd = 'git branch --color'},
+                bcommits = {preview_pager = 'diff-so-fancy'},
+                commits = {preview_pager = 'diff-so-fancy'},
+                status = {preview_pager = 'diff-so-fancy'}
             }
         }
     },
@@ -113,5 +126,15 @@ return {
                 S = {cmd = 'Subvert'}
             }
         }
+    },
+    {
+        'JoosepAlviste/nvim-ts-context-commentstring',
+        lazy = true,
+        opts = {
+            enable_autocmd = false
+        },
+        init = function()
+            vim.g.skip_ts_context_commentstring_module = true
+        end
     }
 }

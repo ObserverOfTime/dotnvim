@@ -22,7 +22,9 @@ vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(
 vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(
     vim.lsp.handlers.signature_help, {border = border}
 )
+--#endregion
 
+--#region Diagnostics
 ---@type lsp-handler
 vim.lsp.handlers['textDocument/diagnostic'] = vim.lsp.diagnostic.on_diagnostic
 
@@ -30,22 +32,26 @@ vim.diagnostic.config {
     float = {border = 'single'},
     virtual_text = {severity = vim.diagnostic.severity.ERROR}
 }
---#endregion
 
---#region Notifications
----@type lsp-handler
-vim.lsp.handlers['window/showMessage'] = function(_, result, ctx)
-    local client = assert(vim.lsp.get_client_by_id(ctx.client_id))
-    local lvl = ({'ERROR', 'WARN', 'INFO', 'DEBUG'})[result.type]
-    vim.notify(result.message, lvl, {title = ('LSP (%s)'):format(client.name)})
+---@module 'config'
+local c = package.loaded.config
+
+for type, icon in pairs(c.icons.lsp.diag) do
+    local hl = 'DiagnosticSign'..type
+    vim.api.nvim_set_hl(0, hl, {link = 'Diagnostic'..type})
+    vim.fn.sign_define(hl, {text = icon, texthl = hl})
 end
 --#endregion
 
---#region Signs
-for type, icon in pairs(package.loaded.config.icons.lsp.diag) do
-    local hl = 'DiagnosticSign'..type
-    vim.api.nvim_set_hl(0, hl, {background = nil})
-    vim.fn.sign_define(hl, {text = icon, texthl = hl})
+--#region Notifications
+local levels = {'ERROR', 'WARN', 'INFO', 'DEBUG'}
+
+---@type lsp-handler
+vim.lsp.handlers['window/showMessage'] = function(_, result, ctx)
+    local client = assert(vim.lsp.get_client_by_id(ctx.client_id))
+    vim.notify(result.message, levels[result.type], {
+        title = ('LSP (%s)'):format(client.name)
+    })
 end
 --#endregion
 
@@ -53,7 +59,6 @@ end
 local lsp = vim.api.nvim_create_augroup('LSP', {clear = true})
 
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
-capabilities.offsetEncoding = {'utf-8', 'utf-16'}
 
 local map = vim.keymap.set
 
@@ -124,6 +129,7 @@ new_client({'c', 'cpp'}, {
     },
     root_dir = find_root({'.clangd', 'Makefile', 'CMakeLists.txt'}),
     capabilities = {
+        offsetEncoding = {'utf-8', 'utf-16'},
         textDocument = {
             completion = {
                 editsNearCursor = true

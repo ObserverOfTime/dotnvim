@@ -20,7 +20,9 @@ end
 ---Jump forward
 ---@param fallback fun()
 local function forward(fallback)
+    ---@module 'cmp'
     local cmp = package.loaded.cmp
+    ---@module 'snippy'
     local snip = package.loaded.snippy
 
     if cmp.visible() then
@@ -37,7 +39,9 @@ end
 ---Jump backward
 ---@param fallback fun()
 local function backward(fallback)
+    ---@module 'cmp'
     local cmp = package.loaded.cmp
+    ---@module 'snippy'
     local snip = package.loaded.snippy
 
     if cmp.visible() then
@@ -51,6 +55,31 @@ end
 
 ---@type LazyPluginSpec[]
 return {
+    {
+        'windwp/nvim-autopairs',
+        lazy = true,
+        config = function()
+            local pairs = require 'nvim-autopairs'
+            local Rule = require 'nvim-autopairs.rule'
+            local cond = require 'nvim-autopairs.conds'
+            pairs.setup()
+            pairs.add_rules {
+                Rule('{%', '%}', 'htmldjango')
+                    :set_end_pair_length(2)
+                    :replace_endpair(function() return '  %' end),
+                Rule('{#', '#}', 'htmldjango')
+                    :set_end_pair_length(2)
+                    :replace_endpair(function() return '  #' end),
+                Rule('{{', '}}', 'htmldjango')
+                    :set_end_pair_length(2)
+                    :replace_endpair(function() return '  }' end),
+                Rule('$', '$', 'tex')
+                    :with_pair(cond.not_before_text('\\')),
+                Rule('\\[', '\\]', 'tex'),
+                Rule('\\(', '\\)', 'tex'),
+            }
+        end
+    },
     {
         'hrsh7th/nvim-cmp',
         event = {'InsertEnter'},
@@ -70,7 +99,7 @@ return {
                     ['<CR>'] = cmp.mapping.confirm {select = false},
                     ['<Tab>'] = cmp.mapping(forward, {'i', 's'}),
                     ['<S-Tab>'] = cmp.mapping(backward, {'i', 's'}),
-                    ['<C-Space>'] = cmp.mapping.complete {},
+                    ['<C-Space>'] = cmp.mapping.complete(),
                     ['<C-b>'] = cmp.mapping.scroll_docs(-4),
                     ['<C-f>'] = cmp.mapping.scroll_docs(4)
                 },
@@ -109,7 +138,7 @@ return {
                                     vim.api.nvim_tabpage_list_wins(0)
                                 )
                             end
-                        },
+                        }
                     }
                 }
             }
@@ -136,7 +165,8 @@ return {
             'FelipeLema/cmp-async-path',
             'hrsh7th/cmp-buffer',
             'hrsh7th/cmp-nvim-lsp',
-            'dcampos/cmp-snippy'
+            'dcampos/cmp-snippy',
+            'nvim-autopairs'
         }
     },
     {
@@ -149,7 +179,7 @@ return {
     },
     {
         'ObserverOfTime/nvim-snippy',
-        lazy = true,
+        ft = {'snippets'},
         dev = true,
         config = true
     }

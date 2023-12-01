@@ -4,32 +4,6 @@ local hunks = c.icons.git.hunks
 ---@type LazyPluginSpec[]
 return {
     {
-        'windwp/nvim-autopairs',
-        priority = 51,
-        event = {'InsertEnter'},
-        config = function()
-            local pairs = require 'nvim-autopairs'
-            local Rule = require 'nvim-autopairs.rule'
-            local cond = require 'nvim-autopairs.conds'
-            pairs.setup()
-            pairs.add_rules {
-                Rule('{%', '%}', 'htmldjango')
-                    :set_end_pair_length(2)
-                    :replace_endpair(function() return '  %' end),
-                Rule('{#', '#}', 'htmldjango')
-                    :set_end_pair_length(2)
-                    :replace_endpair(function() return '  #' end),
-                Rule('{{', '}}', 'htmldjango')
-                    :set_end_pair_length(2)
-                    :replace_endpair(function() return '  }' end),
-                Rule('$', '$', 'tex')
-                    :with_pair(cond.not_before_text('\\')),
-                Rule('\\[', '\\]', 'tex'),
-                Rule('\\(', '\\)', 'tex'),
-            }
-        end
-    },
-    {
         'danymat/neogen',
         cmd = {'Neogen'},
         keys = {
@@ -93,6 +67,7 @@ return {
     {
         'lewis6991/gitsigns.nvim',
         lazy = false,
+        priority = 60,
         cond = c.in_term,
         keys = {
             {'[h', '<Cmd>Gitsigns prev_hunk<CR>', desc = 'go to previous hunk'},
@@ -119,14 +94,13 @@ return {
                 gitdir = vim.env.XDG_CONFIG_HOME..'/dotfiles.git'
             }}
 
-        },
-        dependencies = {'plenary.nvim'}
+        }
     },
     {
         'ObserverOfTime/nvimcord',
         dev = true,
-        event = {'VimEnter'},
-        cond = c.not_mergetool,
+        cmd = {'NvimcordUpdate'},
+        enabled = c.not_mergetool,
         branch = 'workspace',
         config = true
     },
@@ -174,7 +148,7 @@ return {
         'tpope/vim-fugitive'
     },
     {
-        -- XXX: no alternative
+        -- XXX: no good alternative
         'wsdjeg/vim-fetch'
     }
 }

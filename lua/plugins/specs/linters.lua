@@ -91,7 +91,7 @@ return {
     {
         'nvimtools/none-ls.nvim',
         name = 'null-ls.nvim',
-        cond = not_mergetool,
+        enabled = not_mergetool,
         config = function()
             local null_ls = require 'null-ls'
             null_ls.setup {

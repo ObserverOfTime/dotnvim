@@ -64,6 +64,8 @@ return {
                     }
                 }
             }
+
+            vim.opt.signcolumn = 'auto:1-3'
         end
     },
     {

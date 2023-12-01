@@ -135,9 +135,8 @@ return {
     {
         'mfussenegger/nvim-dap',
         lazy = true,
-        cond = function()
-            return c.in_term() and c.not_mergetool()
-        end,
+        cond = c.in_term,
+        enabled = c.not_mergetool,
         config = function()
             local dap = require 'dap'
             local dapui = require 'dapui'
