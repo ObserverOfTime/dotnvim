@@ -5,6 +5,9 @@ map('n', '<UP>', 'gk')
 map('n', '<DOWN>', 'gj')
 --#endregion
 
+-- Disable tag click
+map('n', '<C-LeftMouse>', '<NOP>')
+
 -- Clear search highlighting
 map('n', '<Leader>/', '<Cmd>nohlsearch<CR>')
 
@@ -40,6 +43,9 @@ map({'o', 'x'}, 'i+', ':<C-U>normal T+vt+<CR>', {silent = true})
 
 map({'o', 'x'}, 'a@', ':<C-U>normal F@vf@<CR>', {silent = true})
 map({'o', 'x'}, 'i@', ':<C-U>normal T@vt@<CR>', {silent = true})
+
+map({'o', 'x'}, 'a|', ':<C-U>normal F|vf|<CR>', {silent = true})
+map({'o', 'x'}, 'i|', ':<C-U>normal T|vt|<CR>', {silent = true})
 --#endregion
 
 --#region Actually delete text

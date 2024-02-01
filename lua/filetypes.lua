@@ -34,6 +34,7 @@ end
 vim.filetype.add {
     extension = extension,
     filename = {
-        ['.lintr'] = 'debcontrol'
+        ['.lintr'] = 'debcontrol',
+        ['zathurarc'] = 'zathurarc'
     }
 }

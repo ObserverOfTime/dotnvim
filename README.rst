@@ -63,7 +63,7 @@ Using lazy.nvim_ as the plugin manager.
 * `wsdjeg/vim-fetch <https://github.com/wsdjeg/vim-fetch>`_ |V|
 * `tpope/vim-abolish <https://github.com/tpope/vim-abolish>`_ |V|
 
-   - `smjonas/live-command.nvim <https://github.com/smjonas/live-command.nvim>`_
+  - `smjonas/live-command.nvim <https://github.com/smjonas/live-command.nvim>`_
 * `tpope/vim-fugitive <https://github.com/tpope/vim-fugitive>`_ |V|
 * `nvim-treesitter/nvim-treesitter <https://github.com/nvim-treesitter/nvim-treesitter>`_
 
@@ -79,6 +79,7 @@ Using lazy.nvim_ as the plugin manager.
   - `FelipeLema/cmp-async-path <https://github.com/FelipeLema/cmp-async-path>`_
   - `hrsh7th/cmp-buffer <https://github.com/hrsh7th/cmp-buffer>`_
   - `hrsh7th/cmp-nvim-lsp <https://github.com/hrsh7th/cmp-nvim-lsp>`_
+  - `wookayin/cmp-omni <https://github.com/wookayin/cmp-omni>`_
   - `petertriho/cmp-git <https://github.com/petertriho/cmp-git>`_ |P|
   - `dcampos/cmp-snippy <https://github.com/dcampos/cmp-snippy>`_
 
@@ -141,14 +142,14 @@ Tree-sitter
 * jsdoc
 * json
 * jsonc
-* kotlin
+* kotlin |H|
 * latex |H|
 * lua
 * luadoc
 * luap
 * markdown |H| |I|
 * markdown_inline |H|
-* python
+* python |I|
 * query
 * r
 * regex
@@ -163,6 +164,7 @@ Tree-sitter
 * vimdoc
 * xml
 * yaml
+* zathurarc
 
 | |I| Custom injections
 | |H| Custom highlights

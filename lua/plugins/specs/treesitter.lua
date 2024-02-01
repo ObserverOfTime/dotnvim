@@ -1,50 +1,58 @@
 local langs = {
-    'awk',
-    'bash',
-    'bibtex',
-    'c',
-    'cmake',
-    'cpp',
-    'css',
-    'diff',
-    'dockerfile',
-    'gitattributes',
-    'gitcommit',
-    'gitignore',
-    'html',
-    -- 'htmldjango',
-    'http',
-    -- 'ini',
-    'java',
-    'javascript',
-    'jsdoc',
-    'json',
-    'jsonc',
-    'kotlin',
-    'latex',
-    'lua',
-    'luap',
-    -- 'make',
-    'markdown',
-    'markdown_inline',
-    'perl',
-    'po',
-    'python',
-    'query',
-    'r',
-    'regex',
-    'rnoweb',
-    'rst',
-    'rust',
-    'scss',
-    'svelte',
-    'toml',
-    'typescript',
-    'vim',
-    'vimdoc',
-    'xml',
-    'yaml'
+    awk = {'awk'},
+    bash = {'bash', 'sh'},
+    bibtex = {'bibtex'},
+    c = {'c'},
+    cmake = {'cmake'},
+    cpp = {'cpp'},
+    css = {'css'},
+    diff = {},
+    dockerfile = {'dockerfile'},
+    gitattributes = {'gitattributes'},
+    gitcommit = {'gitcommit'},
+    gitignore = {'gitignore'},
+    html = {'html'},
+    -- htmldjango = {'htmldjango'},
+    http = {'http'},
+    -- ini = {'confini', 'dosini'},
+    java = {'java'},
+    javascript = {'javascript'},
+    jsdoc = {},
+    json = {'json'},
+    jsonc = {'jsonc'},
+    kotlin = {'kotlin'},
+    latex = {'tex'},
+    lua = {'lua'},
+    luap = {},
+    -- make = {'make'},
+    markdown = {'markdown', 'rmd'},
+    markdown_inline = {},
+    perl = {'perl'},
+    po = {'po'},
+    python = {'python'},
+    query = {'query'},
+    r = {'r'},
+    regex = {},
+    rnoweb = {'rnoweb'},
+    rst = {'rst'},
+    rust = {'rust'},
+    scss = {'scss'},
+    svelte = {'svelte'},
+    toml = {'toml'},
+    typescript = {'typescript'},
+    vim = {'vim'},
+    vimdoc = {'help'},
+    xml = {'xml'},
+    yaml = {'yaml'},
+    zathurarc = {'zathurarc'}
 }
+
+---@param buf number
+local function hugefile(_, buf)
+    local file = vim.api.nvim_buf_get_name(buf)
+    local ok, stats = pcall(vim.loop.fs_stat, file)
+    return ok and stats ~= nil and stats.size > 5e5
+end
 
 ---@type LazyPluginSpec[]
 return {
@@ -56,20 +64,18 @@ return {
         ---@type TSConfig
         opts = {
             auto_install = false,
-            indent = {enable = true},
-            highlight = {enable = true},
-            incremental_selection = {
+            indent = {
                 enable = true,
-                keymaps = {
-                    init_selection = '<Leader>si',
-                    node_incremental = '<Leader>sn',
-                    node_decremental = '<Leader>sm',
-                    scope_incremental = '<Leader>ss'
-                }
+                disable = hugefile
+            },
+            highlight = {
+                enable = true,
+                disable = hugefile
             },
             textobjects = {
                 select = {
                     enable = true,
+                    disable = hugefile,
                     keymaps = {
                         ['aB'] = '@block.outer',
                         ['iB'] = '@block.inner',
@@ -93,6 +99,7 @@ return {
                 },
                 swap = {
                     enable = true,
+                    disable = hugefile,
                     swap_next = {
                         ['gss'] = '@parameter.inner'
                     },
@@ -103,6 +110,7 @@ return {
                 move = {
                     enable = true,
                     set_jumps = true,
+                    disable = hugefile,
                     goto_next_start = {
                         [']k'] = '@class.outer',
                         [']m'] = '@function.outer',
@@ -128,12 +136,14 @@ return {
             refactor = {
                 smart_rename = {
                     enable = true,
+                    disable = hugefile,
                     keymaps = {
                         smart_rename = 'gsr'
                     }
                 },
                 navigation = {
                     enable = true,
+                    disable = hugefile,
                     keymaps = {
                         goto_definition      = 'gsd',
                         goto_next_usage      = 'gsn',
@@ -142,7 +152,7 @@ return {
                     }
                 }
             },
-            ensure_installed = langs
+            ensure_installed = vim.tbl_keys(langs)
         },
         config = function(_, opts)
             vim.opt.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
@@ -151,14 +161,18 @@ return {
             if ok then return nvimts.setup(opts) end
 
             ---@diagnostic disable-next-line: redundant-parameter
-            require('nvim-treesitter').setup {ensure_install = langs}
+            require('nvim-treesitter').setup {
+                ensure_install = vim.tbl_keys(langs)
+            }
             vim.opt.indentexpr = [[v:lua.require('nvim-treesitter').indentexpr()]]
             vim.api.nvim_create_autocmd('FileType', {
-              pattern = langs,
+              pattern = vim.tbl_flatten(vim.tbl_values(langs)),
               ---@param args AutocmdArgs
               callback = function(args)
-                vim.treesitter.start(args.buf)
-              end,
+                if not hugefile('', args.buf) then
+                    vim.treesitter.start(args.buf)
+                end
+              end
             })
         end,
         dependencies = {

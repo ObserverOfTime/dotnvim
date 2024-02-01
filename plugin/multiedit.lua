@@ -2,13 +2,6 @@
 ---@license MIT-0
 ---@author ObserverOfTime
 
----@param file string
----@return boolean
----@private
-local function isfile(file)
-    return vim.fn.filereadable(file) == 1
-end
-
 ---Edit multiple files in tabs
 ---@param args CommandArgs
 local function multiedit(args)
@@ -19,11 +12,11 @@ local function multiedit(args)
     for _, arg in ipairs(args.fargs) do
         local glob = vim.fn.glob(arg)
         if glob ~= '' then
-            local files = vim.tbl_filter(
-                isfile, vim.fn.split(glob, '\n'))
-            for _, file in ipairs(files) do
-                -- file = vim.fn.fnamemodify(file, ':.')
-                vim.cmd.tabedit {file, mods = silent}
+            for _, file in ipairs(vim.fn.split(glob, '\n')) do
+                if vim.fn.filereadable(file) == 1 then
+                    file = vim.fn.fnamemodify(file, ':.')
+                    vim.cmd.tabedit {file, mods = silent}
+                end
             end
         else
             vim.cmd.tabedit {arg, mods = silent}

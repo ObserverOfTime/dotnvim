@@ -4,6 +4,8 @@
 nmap <UP> gk
 nmap <DOWN> gj
 
+nmap <C-LeftMouse> <NOP>
+
 nmap <Leader>/ <Cmd>nohlsearch<CR>
 
 nnoremap <C-q> <Cmd>quit<CR>
@@ -35,6 +37,13 @@ xmap <silent> i+ :<C-U>normal T+vt+<CR>
 
 omap <silent> a@ :<C-U>normal F@vf@<CR>
 xmap <silent> a@ :<C-U>normal F@vf@<CR>
+omap <silent> i@ :<C-U>normal T@vt@<CR>
+xmap <silent> i@ :<C-U>normal T@vt@<CR>
+
+omap <silent> a| :<C-U>normal F\|vf\|<CR>
+xmap <silent> a| :<C-U>normal F\|vf\|<CR>
+omap <silent> i| :<C-U>normal T\|vt\|<CR>
+xmap <silent> i| :<C-U>normal T\|vt\|<CR>
 
 nnoremap X D
 nnoremap dd "_dd

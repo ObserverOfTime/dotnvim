@@ -13,19 +13,19 @@ local border = {
       {'┃', 'FloatBorder'},
 }
 
----@type lsp-handler
+---@type vim.lsp.Handler
 vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(
     vim.lsp.handlers.hover, {border = border}
 )
 
----@type lsp-handler
+---@type vim.lsp.Handler
 vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(
     vim.lsp.handlers.signature_help, {border = border}
 )
 --#endregion
 
 --#region Diagnostics
----@type lsp-handler
+---@type vim.lsp.Handler
 vim.lsp.handlers['textDocument/diagnostic'] = vim.lsp.diagnostic.on_diagnostic
 
 vim.diagnostic.config {
@@ -46,7 +46,7 @@ end
 --#region Notifications
 local levels = {'ERROR', 'WARN', 'INFO', 'DEBUG'}
 
----@type lsp-handler
+---@type vim.lsp.Handler
 vim.lsp.handlers['window/showMessage'] = function(_, result, ctx)
     local client = assert(vim.lsp.get_client_by_id(ctx.client_id))
     vim.notify(result.message, levels[result.type], {
@@ -73,6 +73,9 @@ local function new_client(fts, opts, func)
         pattern = fts,
         ---@param args AutocmdArgs
         callback = function(args)
+            local file = vim.api.nvim_buf_get_name(args.buf)
+            local ok, stats = pcall(vim.loop.fs_stat, file)
+            if ok and stats ~= nil and stats.size > 5e5 then return end
             local client_id = vim.lsp.start(
                 vim.tbl_deep_extend('keep', opts, {
                     name = opts.cmd[1],
@@ -94,9 +97,8 @@ local function find_root(files, base)
     local u = require 'null-ls.utils'
     -- TODO: use vim.fs.find
     local cwd = assert(vim.uv.cwd())
-    return u.root_pattern(unpack(files or {'.git'}))(
-        base and vim.api.nvim_buf_get_name(0) or cwd
-    ) or cwd
+    local root = u.root_pattern(unpack(files or {'.git'}))
+    return root(base and vim.api.nvim_buf_get_name(0) or cwd) or cwd
 end
 
 ---Find a file using fd
@@ -137,7 +139,7 @@ new_client({'c', 'cpp'}, {
         }
     },
     handlers = {
-        ---@type lsp-handler
+        ---@type vim.lsp.Handler
         ['textDocument/switchSourceHeader'] = function(err, res)
             if err then
                 vim.notify(
@@ -293,6 +295,10 @@ new_client({'json', 'jsonc'}, {
                     fileMatch = {'conventionalcommit.json'},
                     url = 'https://raw.githubusercontent.com/lppedd/idea-conventional-commit/'..
                           'master/src/main/resources/defaults/conventionalcommit.schema.json'
+                },
+                {
+                    fileMatch = {'vercel.json'},
+                    url = 'https://openapi.vercel.sh/vercel.json'
                 }
             }
         }
@@ -392,6 +398,7 @@ new_client({'tex'}, {
                     ['\\jdk{}'] = 'ignore',
                     ['\\IfLanguageName{}{}{}'] = 'ignore',
                     ['\\citefield{}{}'] = 'dummy',
+                    ['\\acs{}'] = 'dummy',
                 }
             },
             disabledRules = {
@@ -533,7 +540,7 @@ new_client({'bib', 'tex', 'rnoweb'}, {
         })
     end,
     handlers = {
-        ---@type lsp-handler
+        ---@type vim.lsp.Handler
         ['textDocument/forwardSearch'] = function(err, res)
             if err then
                 vim.notify(
@@ -554,7 +561,7 @@ new_client({'bib', 'tex', 'rnoweb'}, {
                 )
             end
         end,
-        ---@type lsp-handler
+        ---@type vim.lsp.Handler
         ['textDocument/build'] = function(err, res)
             if err then
                 vim.notify(

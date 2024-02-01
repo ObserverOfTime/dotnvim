@@ -74,10 +74,7 @@ vim.opt.display = {'truncate', 'uhex'}
 vim.opt.sessionoptions = {
     'buffers',
     'curdir',
-    'folds',
-    'localoptions',
     'tabpages',
-    'terminal',
     'winsize'
 }
 ---Cursor styling (`:h 'guicursor'`)

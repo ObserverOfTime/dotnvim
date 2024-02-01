@@ -53,6 +53,28 @@ local function backward(fallback)
     end
 end
 
+---async_path source
+local async_path = {
+    name = 'async_path',
+    priority = 1,
+    option = {get_cwd = vim.uv.cwd}
+}
+
+---buffer source
+local buffer = {
+    name = 'buffer',
+    priority = 1,
+    option = {
+        keyword_pattern = [[\k\+]],
+        get_bufnrs = function()
+            return vim.tbl_map(
+                vim.api.nvim_win_get_buf,
+                vim.api.nvim_tabpage_list_wins(0)
+            )
+        end
+    }
+}
+
 ---@type LazyPluginSpec[]
 return {
     {
@@ -122,24 +144,8 @@ return {
                         name = 'snippy',
                         priority = 2
                     },
-                    {
-                        name = 'async_path',
-                        priority = 1,
-                        option = {get_cwd = vim.uv.cwd}
-                    },
-                    {
-                        name = 'buffer',
-                        priority = 1,
-                        option = {
-                            keyword_pattern = [[\k\+]],
-                            get_bufnrs = function()
-                                return vim.tbl_map(
-                                    vim.api.nvim_win_get_buf,
-                                    vim.api.nvim_tabpage_list_wins(0)
-                                )
-                            end
-                        }
-                    }
+                    async_path,
+                    buffer
                 }
             }
 
@@ -154,8 +160,15 @@ return {
                 },
                 sources = {
                     {name = 'git', priority = 2},
-                    {name = 'async_path', priority = 1},
-                    {name = 'buffer', priority = 1}
+                    async_path,
+                    buffer
+                }
+            })
+
+            cmp.setup.filetype({'query', 'dap-repl'}, {
+                sources = {
+                    {name = 'omni', priority = 2},
+                    buffer
                 }
             })
 
@@ -168,6 +181,11 @@ return {
             'dcampos/cmp-snippy',
             'nvim-autopairs'
         }
+    },
+    {
+        'wookayin/cmp-omni',
+        ft = {'query', 'dap-repl'},
+        branch = 'fix-return'
     },
     {
         'petertriho/cmp-git',
