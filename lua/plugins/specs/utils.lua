@@ -9,6 +9,10 @@ return {
         lazy = true
     },
     {
+        'nvim-neotest/nvim-nio',
+        lazy = true
+    },
+    {
         'nvim-tree/nvim-web-devicons',
         lazy = true,
         cond = c.in_term
@@ -132,9 +136,6 @@ return {
         lazy = true,
         opts = {
             enable_autocmd = false
-        },
-        init = function()
-            vim.g.skip_ts_context_commentstring_module = true
-        end
+        }
     }
 }

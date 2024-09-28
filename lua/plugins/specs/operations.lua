@@ -95,7 +95,7 @@ return {
     },
     {
         -- XXX: no good alternative
-        'mg979/vim-lion',
+        'vim-laundry/vim-lion',
         keys = {
             {'g]', mode = {'n', 'x'}, desc = 'align left'},
             {'g[', mode = {'n', 'x'}, desc = 'align right'}

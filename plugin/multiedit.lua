@@ -14,7 +14,7 @@ local function multiedit(args)
         if glob ~= '' then
             for _, file in ipairs(vim.fn.split(glob, '\n')) do
                 if vim.fn.filereadable(file) == 1 then
-                    file = vim.fn.fnamemodify(file, ':.')
+                    -- file = vim.fn.fnamemodify(file, ':.')
                     vim.cmd.tabedit {file, mods = silent}
                 end
             end

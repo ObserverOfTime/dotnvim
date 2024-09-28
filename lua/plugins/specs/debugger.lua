@@ -2,13 +2,13 @@ local c = require 'config'
 local hl = 'GruvboxRed'
 local map = vim.keymap.set
 
----@type table<string, Adapter>
+---@type table<string, dap.Adapter>
 local adapters = {}
 ---@type table<string, Configuration[]>
 local configurations = {}
 
 --#region C/C++
----@type ExecutableAdapter
+---@type dap.ExecutableAdapter
 adapters.lldb = {
     type = 'executable',
     command = 'lldb-vscode',
@@ -45,7 +45,7 @@ configurations.cpp = configurations.c
 --#endregion
 
 --#region Python
----@type ExecutableAdapter
+---@type dap.ExecutableAdapter
 adapters.python = {
     type = 'executable',
     command = vim.g.python3_host_prog,
@@ -66,7 +66,7 @@ configurations.python = {{
 --#endregion
 
 --#region JavaScript/TypeScript
----@type ServerAdapter
+---@type dap.ServerAdapter
 adapters['pwa-node'] = {
     type = 'server',
     host = 'localhost',
@@ -104,7 +104,7 @@ configurations.typescript = {{
 --#endregion
 
 --#region Lua
----@type ExecutableAdapter
+---@type dap.ExecutableAdapter
 adapters['local-lua'] = {
     type = 'executable',
     command = 'local-lua-dbg',
@@ -176,6 +176,10 @@ return {
             vim.fn.sign_define('DapBreakpointCondition', {text = '', texthl = hl})
             vim.fn.sign_define('DapBreakpointRejected',  {text = '', texthl = hl})
         end,
-        dependencies = {'rcarriga/nvim-dap-ui'}
+        dependencies = {'nvim-dap-ui'}
+    },
+    {
+        'rcarriga/nvim-dap-ui',
+        dependencies = {'nvim-nio'}
     }
 }

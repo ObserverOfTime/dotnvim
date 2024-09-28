@@ -75,7 +75,8 @@ return {
         opts = {char = '│'}
     },
     {
-        'anuvyklack/pretty-fold.nvim',
+        -- FIXME: anuvyklack/pretty-fold.nvim#41
+        'bbjornstad/pretty-fold.nvim',
         cond = c.in_term,
         opts = {
             fill_char = fold_char,

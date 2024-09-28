@@ -10,28 +10,23 @@ end
 ---@type LazyPluginSpec[]
 return {
     {
-        'simrat39/symbols-outline.nvim',
+        'hedyhli/outline.nvim',
         lazy = true,
         enabled = c.not_mergetool,
         opts = {
-            preview_bg_highlight = 'NormalFloat',
-            symbols = vim.tbl_map(symbol, kind)
+            keymaps = {
+                toggle_preview = 'p'
+            },
+            symbols = {
+                icons = vim.tbl_map(symbol, kind)
+            }
         }
-    },
-    {
-        'barreiroleo/ltex_extra.nvim',
-        lazy = true,
-        enabled = c.not_mergetool
     },
     {
         'JosefLitos/reform.nvim',
         ft = {'bash', 'sh'},
         build = 'make',
         config = true
-    },
-    {
-        'folke/neodev.nvim',
-        ft = {'lua'}
     },
     {
         'uga-rosa/ccc.nvim',

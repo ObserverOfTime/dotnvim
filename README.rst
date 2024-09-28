@@ -50,7 +50,7 @@ Using lazy.nvim_ as the plugin manager.
 * `nvim-lualine/lualine.nvim <https://github.com/nvim-lualine/lualine.nvim>`_
 * `luukvbaal/statuscol.nvim <https://github.com/luukvbaal/statuscol.nvim>`_
 * `lukas-reineke/virt-column.nvim <https://github.com/lukas-reineke/virt-column.nvim>`_
-* `anuvyklack/pretty-fold.nvim <https://github.com/anuvyklack/pretty-fold.nvim>`_
+* `bbjornstad/pretty-fold.nvim <https://github.com/bbjornstad/pretty-fold.nvim>`_
 * `folke/todo-comments.nvim <https://github.com/folke/todo-comments.nvim>`_
 * `uga-rosa/ccc.nvim <https://github.com/uga-rosa/ccc.nvim>`_
 * `numToStr/Comment.nvim <https://github.com/numToStr/Comment.nvim>`_
@@ -73,7 +73,7 @@ Using lazy.nvim_ as the plugin manager.
 * `stsewd/sphinx.nvim <https://github.com/stsewd/sphinx.nvim>`_ |R|
 * `mfussenegger/nvim-dap <https://github.com/mfussenegger/nvim-dap>`_
 
-  - `rcarriga/nvim-dap-ui <https://github.com/rcarriga/nvim-dap-ui>`_
+  - `rcarriga/nvim-dap-ui <https://github.com/rcarriga/nvim-dap-ui>`_ |N|
 * `hrsh7th/nvim-cmp <https://github.com/hrsh7th/nvim-cmp>`_
 
   - `FelipeLema/cmp-async-path <https://github.com/FelipeLema/cmp-async-path>`_
@@ -84,11 +84,11 @@ Using lazy.nvim_ as the plugin manager.
   - `dcampos/cmp-snippy <https://github.com/dcampos/cmp-snippy>`_
 
     + `ObserverOfTime/nvim-snippy <https://github.com/ObserverOfTime/nvim-snippy>`_
-* `simrat39/symbols-outline.nvim <https://github.com/simrat39/symbols-outline.nvim>`_
-* `folke/neodev.nvim <https://github.com/folke/neodev.nvim>`_
+* `hedyhli/outline.nvim <https://github.com/hedyhli/outline.nvim>`_
 * `nvimtools/none-ls.nvim <https://github.com/nvimtools/none-ls.nvim>`_ |P|
+  - `nvimtools/none-ls-extras.nvim <https://github.com/nvimtools/none-ls-extras.nvim>`_
 * `mbbill/undotree <https://github.com/mbbill/undotree>`_ |V|
-* `mg979/vim-lion <https://github.com/mg979/vim-lion>`_ |V|
+* `vim-laundry/vim-lion <https://github.com/vim-laundry/vim-lion>`_ |V|
 * `chrisbra/unicode.vim <https://github.com/chrisbra/unicode.vim>`_ |V|
 * `danymat/neogen <https://github.com/danymat/neogen>`_
 * `andythigpen/nvim-coverage <https://github.com/andythigpen/nvim-coverage>`_ |P|
@@ -103,14 +103,17 @@ Using lazy.nvim_ as the plugin manager.
 | |V| Legacy VimL plugin
 | |R| Remote Python plugin
 | |P| Requires plenary.nvim_
+| |N| Requires nvim-nio_
 
 .. |V| replace:: :sup:`V`
 .. |S| replace:: :sup:`S`
 .. |R| replace:: :sup:`R`
 .. |P| replace:: :sup:`P`
+.. |N| replace:: :sup:`N`
 
 .. _lazy.nvim: https://github.com/folke/lazy.nvim
 .. _plenary.nvim: https://github.com/nvim-lua/plenary.nvim
+.. _nvim-nio: https://github.com/nvim-neotest/nvim-nio
 
 Personal
 ^^^^^^^^
@@ -128,9 +131,11 @@ Tree-sitter
 * c
 * cmake
 * cpp
-* css
+* css |H|
 * diff
 * dockerfile
+* editorconfig
+* hlsplaylist
 * html
 * http
 * gitattributes
@@ -152,12 +157,14 @@ Tree-sitter
 * python |I|
 * query
 * r
+* readline
 * regex
 * rnoweb
 * rst
 * rust
 * scss |H|
 * svelte
+* test
 * toml
 * typescript
 * vim
@@ -181,6 +188,7 @@ Language Servers
 :cpp: clangd_
 :css: vscode-css-languageserver_ & emmet-language-server_
 :dockerfile: docker-langserver_
+:go: gopls_
 :html: vscode-html-languageserver_ & emmet-language-server_
 :htmldjango: emmet-language-server_
 :javascript: typescript-language-server_
@@ -199,12 +207,14 @@ Language Servers
 :stylus: emmet-language-server_
 :svelte: svelteserver_ & emmet-language-server_
 :svg: lemminx_ & emmet-language-server_
+:swift: sourcekit-lsp_
 :tex: texlab_ & ltex-ls_
 :toml: taplo_
 :typescript: typescript-language-server_
 :vim: `vim-language-server`_
 :xml: lemminx_ & emmet-language-server_
 :yaml: yaml-language-server_
+:zig: zls_
 
 Linters
 -------
@@ -214,7 +224,6 @@ Linters
 :htmldjango: djlint_
 :javascript: eslint_d_
 :less: stylelint_
-:lua: luacheck_
 :pug: pug-lint_
 :python:
    | flake8_
@@ -275,6 +284,7 @@ Debuggers
 .. _esbonio: https://github.com/swyddfa/esbonio
 .. _eslint_d: https://github.com/mantoni/eslint_d.js
 .. _flake8: https://flake8.pycqa.org/
+.. _gopls: https://github.com/golang/tools/tree/master/gopls
 .. _isort: https://pycqa.github.io/isort/
 .. _ktlint: https://ktlint.github.io/
 .. _lemminx: https://github.com/eclipse/lemminx
@@ -282,17 +292,17 @@ Debuggers
 .. _local-lua-debugger-vscode: https://github.com/tomblind/local-lua-debugger-vscode
 .. _ltex-ls: https://github.com/valentjn/ltex-ls
 .. _lua-language-server: https://github.com/sumneko/lua-language-server
-.. _luacheck: https://luacheck.readthedocs.io/
 .. _mypy: https://mypy.readthedocs.io/
 .. _neocmakelsp: https://github.com/Decodetalkers/neocmakelsp
 .. _pug-lint: https://github.com/pugjs/pug-lint
 .. _pylint: https://pylint.org/
 .. _pyright: https://github.com/microsoft/pyright
-.. _`r-languageserver`: https://github.com/REditorSupport/languageserver
+.. _r-languageserver: https://github.com/REditorSupport/languageserver
 .. _rstcheck: https://github.com/myint/rstcheck
 .. _ruff: https://beta.ruff.rs/
 .. _rust-analyzer: https://github.com/rust-lang/rust-analyzer
 .. _shfmt: https://github.com/mvdan/sh
+.. _sourcekit-lsp: https://github.com/apple/sourcekit-lsp
 .. _stylelint: https://stylelint.io/
 .. _stylint: https://simenb.github.io/stylint/
 .. _stylua: https://github.com/JohnnyMorganz/StyLua
@@ -301,7 +311,7 @@ Debuggers
 .. _texlab: https://github.com/latex-lsp/texlab
 .. _tidy: https://www.html-tidy.org/
 .. _typescript-language-server: https://github.com/typescript-language-server/typescript-language-server
-.. _`vim-language-server`: https://github.com/iamcco/vim-language-server
+.. _vim-language-server: https://github.com/iamcco/vim-language-server
 .. _vint: https://github.com/Vimjas/vint
 .. _vscode-css-languageserver: https://github.com/microsoft/vscode/tree/main/extensions/css-language-features/server
 .. _vscode-html-languageserver: https://github.com/microsoft/vscode/tree/main/extensions/html-language-features/server
@@ -309,3 +319,4 @@ Debuggers
 .. _vscode-js-debug: https://github.com/microsoft/vscode-js-debug
 .. _xmllint: https://gnome.pages.gitlab.gnome.org/libxml2/xmllint.html
 .. _yaml-language-server: https://github.com/redhat-developer/yaml-language-server
+.. _zls: https://github.com/zigtools/zls

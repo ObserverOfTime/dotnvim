@@ -7,10 +7,12 @@ local langs = {
     cpp = {'cpp'},
     css = {'css'},
     diff = {},
+    editorconfig = {'editorconfig'},
     dockerfile = {'dockerfile'},
     gitattributes = {'gitattributes'},
     gitcommit = {'gitcommit'},
     gitignore = {'gitignore'},
+    hlsplaylist = {'hlsplaylist'},
     html = {'html'},
     -- htmldjango = {'htmldjango'},
     http = {'http'},
@@ -32,6 +34,7 @@ local langs = {
     python = {'python'},
     query = {'query'},
     r = {'r'},
+    readline = {'readline'},
     regex = {},
     rnoweb = {'rnoweb'},
     rst = {'rst'},
@@ -166,6 +169,7 @@ return {
             }
             vim.opt.indentexpr = [[v:lua.require('nvim-treesitter').indentexpr()]]
             vim.api.nvim_create_autocmd('FileType', {
+              ---@diagnostic disable-next-line: deprecated
               pattern = vim.tbl_flatten(vim.tbl_values(langs)),
               ---@param args AutocmdArgs
               callback = function(args)
@@ -179,6 +183,12 @@ return {
             'nvim-treesitter-refactor',
             'nvim-treesitter-textobjects'
         }
+    },
+    {
+        'tree-sitter-grammars/tree-sitter-test',
+        build = 'make parser/test.so',
+        ft = 'test',
+        dev = true
     },
     {
         'nvim-treesitter/nvim-treesitter-refactor',

@@ -23,6 +23,9 @@ require('lazy').setup('plugins.specs', {
             }
         }
     },
+    build = {
+        warn_on_override = false
+    },
     readme = {
         enabled = false
     }

@@ -191,7 +191,15 @@ return {
         'petertriho/cmp-git',
         ft = {'gitcommit'},
         opts = {
-            enableRemoteUrlRewrites = true
+            enableRemoteUrlRewrites = true,
+            trigger_actions = {{
+                debug_name = 'git_commits',
+                trigger_character = '/',
+                action = function(sources, trigger_char, callback, params)
+                    return sources.git:get_commits(callback, params, trigger_char)
+                end,
+            }}
+
         },
         dependencies = {'plenary.nvim'}
     },

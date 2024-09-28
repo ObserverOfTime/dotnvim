@@ -50,7 +50,7 @@ local cfg = {
         }
     },
     puglint = {
-        prefer_local = 'node_modules/.bin',
+        only_local = 'node_modules/.bin',
         condition = has_node_bin('pug-lint')
     },
     pylint = {
@@ -63,12 +63,12 @@ local cfg = {
         extra_args = {'-s', '-ci', '-i', '2', '-bn'}
     },
     stylelint = {
-        prefer_local = 'node_modules/.bin',
+        only_local = 'node_modules/.bin',
         filetypes = {'css', 'scss', 'less', 'svelte'},
         condition = has_node_bin('stylelint')
     },
     stylint = {
-        prefer_local = 'node_modules/.bin',
+        only_local = 'node_modules/.bin',
         condition = has_node_bin('stylint')
     },
     tidy = {
@@ -86,45 +86,81 @@ local cfg = {
     }
 }
 
+---pug-lint source
+local function puglint()
+    local h = require 'null-ls.helpers'
+    local methods = require 'null-ls.methods'
+    local resolver = require 'null-ls.helpers.command_resolver'
+
+    return h.make_builtin {
+        name = 'puglint',
+        filetypes = {'pug'},
+        method = methods.internal.DIAGNOSTICS,
+        generator_opts = {
+            command = 'pug-lint',
+            args = {'--reporter=inline', '$FILENAME'},
+            to_stdin = true,
+            from_stderr = true,
+            format = 'line',
+            check_exit_code = function(code)
+                return code <= 2
+            end,
+            on_output = h.diagnostics.from_patterns {
+                {
+                    pattern = [[([^:]+):(%d+) (.+)]],
+                    groups = {'filename', 'row', 'message'}
+                },
+                {
+                    pattern = [[([^:]+):(%d+):(%d+) (.+)]],
+                    groups = {'filename', 'row', 'col', 'message'}
+                }
+            },
+            dynamic_command = resolver.from_node_modules
+        },
+        factory = h.generator_factory
+    }
+end
+
 ---@type LazyPluginSpec[]
 return {
     {
         'nvimtools/none-ls.nvim',
-        name = 'null-ls.nvim',
         enabled = not_mergetool,
         config = function()
-            local null_ls = require 'null-ls'
-            null_ls.setup {
+            require('null-ls').setup {
                 sources = {
-                    null_ls.builtins.diagnostics.djlint.with(cfg.djlint),
-                    null_ls.builtins.diagnostics.eslint_d.with(cfg.eslint_d),
-                    null_ls.builtins.diagnostics.flake8.with(cfg.flake8),
-                    null_ls.builtins.diagnostics.hadolint,
-                    null_ls.builtins.diagnostics.luacheck,
-                    null_ls.builtins.diagnostics.mypy.with(cfg.mypy),
-                    null_ls.builtins.diagnostics.puglint.with(cfg.puglint),
-                    null_ls.builtins.diagnostics.pylint.with(cfg.pylint),
-                    null_ls.builtins.diagnostics.rstcheck.with(cfg.rstcheck),
-                    null_ls.builtins.diagnostics.ruff.with(cfg.ruff),
-                    null_ls.builtins.diagnostics.stylelint.with(cfg.stylelint),
-                    null_ls.builtins.diagnostics.stylint.with(cfg.stylint),
-                    null_ls.builtins.diagnostics.tidy.with(cfg.tidy),
-                    null_ls.builtins.diagnostics.vint.with(cfg.vint),
+                    require('null-ls.builtins.diagnostics.djlint').with(cfg.djlint),
+                    require('none-ls.diagnostics.eslint_d').with(cfg.eslint_d),
+                    require('none-ls.diagnostics.flake8').with(cfg.flake8),
 
-                    null_ls.builtins.formatting.autopep8.with(cfg.autopep8),
-                    null_ls.builtins.formatting.eslint_d.with(cfg.eslint_d),
-                    null_ls.builtins.formatting.isort.with(cfg.isort),
-                    null_ls.builtins.formatting.ruff.with(cfg.ruff),
-                    null_ls.builtins.formatting.shfmt.with(cfg.shfmt),
-                    null_ls.builtins.formatting.stylelint.with(cfg.stylelint),
-                    null_ls.builtins.formatting.stylua,
-                    null_ls.builtins.formatting.tidy.with(cfg.tidy),
-                    null_ls.builtins.formatting.xmllint.with(cfg.xmllint),
+                    require('null-ls.builtins.diagnostics.hadolint'),
+                    require('null-ls.builtins.diagnostics.mypy').with(cfg.mypy),
+                    puglint().with(cfg.puglint),
+                    require('null-ls.builtins.diagnostics.pylint').with(cfg.pylint),
+                    require('null-ls.builtins.diagnostics.rstcheck').with(cfg.rstcheck),
+                    require('none-ls.diagnostics.ruff').with(cfg.ruff),
+                    require('null-ls.builtins.diagnostics.stylelint').with(cfg.stylelint),
+                    require('null-ls.builtins.diagnostics.stylint').with(cfg.stylint),
+                    require('null-ls.builtins.diagnostics.tidy').with(cfg.tidy),
+                    require('null-ls.builtins.diagnostics.vint').with(cfg.vint),
 
-                    null_ls.builtins.code_actions.eslint_d.with(cfg.eslint_d),
+                    require('none-ls.formatting.autopep8').with(cfg.autopep8),
+                    require('none-ls.formatting.eslint_d').with(cfg.eslint_d),
+                    require('null-ls.builtins.formatting.isort').with(cfg.isort),
+                    require('none-ls.formatting.ruff_format').with(cfg.ruff),
+                    require('null-ls.builtins.formatting.shfmt').with(cfg.shfmt),
+                    require('null-ls.builtins.formatting.stylelint').with(cfg.stylelint),
+                    require('null-ls.builtins.formatting.stylua'),
+                    require('null-ls.builtins.formatting.tidy').with(cfg.tidy),
+                    require('null-ls.builtins.formatting.xmllint').with(cfg.xmllint),
+
+                    require('none-ls.code_actions.eslint_d').with(cfg.eslint_d),
                 }
             }
         end,
-        dependencies = {'plenary.nvim'}
+        dependencies = {
+            'plenary.nvim',
+            'nvimtools/none-ls-extras.nvim'
+        }
     }
 }

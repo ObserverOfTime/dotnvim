@@ -89,6 +89,7 @@ return {
                 changedelete = {text = hunks.M},
                 untracked    = {text = hunks.A},
             },
+            signs_staged_enable = false,
             worktrees = {{
                 toplevel = vim.env.HOME,
                 gitdir = vim.env.XDG_CONFIG_HOME..'/dotfiles.git'
@@ -99,10 +100,19 @@ return {
     {
         'ObserverOfTime/nvimcord',
         dev = true,
-        cmd = {'NvimcordUpdate'},
         enabled = c.not_mergetool,
-        branch = 'workspace',
-        config = true
+        config = function(_, opts)
+            local cwd = assert(vim.uv.cwd())
+            for dir in vim.fs.parents(cwd) do
+                dir = vim.fs.basename(dir)
+                if dir == 'Code' or dir == 'IntelliJ' then
+                    opts.autostart = true
+                    break
+                end
+            end
+            opts.log_level = vim.log.levels.DEBUG
+            require('nvimcord').setup(opts)
+        end
     },
     {
         -- XXX: no alternative

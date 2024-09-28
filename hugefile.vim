@@ -40,10 +40,10 @@ xmap <silent> a@ :<C-U>normal F@vf@<CR>
 omap <silent> i@ :<C-U>normal T@vt@<CR>
 xmap <silent> i@ :<C-U>normal T@vt@<CR>
 
-omap <silent> a| :<C-U>normal F\|vf\|<CR>
-xmap <silent> a| :<C-U>normal F\|vf\|<CR>
-omap <silent> i| :<C-U>normal T\|vt\|<CR>
-xmap <silent> i| :<C-U>normal T\|vt\|<CR>
+omap <silent> a\| :<C-U>normal F\|vf\|<CR>
+xmap <silent> a\| :<C-U>normal F\|vf\|<CR>
+omap <silent> i\| :<C-U>normal T\|vt\|<CR>
+xmap <silent> i\| :<C-U>normal T\|vt\|<CR>
 
 nnoremap X D
 nnoremap dd "_dd

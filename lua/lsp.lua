@@ -1,6 +1,9 @@
 -- Disable for git mergetool
 if vim.g._mergetool then return end
 
+---@module 'config'
+local c = package.loaded.config
+
 --#region Borders
 local border = {
       {'┏', 'FloatBorder'},
@@ -13,40 +16,44 @@ local border = {
       {'┃', 'FloatBorder'},
 }
 
----@type vim.lsp.Handler
+---@type lsp.Handler
 vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(
     vim.lsp.handlers.hover, {border = border}
 )
 
----@type vim.lsp.Handler
+---@type lsp.Handler
 vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(
     vim.lsp.handlers.signature_help, {border = border}
 )
 --#endregion
 
 --#region Diagnostics
----@type vim.lsp.Handler
+---@type lsp.Handler
 vim.lsp.handlers['textDocument/diagnostic'] = vim.lsp.diagnostic.on_diagnostic
 
 vim.diagnostic.config {
     float = {border = 'single'},
-    virtual_text = {severity = vim.diagnostic.severity.ERROR}
+    virtual_text = {severity = vim.diagnostic.severity.ERROR},
+    signs = {
+        text = {
+            [vim.diagnostic.severity.ERROR] = c.icons.lsp.diag.Error,
+            [vim.diagnostic.severity.HINT] = c.icons.lsp.diag.Hint,
+            [vim.diagnostic.severity.INFO] = c.icons.lsp.diag.Info,
+            [vim.diagnostic.severity.WARN] = c.icons.lsp.diag.Warn,
+        }
+    }
 }
 
----@module 'config'
-local c = package.loaded.config
-
-for type, icon in pairs(c.icons.lsp.diag) do
+for type, _ in pairs(c.icons.lsp.diag) do
     local hl = 'DiagnosticSign'..type
     vim.api.nvim_set_hl(0, hl, {link = 'Diagnostic'..type})
-    vim.fn.sign_define(hl, {text = icon, texthl = hl})
 end
 --#endregion
 
 --#region Notifications
 local levels = {'ERROR', 'WARN', 'INFO', 'DEBUG'}
 
----@type vim.lsp.Handler
+---@type lsp.Handler
 vim.lsp.handlers['window/showMessage'] = function(_, result, ctx)
     local client = assert(vim.lsp.get_client_by_id(ctx.client_id))
     vim.notify(result.message, levels[result.type], {
@@ -58,13 +65,17 @@ end
 --#region Clients
 local lsp = vim.api.nvim_create_augroup('LSP', {clear = true})
 
-local capabilities = require('cmp_nvim_lsp').default_capabilities()
+local capabilities = vim.tbl_deep_extend(
+    'force',
+    vim.lsp.protocol.make_client_capabilities(),
+    require('cmp_nvim_lsp').default_capabilities()
+)
 
 local map = vim.keymap.set
 
 ---Create an LSP client
 ---@param fts string[]
----@param opts lsp.ClientConfig
+---@param opts vim.lsp.ClientConfig
 ---@param func? fun(client_id: integer, bufnr: integer)
 local function new_client(fts, opts, func)
     if opts.root_dir == nil then return end
@@ -127,6 +138,7 @@ new_client({'sh'}, {
 new_client({'c', 'cpp'}, {
     cmd = {
         'clangd', '--clang-tidy',
+        '--header-insertion=never',
         '--completion-style=detailed'
     },
     root_dir = find_root({'.clangd', 'Makefile', 'CMakeLists.txt'}),
@@ -139,7 +151,7 @@ new_client({'c', 'cpp'}, {
         }
     },
     handlers = {
-        ---@type vim.lsp.Handler
+        ---@type lsp.Handler
         ['textDocument/switchSourceHeader'] = function(err, res)
             if err then
                 vim.notify(
@@ -199,6 +211,11 @@ new_client({'dockerfile'}, {
     root_dir = find_root({'Dockerfile'}, true)
 })
 
+new_client({'go', 'gomod'}, {
+    cmd = {'gopls'},
+    root_dir = find_root({'go.mod'}, true)
+})
+
 new_client({
     'html', 'xml', 'pug',
     'css', 'less', 'scss', 'stylus',
@@ -239,6 +256,12 @@ new_client({'json', 'jsonc'}, {
     },
     settings = {
         json = {
+            format = {
+                enable = true
+            },
+            validate = {
+                enable = true
+            },
             schemas = {
                 {
                     fileMatch = {'package.json'},
@@ -268,7 +291,7 @@ new_client({'json', 'jsonc'}, {
                 },
                 {
                     fileMatch = {'.luarc.json'},
-                    url = 'https://raw.githubusercontent.com/sumneko/'..
+                    url = 'https://raw.githubusercontent.com/LuaLS/'..
                           'vscode-lua/master/setting/schema.json'
                 },
                 {
@@ -392,6 +415,7 @@ new_client({'tex'}, {
                     ['\\newmintinline[]{}{}'] = 'ignore',
                     ['\\newmintedfile[]{}{}'] = 'ignore',
                     ['\\titleformat{}[]{}{}{}'] = 'ignore',
+                    ['\\textcolor{}'] = 'ignore',
                     ['\\nocite{}'] = 'ignore',
                     ['\\ktfile[]{}'] = 'ignore',
                     ['\\android{}'] = 'ignore',
@@ -417,29 +441,11 @@ new_client({'tex'}, {
             }
         }
     }
-}, function()
-    require('ltex_extra').setup { path = '.idea/ltex' }
-end)
+})
 
 new_client({'lua'}, {
     cmd = {'lua-language-server'},
-    root_dir = find_root({'.luarc.json', 'lua', '.luacheckrc'}, true),
-    ---@param client lsp.Client
-    on_init = function(client)
-        require('neodev.config').setup {setup_jsonls = false}
-        local settings = require('neodev.luals').setup().settings
-        ---@cast settings table
-        table.insert(
-            settings.Lua.workspace.library,
-            client.config.root_dir..'/lua'
-        )
-        client.config.settings = vim.tbl_deep_extend(
-            'keep', client.config.settings, settings
-        )
-        client.notify('workspace/didChangeConfiguration', {
-            settings = client.config.settings
-        })
-    end,
+    root_dir = find_root({'.luarc.json', '.luacheckrc'}, true),
     settings = {
         Lua = {
             hint = {
@@ -463,18 +469,14 @@ new_client({'python'}, {
         'pyrightconfig.json'
     }),
     settings = {
-        python = {
+        pyright = {
             disableOrganizeImports = true,
             analysis = {
                 autoSearchPaths = true,
                 typeCheckingMode = 'off',
                 autoImportCompletions = true,
                 useLibraryCodeForTypes = true,
-                diagnosticMode = 'openFilesOnly',
-                inlayHints = {
-                    variableTypes = true,
-                    functionReturnTypes = true
-                }
+                diagnosticMode = 'openFilesOnly'
             }
         }
     }
@@ -491,11 +493,21 @@ new_client({'rust'}, {
     root_dir = find_root({'Cargo.toml'}, true),
     settings = {
         ['rust-analyzer'] = {
-            checkOnSave = {
+            check = {
                 command = 'clippy'
+            },
+            diagnostics = {
+                disabled = {
+                    'inactive-code'
+                }
             }
         }
     }
+})
+
+new_client({'swift'}, {
+    cmd = {'sourcekit-lsp'},
+    root_dir = find_root({'Package.swift'})
 })
 
 new_client({'svelte'}, {
@@ -522,7 +534,7 @@ new_client({'toml'}, {
 new_client({'bib', 'tex', 'rnoweb'}, {
     cmd = {'texlab'},
     root_dir = find_root({'.latexmkrc'}, true),
-    ---@param client lsp.Client
+    ---@param client vim.lsp.Client
     on_init = function(client)
         local rc = find_file('-H .latexmkrc')
         if rc ~= nil then
@@ -540,7 +552,7 @@ new_client({'bib', 'tex', 'rnoweb'}, {
         })
     end,
     handlers = {
-        ---@type vim.lsp.Handler
+        ---@type lsp.Handler
         ['textDocument/forwardSearch'] = function(err, res)
             if err then
                 vim.notify(
@@ -561,7 +573,7 @@ new_client({'bib', 'tex', 'rnoweb'}, {
                 )
             end
         end,
-        ---@type vim.lsp.Handler
+        ---@type lsp.Handler
         ['textDocument/build'] = function(err, res)
             if err then
                 vim.notify(
@@ -645,19 +657,26 @@ new_client({'typescript'}, {
 
 new_client({'javascript', 'typescript'}, {
     cmd = {'typescript-language-server', '--stdio'},
-    root_dir = find_root({'package.json', 'tsconfig.json', 'jsconfig.json'}),
+    root_dir = find_root({'tsconfig.json', 'jsconfig.json', 'package.json'}),
     settings = {
+        diagnostics = {
+            ignoredCodes = {80001}
+        },
+        implicitProjectConfiguration = {
+            checkJs = true
+        },
         javascript = {
             inlayHints = {
-                includeInlayVariableTypeHints = true,
-                includeInlayFunctionParameterTypeHints = true,
-                includeInlayFunctionLikeReturnTypeHints = true,
-                includeInlayPropertyDeclarationTypeHints = true
+                includeInlayFunctionLikeReturnTypeHints = true
             }
         }
     },
     init_options = {
-        hostInfo = 'neovim'
+        hostInfo = 'neovim',
+        preferences = {
+            interactiveInlayHints = false,
+            includeInlayFunctionParameterNameHints = 'literals'
+        }
     }
 })
 
@@ -686,16 +705,21 @@ new_client({'yaml'}, {
             telemetry = {enabled = false},
             schemas = {
                 -- FIXME: redhat-developer/yaml-language-server#422
-                -- ['https://json.schemastore.org/github-issue-forms.json'] = '.github/ISSUE_TEMPLATE/*.yml',
+                -- ['https://json.schemastore.org/github-issue-forms.json'] = '.github/ISSUE_TEMPLATE/*',
                 ['https://json.schemastore.org/github-issue-config.json'] = '.github/ISSUE_TEMPLATE/config.yml',
+                ['https://json.schemastore.org/github-discussion.json'] = '.github/DISCUSSION_TEMPLATE/*',
                 ['https://json.schemastore.org/github-workflow.json'] = '.github/workflows/*',
                 ['https://json.schemastore.org/github-funding.json'] = '.github/FUNDING.yml',
                 ['https://json.schemastore.org/github-action.json'] = 'action.yml',
+                ['https://json.schemastore.org/dependabot-2.0.json'] = 'dependabot.yml',
                 ['https://json.schemastore.org/appveyor.json'] = 'appveyor.yml',
                 ['https://json.schemastore.org/jekyll.json'] = '_config.yml',
                 ['https://json.schemastore.org/codecov.json'] = 'codecov.yml',
                 ['https://json.schemastore.org/clangd.json'] = '.clangd',
                 ['https://json.schemastore.org/clang-format.json'] = '.clang-format',
+                ['https://json.schemastore.org/detekt-1.22.0.json'] = 'detekt.yml',
+                ['https://json.schemastore.org/pubspec.json'] = 'pubspec.yaml',
+                ['https://render.com/schema/render.yaml.json'] = 'render.yaml',
                 ['https://gitlab.com/gitlab-org/gitlab/-/raw/master/app/assets/javascripts/editor/schema/ci.json'] =
                     '.gitlab-ci.yml',
                 ['https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json'] =
@@ -703,6 +727,11 @@ new_client({'yaml'}, {
             }
         }
     }
+})
+
+new_client({'zig'}, {
+    cmd = {'zls'},
+    root_dir = find_root({'build.zig'}),
 })
 --#endregion
 
@@ -720,10 +749,10 @@ vim.api.nvim_create_autocmd('LspAttach', {
         end
 
         if client.supports_method('textDocument/inlayHint', {bufnr = args.buf}) then
-            vim.lsp.inlay_hint.enable(args.buf, true)
+            vim.lsp.inlay_hint.enable(true, {bufnr = args.buf})
             map('n', 'glH', function()
-                local toggle = vim.lsp.inlay_hint.is_enabled(args.buf)
-                vim.lsp.inlay_hint.enable(args.buf, not toggle)
+                local toggle = vim.lsp.inlay_hint.is_enabled {bufnr = args.buf}
+                vim.lsp.inlay_hint.enable(not toggle, {bufnr = args.buf})
             end, {
                 desc = 'toggle inlay hints', buffer = args.buf
             })
@@ -772,8 +801,8 @@ vim.api.nvim_create_autocmd('LspAttach', {
         end
 
         if client.supports_method('textDocument/documentSymbol', {bufnr = args.buf}) then
-            local symbols = require 'symbols-outline'
-            map('n', 'gO', symbols.open_outline, {
+            local outline = require 'outline'
+            map('n', 'gO', outline.open_outline, {
                 desc = 'symbols outline', buffer = args.buf
             })
         end
@@ -797,7 +826,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
         end
 
         if client.supports_method('textDocument/documentColor', {bufnr = args.buf}) then
-            require('ccc.highlighter').new(false):enable(args.buf)
+            require('ccc.highlighter'):enable(args.buf)
         end
 
         vim.b[args.buf]._lsp_attached = true

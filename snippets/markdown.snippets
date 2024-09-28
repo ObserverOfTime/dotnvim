@@ -1,7 +1,12 @@
 snippet code "code block" b
-	`"\`\`\`"`${1}
+	\`\`\`${1}
 	$TM_SELECTED_TEXT${2}
-	`"\`\`\`"`
+	\`\`\`
+
+snippet tex "latex block" b
+	\`\`\`{=latex}
+	${0}
+	\`\`\`
 
 snippet * "italics" i
 	*$TM_SELECTED_TEXT${1}*
@@ -18,7 +23,7 @@ snippet lnk "link"
 snippet img "image"
 	![${1:alt}](${2:$TM_SELECTED_TEXT}${3})
 
-snippet ref ""reference""
+snippet ref "reference"
 	[${1:$TM_SELECTED_TEXT}][${2:id}]
 	${0}
 	[$2]: ${4:path}${5}
