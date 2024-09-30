@@ -8,6 +8,7 @@ vim.loader.enable()
 require('settings')
 require('filetypes')
 require('mappings')
+require('commands')
 require('plugins')
 require('lsp')
 EOF
@@ -34,24 +35,15 @@ let g:tex_flavor = 'latex'
 " C header syntax
 let g:c_syntax_for_h = v:true
 
-" Netrw {{{
-let g:netrw_banner = 0
-let g:netrw_winsize = 25
-let g:netrw_liststyle = 3
-let g:netrw_sizestyle = 'H'
-let g:netrw_browse_split = 4
-let g:netrw_home = stdpath('state')
-" }}}
-
 " Define custom commands {{{
 " Copy file to the clipboard
 command! CopyFile :silent %y+
 
+" Copy path to the clipboard
+command! -nargs=? CopyPath :let @+ = fnamemodify(expand('%'), <q-args>))
+
 " Delete trailing whitespace
 command! DelTrail :silent %s/\s\+$//e
-
-" Show syntax groups under cursor
-command! SynStack :echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
 
 " Open a terminal with the specified command
 command! -complete=shellcmd -nargs=* Term

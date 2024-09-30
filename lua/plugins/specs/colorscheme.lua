@@ -78,7 +78,11 @@ return {
         config = function(_, opts)
             require('gruvbox').setup(opts)
             vim.cmd.colorscheme('gruvbox')
-            vim.cmd.highlight({'clear', 'ColorColumn'})
+            vim.cmd.highlight {'clear', 'ColorColumn'}
+            vim.cmd.highlight {'clear', 'StatusLine'}
+            vim.cmd.highlight {'clear', 'StatusLineNC'}
+            vim.cmd.highlight {'clear', 'StatusLineTerm'}
+            vim.cmd.highlight {'clear', 'StatusLineTermNC'}
         end
     }
 }

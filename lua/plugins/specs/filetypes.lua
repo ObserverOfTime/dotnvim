@@ -28,11 +28,6 @@ return {
     },
     {
         -- XXX: no tree-sitter parser
-        'kchmck/vim-coffee-script',
-        ft = {'coffee'}
-    },
-    {
-        -- XXX: no tree-sitter parser
         'wsdjeg/vim-livescript',
         ft = {'livescript'}
     },

@@ -127,7 +127,7 @@ end
 --#endregion
 
 --#region Git mergetool overrides
-if vim.g._mergetool then
+if vim.o.diff then
     vim.opt.laststatus = 3
     vim.opt.foldcolumn = '0'
     vim.opt.signcolumn = 'no'

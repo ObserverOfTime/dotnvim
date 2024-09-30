@@ -21,6 +21,11 @@ local function is_writable()
     return not vim.bo.readonly
 end
 
+---Check if there are multiple tabs
+local function multiple_tabs()
+    return vim.fn.tabpagenr('$') > 1
+end
+
 ---Expandtab option
 local function expandtab()
     return vim.bo.expandtab and '' or '󰌒'
@@ -107,6 +112,11 @@ end
 local function filename_click()
     require('fzf-lua').files()
 end
+
+---Close tab click handler
+local function close_tab_click()
+    vim.cmd.tabclose()
+end
 --#endregion
 
 --#region Components
@@ -141,6 +151,29 @@ local comp = {
         },
         on_click = filename_click
     },
+    tabs = {
+        'tabs',
+        path = 1,
+        show_modified_status = false,
+        symbols = {
+            modified = ' '
+        },
+        cond = multiple_tabs
+    },
+    close_tab = {
+        '%{"󰖭"}',
+        cond = multiple_tabs,
+        on_click = close_tab_click
+    },
+    buffers = {
+        'buffers',
+        show_modified_status = false,
+        symbols = {
+            modified = ' ',
+            alternate_file = '',
+            directory = ' '
+        }
+    },
     binary = binary,
     spell = spell,
     clock = clock
@@ -154,7 +187,7 @@ local quickfix = {
 }
 
 quickfix.init = function()
-  vim.g.qf_disable_statusline = true
+    vim.g.qf_disable_statusline = true
 end
 
 quickfix.sections.lualine_a = {
@@ -169,7 +202,7 @@ quickfix.sections.lualine_b = {
     function()
         local loclist = vim.fn.getloclist(0, {filewinid = 1})
         if loclist.filewinid == 0 then
-            return vim.fn.getqflist({ title = 0 }).title
+            return vim.fn.getqflist({title = 0}).title
         end
         return vim.fn.getloclist(0, {title = 0}).title
     end
@@ -366,36 +399,36 @@ netrw.sections.lualine_z = {clock}
 
 --#region Theme
 local grayscale = {
-  normal = {
-    a = {bg = '#8E8E8E', fg = '#252525'},
-    b = {bg = '#464646', fg = '#E3E3E3'},
-    c = {bg = '#252525', fg = '#999999'}
-  },
-  insert = {
-    a = {bg = '#686868', fg = '#252525'},
-    b = {bg = '#464646', fg = '#E3E3E3'},
-    c = {bg = '#252525', fg = '#999999'}
-  },
-  visual = {
-    a = {bg = '#747474', fg = '#252525'},
-    b = {bg = '#464646', fg = '#E3E3E3'},
-    c = {bg = '#252525', fg = '#999999'}
-  },
-  replace = {
-    a = {bg = '#7C7C7C', fg = '#252525'},
-    b = {bg = '#464646', fg = '#E3E3E3'},
-    c = {bg = '#252525', fg = '#999999'}
-  },
-  command = {
-    a = {bg = '#8E8E8E', fg = '#252525'},
-    b = {bg = '#252525', fg = '#999999'},
-    c = {bg = '#464646', fg = '#E3E3E3'}
-  },
-  inactive = {
-    a = {bg = '#252525', fg = '#B9B9B9'},
-    b = {bg = '#252525', fg = '#B9B9B9'},
-    c = {bg = '#252525', fg = '#B9B9B9'}
-  }
+    normal = {
+        a = {bg = '#8E8E8E', fg = '#252525'},
+        b = {bg = '#464646', fg = '#E3E3E3'},
+        c = {bg = '#252525', fg = '#999999'}
+    },
+    insert = {
+        a = {bg = '#686868', fg = '#252525'},
+        b = {bg = '#464646', fg = '#E3E3E3'},
+        c = {bg = '#252525', fg = '#999999'}
+    },
+    visual = {
+        a = {bg = '#747474', fg = '#252525'},
+        b = {bg = '#464646', fg = '#E3E3E3'},
+        c = {bg = '#252525', fg = '#999999'}
+    },
+    replace = {
+        a = {bg = '#7C7C7C', fg = '#252525'},
+        b = {bg = '#464646', fg = '#E3E3E3'},
+        c = {bg = '#252525', fg = '#999999'}
+    },
+    command = {
+        a = {bg = '#8E8E8E', fg = '#252525'},
+        b = {bg = '#252525', fg = '#999999'},
+        c = {bg = '#464646', fg = '#E3E3E3'}
+    },
+    inactive = {
+        a = {bg = '#252525', fg = '#B9B9B9'},
+        b = {bg = '#252525', fg = '#B9B9B9'},
+        c = {bg = '#252525', fg = '#B9B9B9'}
+    }
 }
 --#endregion
 
@@ -407,8 +440,8 @@ return {
         opts = {
             options = {
                 theme = grayscale,
-                component_separators = {left = '', right = ''},
-                section_separators = {left = '', right = ''}
+                component_separators = {left = '', right = ''},
+                section_separators = {left = '', right = ''}
             },
             extensions = {
                 lazy, quickfix, fzf, dap, man, netrw
@@ -416,14 +449,13 @@ return {
             sections = {
                 lualine_a = {
                     comp.mode,
-                    comp.spell,
+                    comp.spell
                 },
                 lualine_b = {
-                    comp.branch,
-                    comp.diagnostics
+                    comp.branch
                 },
                 lualine_c = {
-                    comp.filename,
+                    comp.diagnostics,
                     comp.csv_col
                 },
                 lualine_x = {
@@ -443,8 +475,20 @@ return {
                     comp.clock
                 }
             },
-            inactive_sections = {
-                lualine_c = {comp.filename}
+            tabline = {
+                lualine_a = {
+                    comp.filename
+                },
+                lualine_b = {
+                    -- FIXME: nvim-lualine/lualine.nvim#1364
+                    -- comp.buffers
+                },
+                lualine_y = {
+                    comp.close_tab
+                },
+                lualine_z = {
+                    comp.tabs
+                }
             }
         }
     }

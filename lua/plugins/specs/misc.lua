@@ -25,58 +25,18 @@ return {
         end
     },
     {
-        'andythigpen/nvim-coverage',
-        keys = {
-            {
-                '<Leader>cl', function()
-                    require('coverage').load(true)
-                end,
-                desc = 'load coverage'
-            },
-            {
-                '<Leader>cs',
-                function()
-                    require('coverage').summary()
-                end,
-                desc = 'show coverage summary'
-            },
-            {
-                '<Leader>ct',
-                function()
-                    require('coverage').toggle()
-                end,
-                desc = 'toggle coverage'
-            }
-        },
-        cond = function()
-            return vim.fn.executable('coverage') == 1
-        end,
-        opts = {
-            commands = false,
-            highlights = {
-                covered   = {fg = '#00DD00'},
-                uncovered = {fg = '#FF0000'}
-            },
-            signs = {
-                covered   = {text = '▍', priority = 1},
-                uncovered = {text = '▍', priority = 1}
-            }
-        },
-        dependencies = {'plenary.nvim'}
-    },
-    {
         'lewis6991/gitsigns.nvim',
         lazy = false,
         priority = 60,
         cond = c.in_term,
         keys = {
-            {'[h', '<Cmd>Gitsigns prev_hunk<CR>', desc = 'go to previous hunk'},
-            {']h', '<Cmd>Gitsigns next_hunk<CR>', desc = 'go to next hunk'},
-            {'<Leader>gd', '<Cmd>Gitsigns diffthis<CR>', desc = 'view diff'},
-            {'<Leader>ga', '<Cmd>Gitsigns stage_hunk<CR>', desc = 'stage hunk'},
-            {'<Leader>gr', '<Cmd>Gitsigns reset_hunk<CR>', desc = 'reset hunk'},
-            {'<Leader>gs', '<Cmd>Gitsigns select_hunk<CR>', desc = 'select hunk'},
-            {'<Leader>gp', '<Cmd>Gitsigns preview_hunk_inline<CR>', desc = 'preview hunk'},
+            {'[h',         '<Cmd>Gitsigns prev_hunk<CR>',                 desc = 'go to previous hunk'},
+            {']h',         '<Cmd>Gitsigns next_hunk<CR>',                 desc = 'go to next hunk'},
+            {'<Leader>gd', '<Cmd>Gitsigns diffthis<CR>',                  desc = 'view diff'},
+            {'<Leader>ga', '<Cmd>Gitsigns stage_hunk<CR>',                desc = 'stage hunk'},
+            {'<Leader>gr', '<Cmd>Gitsigns reset_hunk<CR>',                desc = 'reset hunk'},
+            {'<Leader>gs', '<Cmd>Gitsigns select_hunk<CR>',               desc = 'select hunk'},
+            {'<Leader>gp', '<Cmd>Gitsigns preview_hunk_inline<CR>',       desc = 'preview hunk'},
             {'<Leader>gb', '<Cmd>Gitsigns toggle_current_line_blame<CR>', desc = 'toggle blame'}
         },
         ---@type Gitsigns.Config
@@ -98,6 +58,21 @@ return {
         }
     },
     {
+        'pwntester/octo.nvim',
+        cmd = {'Octo'},
+        cond = c.in_term,
+        opts = {
+            picker = 'fzf-lua',
+            default_merge_method = 'rebase',
+            default_to_projects_v2 = true,
+            ui = {
+                use_signcolumn = false,
+                use_signstatus = false
+            }
+        },
+        dependencies = {'plenary.nvim'}
+    },
+    {
         'ObserverOfTime/nvimcord',
         dev = true,
         enabled = c.not_mergetool,
@@ -113,6 +88,11 @@ return {
             opts.log_level = vim.log.levels.DEBUG
             require('nvimcord').setup(opts)
         end
+    },
+    {
+        'RaafatTurki/hex.nvim',
+        cmd = {'HexDump', 'HexAssemble', 'HexToggle'},
+        config = true
     },
     {
         -- XXX: no alternative
@@ -140,12 +120,16 @@ return {
         event = {'VeryLazy'},
         keys = {
             {
-                'cr', '<Plug>(abolish-coerce-word)',
-                mode = 'n', desc = 'coerce case (word)'
+                'cr',
+                '<Plug>(abolish-coerce-word)',
+                mode = 'n',
+                desc = 'coerce case (word)'
             },
             {
-                'R', '<Plug>(abolish-coerce)',
-                mode = 'v', desc = 'coerce case (visual)'
+                'R',
+                '<Plug>(abolish-coerce)',
+                mode = 'v',
+                desc = 'coerce case (visual)'
             }
         },
         init = function()

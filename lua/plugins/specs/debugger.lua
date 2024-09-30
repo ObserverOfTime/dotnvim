@@ -1,17 +1,15 @@
 local c = require 'config'
-local hl = 'GruvboxRed'
-local map = vim.keymap.set
 
 ---@type table<string, dap.Adapter>
 local adapters = {}
 ---@type table<string, Configuration[]>
 local configurations = {}
 
---#region C/C++
+--#region C/C++/Rust
 ---@type dap.ExecutableAdapter
 adapters.lldb = {
     type = 'executable',
-    command = 'lldb-vscode',
+    command = 'lldb-dap',
     name = 'lldb'
 }
 
@@ -35,13 +33,15 @@ configurations.c = {{
     env = function()
         local variables = {}
         for k, v in pairs(vim.fn.environ()) do
-          table.insert(variables, k..'='..v)
+            table.insert(variables, k..'='..v)
         end
         return variables
     end
 }}
 
 configurations.cpp = configurations.c
+configurations.rust = configurations.c
+configurations.zig = configurations.c
 --#endregion
 
 --#region Python
@@ -79,17 +79,34 @@ adapters['pwa-node'] = {
     }
 }
 
-configurations.javascript = {{
-    type = 'pwa-node',
-    name = 'JavaScript',
-    request = 'launch',
-    program = '${file}',
-    cwd = '${workspaceFolder}'
-}}
+---@type dap.ExecutableAdapter
+adapters.firefox = {
+    type = 'executable',
+    command = 'firefox-debugadapter'
+}
+
+configurations.javascript = {
+    {
+        type = 'pwa-node',
+        name = 'JavaScript (Node)',
+        request = 'launch',
+        program = '${file}',
+        cwd = '${workspaceFolder}'
+    },
+    {
+        type = 'firefox',
+        name = 'JavaScript (Firefox)',
+        request = 'launch',
+        reAttach = true,
+        url = 'http://localhost:4000',
+        webRoot = '${workspaceFolder}',
+        firefoxExecutable = '/usr/bin/firefox-developer-edition'
+    }
+}
 
 configurations.typescript = {{
     type = 'pwa-node',
-    name = 'TypeScript',
+    name = 'TypeScript (Deno)',
     request = 'launch',
     program = '${file}',
     cwd = '${workspaceFolder}',
@@ -124,8 +141,8 @@ configurations.lua = {{
     request = 'launch',
     cwd = '${workspaceFolder}',
     program = {
-      lua = '/usr/local/bin/nlua',
-      file = '${file}'
+        lua = '/usr/local/bin/nlua',
+        file = '${file}'
     }
 }}
 --#endregion
@@ -134,9 +151,110 @@ configurations.lua = {{
 return {
     {
         'mfussenegger/nvim-dap',
-        lazy = true,
         cond = c.in_term,
         enabled = c.not_mergetool,
+        keys = {
+            {
+                '<Leader>Dc',
+                function()
+                    require('dap').continue()
+                end,
+                mode = {'n'},
+                desc = 'DAP continue',
+            },
+            {
+                '<Leader>Do',
+                function()
+                    require('dap').step_over()
+                end,
+                mode = {'n'},
+                desc = 'DAP step over',
+            },
+            {
+                '<Leader>Di',
+                function()
+                    require('dap').step_into()
+                end,
+                mode = {'n'},
+                desc = 'DAP step into',
+            },
+            {
+                '<Leader>DO',
+                function()
+                    require('dap').step_out()
+                end,
+                mode = {'n'},
+                desc = 'DAP step out',
+            },
+            {
+                '<Leader>Db',
+                function()
+                    require('dap').toggle_breakpoint()
+                end,
+                mode = {'n'},
+                desc = 'DAP breakpoint',
+            },
+            {
+                '<Leader>Dr',
+                function()
+                    require('dap.repl').open()
+                end,
+                mode = {'n'},
+                desc = 'DAP REPL',
+            },
+            {
+                '<Leader>DR',
+                function()
+                    require('dap').run_last()
+                end,
+                mode = {'n'},
+                desc = 'DAP run',
+            },
+            {
+                '<Leader>DC',
+                function()
+                    vim.ui.input({
+                        prompt = 'Condition'
+                    }, function(input)
+                        require('dap').set_breakpoint(input)
+                    end)
+                end,
+                mode = {'n'},
+                desc = 'DAP condition',
+            },
+            {
+                '<Leader>DL',
+                function()
+                    vim.ui.input({
+                        prompt = 'Log point message'
+                    }, function(input)
+                        require('dap').set_breakpoint(nil, nil, input)
+                    end)
+                end,
+                mode = {'n'},
+                desc = 'DAP log point',
+            },
+            {
+                '<Leader>De',
+                function()
+                    require('dapui').eval()
+                end,
+                mode = {'n', 'x'},
+                desc = 'DAP eval text',
+            },
+            {
+                '<Leader>DE',
+                function()
+                    vim.ui.input({
+                        prompt = 'Expression'
+                    }, function(input)
+                        require('dapui').eval(input)
+                    end)
+                end,
+                mode = {'n'},
+                desc = 'DAP eval input',
+            }
+        },
         config = function()
             local dap = require 'dap'
             local dapui = require 'dapui'
@@ -150,36 +268,18 @@ return {
             dap.listeners.before.event_terminated['dapui_config'] = dapui.close
             dap.listeners.before.event_exited['dapui_config'] = dapui.close
 
-            map('n', '<Leader>Dc', dap.continue, {desc = 'DAP continue'})
-            map('n', '<Leader>Do', dap.step_over, {desc = 'DAP step over'})
-            map('n', '<Leader>Di', dap.step_into, {desc = 'DAP step into'})
-            map('n', '<Leader>DO', dap.step_out, {desc = 'DAP step out'})
-            map('n', '<Leader>Db', dap.toggle_breakpoint, {desc = 'DAP breakpoint'})
-            map('n', '<Leader>Dr', dap.repl.open, {desc = 'DAP REPL'})
-            map('n', '<Leader>DR', dap.run_last, {desc = 'DAP run'})
-            map('n', '<Leader>DC', function()
-                vim.ui.input({prompt = 'Condition'}, dap.set_breakpoint)
-            end, {desc = 'DAP condition'})
-            map('n', '<Leader>DL', function()
-                vim.ui.input({prompt = 'Log point message'}, function(input)
-                    dap.set_breakpoint(nil, nil, input)
-                end)
-            end, {desc = 'DAP log point'})
-            map('n', '<Leader>DE', function()
-                vim.ui.input({prompt = 'Expression'}, dapui.eval)
-            end, {desc = 'DAP eval input'})
-            map({'n', 'x'}, '<Leader>De', dapui.eval, {desc = 'DAP eval text'})
-
-            vim.fn.sign_define('DapStopped',             {text = '', texthl = hl})
-            vim.fn.sign_define('DapLogPoint',            {text = '', texthl = hl})
-            vim.fn.sign_define('DapBreakpoint',          {text = '', texthl = hl})
+            local hl = 'GruvboxRed'
+            vim.fn.sign_define('DapStopped', {text = '', texthl = hl})
+            vim.fn.sign_define('DapLogPoint', {text = '', texthl = hl})
+            vim.fn.sign_define('DapBreakpoint', {text = '', texthl = hl})
             vim.fn.sign_define('DapBreakpointCondition', {text = '', texthl = hl})
-            vim.fn.sign_define('DapBreakpointRejected',  {text = '', texthl = hl})
+            vim.fn.sign_define('DapBreakpointRejected', {text = '', texthl = hl})
         end,
         dependencies = {'nvim-dap-ui'}
     },
     {
         'rcarriga/nvim-dap-ui',
+        lazy = true,
         dependencies = {'nvim-nio'}
     }
 }

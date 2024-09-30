@@ -1,36 +1,10 @@
 -- Disable for git mergetool
-if vim.g._mergetool then return end
+if vim.o.diff then return end
 
 ---@module 'config'
 local c = package.loaded.config
 
---#region Borders
-local border = {
-      {'┏', 'FloatBorder'},
-      {'━', 'FloatBorder'},
-      {'┓', 'FloatBorder'},
-      {'┃', 'FloatBorder'},
-      {'┛', 'FloatBorder'},
-      {'━', 'FloatBorder'},
-      {'┗', 'FloatBorder'},
-      {'┃', 'FloatBorder'},
-}
-
----@type lsp.Handler
-vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(
-    vim.lsp.handlers.hover, {border = border}
-)
-
----@type lsp.Handler
-vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(
-    vim.lsp.handlers.signature_help, {border = border}
-)
---#endregion
-
 --#region Diagnostics
----@type lsp.Handler
-vim.lsp.handlers['textDocument/diagnostic'] = vim.lsp.diagnostic.on_diagnostic
-
 vim.diagnostic.config {
     float = {border = 'single'},
     virtual_text = {severity = vim.diagnostic.severity.ERROR},
@@ -65,83 +39,54 @@ end
 --#region Clients
 local lsp = vim.api.nvim_create_augroup('LSP', {clear = true})
 
-local capabilities = vim.tbl_deep_extend(
-    'force',
-    vim.lsp.protocol.make_client_capabilities(),
-    require('cmp_nvim_lsp').default_capabilities()
-)
-
 local map = vim.keymap.set
 
----Create an LSP client
----@param fts string[]
----@param opts vim.lsp.ClientConfig
----@param func? fun(client_id: integer, bufnr: integer)
-local function new_client(fts, opts, func)
-    if opts.root_dir == nil then return end
-    vim.api.nvim_create_autocmd('FileType', {
-        group = lsp,
-        pattern = fts,
-        ---@param args AutocmdArgs
-        callback = function(args)
-            local file = vim.api.nvim_buf_get_name(args.buf)
-            local ok, stats = pcall(vim.loop.fs_stat, file)
-            if ok and stats ~= nil and stats.size > 5e5 then return end
-            local client_id = vim.lsp.start(
-                vim.tbl_deep_extend('keep', opts, {
-                    name = opts.cmd[1],
-                    capabilities = capabilities
-                })
-            )
-            if func and client_id then
-                func(client_id, args.buf)
-            end
-        end
-    })
+---Configure an LSP client
+---@param name string
+---@param opts vim.lsp.Config
+---@param enable? boolean
+local function new_client(name, opts, enable)
+    vim.lsp.config[name] = opts
+    vim.lsp.enable(name, enable)
 end
 
----Find the root directory
----@param files? string[]
----@param base? boolean
----@return string
-local function find_root(files, base)
-    local u = require 'null-ls.utils'
-    -- TODO: use vim.fs.find
-    local cwd = assert(vim.uv.cwd())
-    local root = u.root_pattern(unpack(files or {'.git'}))
-    return root(base and vim.api.nvim_buf_get_name(0) or cwd) or cwd
-end
+vim.lsp.config('*', {
+    root_markers = {'.git'},
+    capabilities = vim.tbl_deep_extend(
+        'force',
+        vim.lsp.protocol.make_client_capabilities(),
+        require('cmp_nvim_lsp').default_capabilities()
+    )
+})
 
----Find a file using fd
----@param args string
----@return string|nil
-local function find_file(args)
-    local exec = 'fd --max-results 1 -d 3 '
-    local res = assert(vim.fn.systemlist(exec..args))
-    return vim.tbl_isempty(res) and nil or res[1]
-end
-
-new_client({'sh'}, {
+new_client('bash-language-server', {
     cmd = {'bash-language-server', 'start'},
+    filetypes = {'sh', 'bash'},
+    root_markers = {'.git', '.bash_profile'},
     settings = {
         bashIde = {
             globPattern = '*.sh',
             shellcheckArguments = {
                 '-e', 'SC1090,SC2034,SC2128,SC2148,SC2164',
                 '-o', 'add-default-case,require-double-brackets'
+            },
+            shfmt = {
+                caseIndent = true,
+                simplifyCode = true,
+                spaceRedirects = true
             }
         }
-    },
-    root_dir = find_root()
+    }
 })
 
-new_client({'c', 'cpp'}, {
+new_client('clangd', {
     cmd = {
         'clangd', '--clang-tidy',
         '--header-insertion=never',
         '--completion-style=detailed'
     },
-    root_dir = find_root({'.clangd', 'Makefile', 'CMakeLists.txt'}),
+    filetypes = {'c', 'cpp'},
+    root_markers = {'.clangd', 'Makefile', 'CMakeLists.txt'},
     capabilities = {
         offsetEncoding = {'utf-8', 'utf-16'},
         textDocument = {
@@ -170,35 +115,12 @@ new_client({'c', 'cpp'}, {
             end
         end
     }
-}, function(client_id, bufnr)
-    local client = vim.lsp.get_client_by_id(client_id)
-    if not client then
-        error(('Client %d not found'):format(client_id))
-    end
-
-    vim.keymap.set('n', 'gls', function()
-        ---@diagnostic disable-next-line: invisible
-        client.request('textDocument/switchSourceHeader', {
-            uri = vim.uri_from_bufnr(bufnr)
-        }, nil, bufnr)
-    end, {buffer = bufnr, desc = 'textDocument/switchSourceHeader'})
-end)
-
-new_client({'cmake'}, {
-    cmd = {'neocmakelsp', 'stdio'},
-    root_dir = find_root({'CMakeLists.txt'}),
-    capabilities = {
-        workspace = {
-            didChangeWatchedFiles = {
-                dynamicRegistration = true
-            }
-        }
-    }
 })
 
-new_client({'css', 'scss', 'less'}, {
+new_client('css', {
     cmd = {'vscode-css-languageserver', '--stdio'},
-    root_dir = find_root({'package.json', '.git'}),
+    filetypes = {'css', 'scss', 'less'},
+    root_markers = {'package.json', '.git'},
     settings = {
         css = {validate = true},
         scss = {validate = true},
@@ -206,41 +128,165 @@ new_client({'css', 'scss', 'less'}, {
     }
 })
 
-new_client({'dockerfile'}, {
+new_client('djlsp', {
+    cmd = {'djlsp'},
+    filetypes = {'htmldjango'},
+    root_markers = {'.venv', '.env'},
+    init_options = {
+        djlsp = {
+            django_settings_module = vim.env.DJANGO_SETTINGS_MODULE
+        }
+    }
+})
+
+new_client('deno', {
+    cmd = {'deno', 'lsp'},
+    filetypes = {'typescript'},
+    cmd_env = {
+        NO_COLOR = true
+    },
+    root_markers = {'deno.json', 'deno.jsonc'},
+    settings = {
+        deno = {
+            enable = true,
+            inlayHints = {
+                parameterNames = {
+                    enabled = 'literals'
+                },
+            },
+            suggest = {
+                autoImports = true,
+                completeFunctionCalls = true,
+                names = true,
+                paths = true
+            },
+            lint = true
+        }
+    }
+}, false)
+
+new_client('docker-langserver', {
     cmd = {'docker-langserver', '--stdio'},
-    root_dir = find_root({'Dockerfile'}, true)
+    filetypes = {'dockerfile'},
+    root_markers = {'Dockerfile'}
 })
 
-new_client({'go', 'gomod'}, {
-    cmd = {'gopls'},
-    root_dir = find_root({'go.mod'}, true)
+new_client('efm-langserver', {
+    cmd = {
+        'efm-langserver', '-c',
+        vim.fn.stdpath('config')..'/efm-config.yaml'
+    },
+    filetypes = {
+        'css', 'html', 'htmldjango', 'less',
+        'lua', 'pug', 'python', 'rst', 'scss',
+        'svelte', 'svg', 'vim', 'xml'
+    },
+    root_markers = {'.git'},
+    init_options = {
+        hover = false,
+        codeAction = false,
+        completion = false,
+        documentSymbol = false
+    },
 })
 
-new_client({
-    'html', 'xml', 'pug',
-    'css', 'less', 'scss', 'stylus',
-    'htmldjango', 'svelte', 'svg'
-}, {
+new_client('emmet', {
     cmd = {'emmet-language-server', '--stdio'},
-    root_dir = find_root(),
+    filetypes = {
+        'css', 'html', 'htmldjango', 'less', 'pug',
+        'scss', 'stylus', 'svelte', 'svg', 'xml'
+    },
     init_options = {
         showSuggestionsAsSnippets = true,
         variables = {charset = 'UTF-8'}
     }
 })
 
-new_client({'rst'}, {
-    cmd = {'esbonio'},
-    root_dir = find_root({
-        'README.rst', 'setup.py',
-        'pyproject.toml', '.git'
-    })
+new_client('eslint', {
+    cmd = {'eslint-language-server', '--stdio'},
+    filetypes = {'javascript', 'typescript', 'svelte'},
+    root_markers = {
+        'eslint.config.js',
+        'eslint.config.mjs',
+        'package.json'
+    },
+    settings = {
+        run = 'onSave',
+        nodePath = '',
+        validate = 'on',
+        probe = {
+            'javascript', 'typescript', 'svelte'
+        },
+        workingDirectories = {
+            {mode = 'location'}
+        },
+        experimental = {
+            useFlatConfig = false
+        },
+        problems = {
+            shortenToSingleLine = true
+        },
+        codeAction = {
+            disableRuleComment = {
+                enable = true,
+                location = 'separateLine'
+            },
+            showDocumentation = {
+                enable = true
+            }
+        },
+        rulesCustomizations = {}
+    },
+    capabilities = {
+        workspace = {
+            didChangeWorkspaceFolders = {
+                dynamicRegistration = true
+            }
+        }
+    },
+    ---@param client vim.lsp.Client
+    on_init = function(client)
+        local files = {'eslint.config.js', 'eslint.config.mjs'}
+        if #vim.fs.find(files, {path = client.root_dir, limit = 1}) > 0 then
+            ---@diagnostic disable-next-line: inject-field
+            client.config.settings.experimental.useFlatConfig = true
+        end
+        client:notify('workspace/didChangeConfiguration', {
+            settings = client.config.settings
+        })
+    end,
+    handlers = {
+        ---@type lsp.Handler
+        ['eslint/openDoc'] = function(_, result)
+            if result then vim.ui.open(result.url) end
+            return {}
+        end,
+        ---@type lsp.Handler
+        ['eslint/noConfig'] = function()
+            vim.notify('Missing eslint config', vim.log.levels.WARN, {
+                title = 'eslint', icon = '󰱺'
+            })
+            return {}
+        end
+    }
 })
 
-new_client({'html'}, {
+new_client('esbonio', {
+    cmd = {'esbonio'},
+    filetypes = {'rst'},
+    root_markers = {'README.rst', 'setup.py'}
+})
+
+new_client('gopls', {
+    cmd = {'gopls'},
+    filetypes = {'go', 'gomod'},
+    root_markers = {'go.mod'},
+})
+
+new_client('html', {
     cmd = {'vscode-html-languageserver', '--stdio'},
-    root_dir = find_root({'package.json', '.git'}),
-    settings = {},
+    filetypes = {'html'},
+    root_markers = {'package.json', '.git'},
     init_options = {
         provideFormatter = true,
         embeddedLanguages = {css = true, javascript = true},
@@ -248,9 +294,9 @@ new_client({'html'}, {
     }
 })
 
-new_client({'json', 'jsonc'}, {
+new_client('json', {
     cmd = {'vscode-json-languageserver', '--stdio'},
-    root_dir = find_root(),
+    filetypes = {'json', 'jsonc'},
     init_options = {
         provideFormatter = true
     },
@@ -272,14 +318,19 @@ new_client({'json', 'jsonc'}, {
                     url = 'https://json.schemastore.org/tsconfig.json'
                 },
                 {
+                    fileMatch = {'tree-sitter.json'},
+                    url = 'https://tree-sitter.github.io/'..
+                        'tree-sitter/assets/schemas/config.schema.json'
+                },
+                {
                     fileMatch = {'contribute.json'},
                     url = 'https://raw.githubusercontent.com/mozilla/'..
-                          'contribute.json/master/schema.json'
+                        'contribute.json/master/schema.json'
                 },
                 {
                     fileMatch = {'openapi.json'},
                     url = 'https://raw.githubusercontent.com/OAI/'..
-                          'OpenAPI-Specification/main/schemas/v3.0/schema.json'
+                        'OpenAPI-Specification/main/schemas/v3.0/schema.json'
                 },
                 {
                     fileMatch = {'compile_commands.json'},
@@ -292,32 +343,32 @@ new_client({'json', 'jsonc'}, {
                 {
                     fileMatch = {'.luarc.json'},
                     url = 'https://raw.githubusercontent.com/LuaLS/'..
-                          'vscode-lua/master/setting/schema.json'
+                        'vscode-lua/master/setting/schema.json'
                 },
                 {
                     fileMatch = {'pkg.json', 'packspec.json'},
                     url = 'https://raw.githubusercontent.com/neovim/'..
-                          'packspec/master/schema/packspec_schema.json'
+                        'packspec/master/schema/packspec_schema.json'
                 },
                 {
                     fileMatch = {'pyrightconfig.json'},
                     url = 'https://raw.githubusercontent.com/microsoft/pyright/main/'..
-                          'packages/vscode-pyright/schemas/pyrightconfig.schema.json'
+                        'packages/vscode-pyright/schemas/pyrightconfig.schema.json'
                 },
                 {
                     fileMatch = {'grammar.json'},
                     url = 'https://raw.githubusercontent.com/tree-sitter/'..
-                          'tree-sitter/master/cli/src/generate/grammar-schema.json'
+                        'tree-sitter/master/cli/src/generate/grammar-schema.json'
                 },
                 {
                     fileMatch = {'deno.json', 'deno.jsonc'},
                     url = 'https://raw.githubusercontent.com/denoland/'..
-                          'deno/main/cli/schemas/config-file.v1.json'
+                        'deno/main/cli/schemas/config-file.v1.json'
                 },
                 {
                     fileMatch = {'conventionalcommit.json'},
                     url = 'https://raw.githubusercontent.com/lppedd/idea-conventional-commit/'..
-                          'master/src/main/resources/defaults/conventionalcommit.schema.json'
+                        'master/src/main/resources/defaults/conventionalcommit.schema.json'
                 },
                 {
                     fileMatch = {'vercel.json'},
@@ -328,9 +379,12 @@ new_client({'json', 'jsonc'}, {
     }
 })
 
-new_client({'kotlin'}, {
+new_client('kotlin-language-server', {
     cmd = {'kotlin-language-server'},
-    root_dir = find_root({'build.gradle', 'build.gradle.kts'}),
+    filetypes = {'kotlin'},
+    root_markers = {
+        'settings.gradle', 'settings.gradle.kts'
+    },
     settings = {
         kotlin = {
             completion = {
@@ -353,9 +407,9 @@ new_client({'kotlin'}, {
     }
 })
 
-new_client({'xml', 'svg'}, {
+new_client('lemminx', {
     cmd = {'lemminx'},
-    root_dir = find_root(),
+    filetypes = {'xml', 'svg'},
     settings = {
         xml = {
             server = {
@@ -368,7 +422,7 @@ new_client({'xml', 'svg'}, {
                 {
                     pattern = '**/*.svg',
                     systemId = 'https://raw.githubusercontent.com/'..
-                               'dumistoklus/svg-xsd-schema/master/svg.xsd'
+                        'dumistoklus/svg-xsd-schema/master/svg.xsd'
                 },
                 {
                     pattern = 'pom.xml',
@@ -377,27 +431,27 @@ new_client({'xml', 'svg'}, {
                 {
                     pattern = 'persistence.xml',
                     systemId = 'https://www.oracle.com/webfolder/technetwork/'..
-                               'jsc/xml/ns/persistence/persistence_2_2.xsd'
+                        'jsc/xml/ns/persistence/persistence_2_2.xsd'
                 },
                 {
                     pattern = 'opensearch.xml',
                     systemId = 'https://gitlab.com/gitlab-org/gitlab-foss/-/'..
-                               'raw/ab077b8/spec/fixtures/OpenSearchDescription.xsd'
+                        'raw/ab077b8/spec/fixtures/OpenSearchDescription.xsd'
                 },
                 {
                     pattern = 'ComicInfo.xml',
                     systemId = 'https://raw.githubusercontent.com/anansi-project/'..
-                               'comicinfo/main/drafts/v2.1/ComicInfo.xsd'
+                        'comicinfo/main/drafts/v2.1/ComicInfo.xsd'
                 }
             }
         }
     }
 })
 
-new_client({'tex'}, {
-    name = 'ltex',
+new_client('ltex', {
     cmd = {'ltex-ls'},
-    root_dir = find_root({'.latexmkrc'}, true),
+    filetypes = {'tex'},
+    root_markers = {'.latexmkrc'},
     get_language_id = function() return 'latex' end,
     settings = {
         ltex = {
@@ -417,10 +471,6 @@ new_client({'tex'}, {
                     ['\\titleformat{}[]{}{}{}'] = 'ignore',
                     ['\\textcolor{}'] = 'ignore',
                     ['\\nocite{}'] = 'ignore',
-                    ['\\ktfile[]{}'] = 'ignore',
-                    ['\\android{}'] = 'ignore',
-                    ['\\jdk{}'] = 'ignore',
-                    ['\\IfLanguageName{}{}{}'] = 'ignore',
                     ['\\citefield{}{}'] = 'dummy',
                     ['\\acs{}'] = 'dummy',
                 }
@@ -443,9 +493,12 @@ new_client({'tex'}, {
     }
 })
 
-new_client({'lua'}, {
+new_client('lua-language-server', {
     cmd = {'lua-language-server'},
-    root_dir = find_root({'.luarc.json', '.luacheckrc'}, true),
+    filetypes = {'lua'},
+    root_markers = {
+        '.luarc.json', '.luacheckrc', '.git'
+    },
     settings = {
         Lua = {
             hint = {
@@ -461,13 +514,27 @@ new_client({'lua'}, {
     }
 })
 
-new_client({'python'}, {
-    name = 'pyright',
+new_client('neocmakelsp', {
+    cmd = {'neocmakelsp', 'stdio'},
+    filetypes = {'cmake'},
+    root_markers = {'CMakeLists.txt'},
+    capabilities = {
+        workspace = {
+            didChangeWatchedFiles = {
+                dynamicRegistration = true
+            }
+        }
+    }
+})
+
+new_client('pyright', {
     cmd = {'pyright-langserver', '--stdio'},
-    root_dir = find_root({
-        'setup.py', 'pyproject.toml',
+    filetypes = {'python'},
+    root_markers = {
+        'setup.py',
+        'pyproject.toml',
         'pyrightconfig.json'
-    }),
+    },
     settings = {
         pyright = {
             disableOrganizeImports = true,
@@ -482,15 +549,22 @@ new_client({'python'}, {
     }
 })
 
-new_client({'r', 'rmd'}, {
+new_client('r-languageserver', {
     name = 'r-languageserver',
-    root_dir = find_root(),
+    filetypes = {'r', 'rmd'},
     cmd = {'R', '--vanilla', '-s', '-e', 'languageserver::run()'}
-})
+}, false)
 
-new_client({'rust'}, {
+new_client('ruff', {
+    cmd = {'ruff', 'server'},
+    filetypes = {'python'},
+    root_markers = {'pyproject.toml'},
+}, false)
+
+new_client('rust-analyzer', {
     cmd = {'rust-analyzer'},
-    root_dir = find_root({'Cargo.toml'}, true),
+    filetypes = {'rust'},
+    root_markers = {'Cargo.toml'},
     settings = {
         ['rust-analyzer'] = {
             check = {
@@ -505,19 +579,30 @@ new_client({'rust'}, {
     }
 })
 
-new_client({'swift'}, {
+new_client('sourcekit-lsp', {
     cmd = {'sourcekit-lsp'},
-    root_dir = find_root({'Package.swift'})
+    filetypes = {'swift'},
+    root_markers = {'Package.swift'}
 })
 
-new_client({'svelte'}, {
+new_client('sqls', {
+    cmd = {
+        'sqls',
+        '-config',
+        vim.env.XDG_CONFIG_HOME..'/sqls/config.yml'
+    },
+    filetypes = {'sql'}
+})
+
+new_client('svelteserver', {
     cmd = {'svelteserver', '--stdio'},
-    root_dir = find_root({'package.json'})
+    filetypes = {'svelte'},
+    root_markers = {'svelte.config.js', 'package.json'}
 })
 
-new_client({'toml'}, {
+new_client('taplo', {
     cmd = {'taplo', 'lsp', 'stdio'},
-    root_dir = find_root(),
+    filetypes = {'toml'},
     settings = {
         taplo = {
             schema = {
@@ -531,36 +616,36 @@ new_client({'toml'}, {
     }
 })
 
-new_client({'bib', 'tex', 'rnoweb'}, {
+new_client('texlab', {
     cmd = {'texlab'},
-    root_dir = find_root({'.latexmkrc'}, true),
+    filetypes = {'bib', 'tex', 'rnoweb'},
+    root_markers = {'.git', '.latexmkrc'},
     ---@param client vim.lsp.Client
     on_init = function(client)
-        local rc = find_file('-H .latexmkrc')
+        local rc = vim.fs.find('.latexmkrc', {
+            limit = 1, type = 'file'
+        })[1]
         if rc ~= nil then
+            ---@diagnostic disable-next-line: inject-field
             client.config.settings.texlab.build = {
                 args = {'-r', rc}
             }
         end
-        local aux = find_file('--no-ignore -e aux')
+        local aux = vim.fs.find(function(name)
+            return vim.endswith(name, '.aux')
+        end, {limit = 1, type = 'file'})[1]
         if aux ~= nil then
-            aux = vim.fn.fnamemodify(aux, ':h')
-            client.config.settings.texlab.auxDirectory = aux
+            ---@diagnostic disable-next-line: inject-field
+            client.config.settings.texlab.auxDirectory = vim.fs.dirname(aux)
         end
-        client.notify('workspace/didChangeConfiguration', {
+        client:notify('workspace/didChangeConfiguration', {
             settings = client.config.settings
         })
     end,
     handlers = {
         ---@type lsp.Handler
-        ['textDocument/forwardSearch'] = function(err, res)
-            if err then
-                vim.notify(
-                    tostring(err),
-                    vim.log.levels.ERROR,
-                    {title = 'LSP (texlab)'}
-                )
-            else
+        ['textDocument/forwardSearch'] = function(_, res)
+            if res then
                 vim.notify(
                     ('Search %s'):format(({
                         'Success',
@@ -574,14 +659,8 @@ new_client({'bib', 'tex', 'rnoweb'}, {
             end
         end,
         ---@type lsp.Handler
-        ['textDocument/build'] = function(err, res)
-            if err then
-                vim.notify(
-                    tostring(err),
-                    vim.log.levels.ERROR,
-                    {title = 'LSP (texlab)'}
-                )
-            else
+        ['textDocument/build'] = function(_, res)
+            if res then
                 vim.notify(
                     ('Build %s'):format(({
                         'Success',
@@ -606,58 +685,30 @@ new_client({'bib', 'tex', 'rnoweb'}, {
             }
         }
     }
-}, function(client_id, bufnr)
-    local client = vim.lsp.get_client_by_id(client_id)
-    if not client then
-        error(('Client %d not found'):format(client_id))
-    end
+})
 
-    vim.keymap.set('n', 'gls', function()
-        local params = {
-            textDocument = {uri = vim.uri_from_bufnr(bufnr)},
-            position = {line = vim.fn.line('.') - 1, character = vim.fn.col('.')},
-        }
-        client.request('textDocument/forwardSearch', params, nil, bufnr)
-    end, {buffer = bufnr, desc = 'textDocument/forwardSearch'})
-
-    vim.keymap.set('n', 'glb', function()
-        local params = {
-            textDocument = {uri = vim.uri_from_bufnr(bufnr)}
-        }
-        client.request('textDocument/build', params, nil, bufnr)
-    end, {buffer = bufnr, desc = 'textDocument/build'})
-end)
-
---[[
-new_client({'typescript'}, {
-    cmd = {'deno', 'lsp'},
-    cmd_env = {
-        NO_COLOR = true
-    },
-    root_dir = find_root({'deno.json', 'deno.jsonc'}),
+new_client('ts_query_ls', {
+    cmd = {'ts_query_ls'},
+    filetypes = {'query'},
+    root_markers = {'queries'},
     settings = {
-        deno = {
-            enable = true,
-            inlayHints = {
-                parameterNames = {
-                    enabled = 'literals'
-                },
-            },
-            suggest = {
-                autoImports = true,
-                completeFunctionCalls = true,
-                names = true,
-                paths = true
-            },
-            lint = true
+        parser_install_directories = {
+            vim.fn.stdpath('data')..'/site/lazy/nvim-treesitter/parser'
+        },
+        parser_aliases = {
+            ecma = 'javascript'
         }
     }
 })
---]]
 
-new_client({'javascript', 'typescript'}, {
+new_client('typescript-language-server', {
     cmd = {'typescript-language-server', '--stdio'},
-    root_dir = find_root({'tsconfig.json', 'jsconfig.json', 'package.json'}),
+    filetypes = {'javascript', 'typescript'},
+    root_markers = {
+        'tsconfig.json',
+        'jsconfig.json',
+        'package.json'
+    },
     settings = {
         diagnostics = {
             ignoredCodes = {80001}
@@ -680,9 +731,9 @@ new_client({'javascript', 'typescript'}, {
     }
 })
 
-new_client({'vim'}, {
+new_client('vim-language-server', {
     cmd = {'vim-language-server', '--stdio'},
-    root_dir = find_root(),
+    filetypes = {'vim'},
     init_options = {
         isNeovim = true,
         iskeyword = vim.bo.iskeyword,
@@ -697,9 +748,9 @@ new_client({'vim'}, {
     }
 })
 
-new_client({'yaml'}, {
+new_client('yaml-language-server', {
     cmd = {'yaml-language-server', '--stdio'},
-    root_dir = find_root(),
+    filetypes = {'yaml'},
     settings = {
         yaml = {
             telemetry = {enabled = false},
@@ -721,34 +772,33 @@ new_client({'yaml'}, {
                 ['https://json.schemastore.org/pubspec.json'] = 'pubspec.yaml',
                 ['https://render.com/schema/render.yaml.json'] = 'render.yaml',
                 ['https://gitlab.com/gitlab-org/gitlab/-/raw/master/app/assets/javascripts/editor/schema/ci.json'] =
-                    '.gitlab-ci.yml',
+                '.gitlab-ci.yml',
                 ['https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json'] =
-                    'docker-compose.yml',
+                'docker-compose.yml',
             }
         }
     }
 })
 
-new_client({'zig'}, {
+new_client('zls', {
     cmd = {'zls'},
-    root_dir = find_root({'build.zig'}),
+    filetypes = {'zig'},
+    root_markers = {'build.zig'}
 })
 --#endregion
 
 --#region LspAttach callback
 vim.api.nvim_create_autocmd('LspAttach', {
     group = lsp,
-    ---@param args LspAttachArgs
+    ---@param args vim.api.keyset.create_autocmd.callback_args
     callback = function(args)
         local fzf = require 'fzf-lua'
         local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
 
-        if not vim.b[args.buf]._lsp_attached then
-            vim.bo[args.buf].tagfunc = 'v:lua.vim.lsp.tagfunc'
-            vim.bo[args.buf].formatexpr = 'v:lua.vim.lsp.buf.formatexpr'
-        end
+        vim.bo[args.buf].tagfunc = 'v:lua.vim.lsp.tagfunc'
+        vim.bo[args.buf].formatexpr = 'v:lua.vim.lsp.buf.formatexpr'
 
-        if client.supports_method('textDocument/inlayHint', {bufnr = args.buf}) then
+        if client:supports_method('textDocument/inlayHint', args.buf) then
             vim.lsp.inlay_hint.enable(true, {bufnr = args.buf})
             map('n', 'glH', function()
                 local toggle = vim.lsp.inlay_hint.is_enabled {bufnr = args.buf}
@@ -758,88 +808,105 @@ vim.api.nvim_create_autocmd('LspAttach', {
             })
         end
 
-        if client.supports_method('textDocument/codeAction', {bufnr = args.buf}) then
+        if client:supports_method('textDocument/codeAction', args.buf) then
             map('n', 'gla', fzf.lsp_code_actions, {
                 desc = 'textDocument/codeAction', buffer = args.buf
             })
         end
 
-        if client.supports_method('textDocument/rename', {bufnr = args.buf}) then
+        if client:supports_method('textDocument/rename', args.buf) then
             map('n', 'glr', vim.lsp.buf.rename, {
                 desc = 'textDocument/rename', buffer = args.buf
             })
         end
 
-        if client.supports_method('textDocument/references', {bufnr = args.buf}) then
+        if client:supports_method('textDocument/references', args.buf) then
             map('n', 'glR', fzf.lsp_references, {
                 desc = 'textDocument/references', buffer = args.buf
             })
         end
 
-        if client.supports_method('textDocument/implementation', {bufnr = args.buf}) then
+        if client:supports_method('textDocument/implementation', args.buf) then
             map('n', 'gli', vim.lsp.buf.implementation, {
                 desc = 'textDocument/implementation', buffer = args.buf
             })
         end
 
-        if client.supports_method('textDocument/signatureHelp', {bufnr = args.buf}) then
-            map('n', 'glh', vim.lsp.buf.signature_help, {
-                desc = 'textDocument/signatureHelp', buffer = args.buf
-            })
+        if client:supports_method('textDocument/signatureHelp', args.buf) then
+            map('n', 'glh', function()
+                vim.lsp.buf.signature_help {border = 'single'}
+            end, {desc = 'textDocument/signatureHelp', buffer = args.buf})
         end
 
-        if client.supports_method('textDocument/typeDefinition', {bufnr = args.buf}) then
+        if client:supports_method('textDocument/typeDefinition', args.buf) then
             map('n', 'glT', vim.lsp.buf.type_definition, {
                 desc = 'textDocument/typeDefinition', buffer = args.buf
             })
         end
 
-        if client.supports_method('textDocument/formatting', {bufnr = args.buf}) then
+        if client:supports_method('textDocument/formatting', args.buf) then
             map({'n', 'v'}, 'glf', function() vim.lsp.buf.format() end, {
                 desc = 'textDocument/formatting', buffer = args.buf
             })
         end
 
-        if client.supports_method('textDocument/documentSymbol', {bufnr = args.buf}) then
+        if client:supports_method('textDocument/documentSymbol', args.buf) then
             local outline = require 'outline'
             map('n', 'gO', outline.open_outline, {
                 desc = 'symbols outline', buffer = args.buf
             })
         end
 
-        if client.supports_method('textDocument/declaration', {bufnr = args.buf}) then
+        if client:supports_method('textDocument/declaration', args.buf) then
             map('n', 'gD', vim.lsp.buf.declaration, {
                 desc = 'textDocument/declaration', buffer = args.buf
             })
         end
 
-        if client.supports_method('textDocument/definition', {bufnr = args.buf}) then
+        if client:supports_method('textDocument/definition', args.buf) then
             map('n', 'gd', fzf.lsp_definitions, {
                 desc = 'textDocument/definition', buffer = args.buf
             })
         end
 
-        if client.supports_method('textDocument/hover', {bufnr = args.buf}) then
-            map('n', 'K', vim.lsp.buf.hover, {
-                desc = 'textDocument/hover', buffer = args.buf
-            })
+        if client:supports_method('textDocument/hover', args.buf) then
+            map('n', 'K', function()
+                vim.lsp.buf.hover {border = 'single'}
+            end, {desc = 'textDocument/hover', buffer = args.buf})
         end
 
-        if client.supports_method('textDocument/documentColor', {bufnr = args.buf}) then
+        if client:supports_method('textDocument/documentColor', args.buf) then
             require('ccc.highlighter'):enable(args.buf)
         end
 
-        vim.b[args.buf]._lsp_attached = true
+        if client:supports_method('textDocument/switchSourceHeader', args.buf) then
+            map('n', 'gls', function()
+                local win = vim.api.nvim_get_current_win()
+                local params = vim.lsp.util.make_position_params(win, client.offset_encoding)
+                client:request('textDocument/switchSourceHeader', params, nil, args.buf)
+            end, {desc = 'textDocument/switchSourceHeader', buffer = args.buf})
+        end
+
+        if client.name == 'texlab' then
+            map('n', 'glS', function()
+                local win = vim.api.nvim_get_current_win()
+                local params = vim.lsp.util.make_position_params(win, client.offset_encoding)
+                client:request('textDocument/forwardSearch', params, nil, args.buf)
+            end, {desc = 'textDocument/forwardSearch', buffer = args.buf})
+
+            map('n', 'glB', function()
+                client:request('textDocument/build', {
+                    textDocument = {uri = vim.uri_from_bufnr(args.buf)}
+                }, nil, args.buf)
+            end, {desc = 'textDocument/build', buffer = args.buf})
+        end
     end
 })
 --#endregion
 
 --#region LspAddWorkspace command
----@param args CommandArgs
+---@param args vim.api.keyset.create_user_command.command_args
 vim.api.nvim_create_user_command('LspAddWorkspace', function(args)
     vim.lsp.buf.add_workspace_folder(args.args)
-end, {
-    nargs = 1, complete = 'dir',
-    desc = 'add a workspace folder'
-})
+end, {nargs = 1, complete = 'dir', desc = 'add a workspace folder'})
 --#endregion

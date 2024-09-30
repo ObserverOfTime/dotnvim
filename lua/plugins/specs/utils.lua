@@ -38,7 +38,7 @@ return {
         module = false
     },
     {
-        'rohit-s8/floating-input.nvim',
+        'liangxianzhe/floating-input.nvim',
         event = {'VeryLazy'},
         cond = c.in_term
     },
@@ -65,7 +65,7 @@ return {
                 preview = {
                     wrap = 'wrap',
                     hidden = 'hidden',
-                    scrollchars = {'┃', '' }
+                    scrollchars = {'┃', ''}
                 }
             },
             keymap = {
@@ -79,8 +79,8 @@ return {
                     ['<C-r>']    = 'preview-page-reset'
                 },
                 fzf = {
-                    ['ctrl-w']    = 'toggle-preview-wrap',
-                    ['ctrl-p']    = 'toggle-preview'
+                    ['ctrl-w'] = 'toggle-preview-wrap',
+                    ['ctrl-p'] = 'toggle-preview'
                 }
             },
             previewers = {
@@ -98,21 +98,21 @@ return {
                 async_or_timeout = 3000,
                 icons = {
                     Error       = {icon = diag.Error, color = 'red'},
-                    Warning     = {icon = diag.Warn, color  = 'yellow'},
-                    Information = {icon = diag.Info, color  = 'cyan'},
-                    Hint        = {icon = diag.Hint, color  = 'blue'},
+                    Warning     = {icon = diag.Warn, color = 'yellow'},
+                    Information = {icon = diag.Info, color = 'cyan'},
+                    Hint        = {icon = diag.Hint, color = 'blue'},
                 }
             },
             git = {
                 icons = {
-                  ['?'] = {icon = status.X, color = 'magenta'},
-                  ['A'] = {icon = status.A, color = 'green'},
-                  ['C'] = {icon = status.C, color = 'cyan'},
-                  ['D'] = {icon = status.D, color = 'red'},
-                  ['M'] = {icon = status.M, color = 'yellow'},
-                  ['R'] = {icon = status.R, color = 'cyan'},
-                  ['T'] = {icon = status.T, color = 'blue'},
-                  ['U'] = {icon = status.R, color = 'cyan'}
+                    ['?'] = {icon = status.X, color = 'magenta'},
+                    ['A'] = {icon = status.A, color = 'green'},
+                    ['C'] = {icon = status.C, color = 'cyan'},
+                    ['D'] = {icon = status.D, color = 'red'},
+                    ['M'] = {icon = status.M, color = 'yellow'},
+                    ['R'] = {icon = status.R, color = 'cyan'},
+                    ['T'] = {icon = status.T, color = 'blue'},
+                    ['U'] = {icon = status.R, color = 'cyan'}
                 },
                 branches = {cmd = 'git branch --color'},
                 bcommits = {preview_pager = 'diff-so-fancy'},
@@ -120,6 +120,15 @@ return {
                 status = {preview_pager = 'diff-so-fancy'}
             }
         }
+    },
+    {
+        'AckslD/nvim-FeMaco.lua',
+        cmd = {'FeMaco'},
+        config = true
+    },
+    {
+        'tiagovla/scope.nvim',
+        config = true
     },
     {
         'smjonas/live-command.nvim',

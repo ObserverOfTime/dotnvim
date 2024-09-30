@@ -80,10 +80,14 @@ map('t', '<Esc>', [[<C-\><C-n>]], {noremap = true})
 map('n', 'gld', vim.diagnostic.open_float, {
     desc = 'open diagnostic float'
 })
-map('n', '[d', vim.diagnostic.goto_prev, {
+map('n', '[d', function()
+    vim.diagnostic.jump {count = -1, float = true}
+end, {
     desc = 'go to previous diagnostic'
 })
-map('n', ']d', vim.diagnostic.goto_next, {
+map('n', ']d', function()
+    vim.diagnostic.jump {count = 1, float = true}
+end, {
     desc = 'go to next diagnostic'
 })
 map('n', '<Leader>l', function()

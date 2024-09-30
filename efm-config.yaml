@@ -1,0 +1,138 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/mattn/efm-langserver/refs/heads/master/schema.json
+
+version: 2
+
+lint-debounce: 1s
+
+root-markers: [.git]
+
+tools:
+    djlint: &djlint
+        prefix: djlint
+        lint-command: >-
+            djlint --linter-output-format 'I:{line}: {message}' --profile django -
+        lint-formats:
+            - '%t:%l:%c: %m'
+        lint-ignore-exit-code: true
+        lint-stdin: true
+        lint-on-save: true
+        lint-severity: 3
+        format-command: djlint --reformat -
+        format-stdin: true
+        root-markers:
+            - manage.py
+    mypy: &mypy
+        prefix: mypy
+        lint-command: >-
+            mypy --show-column-numbers --no-color-output --no-error-summary --no-pretty
+        lint-formats:
+            - '%f:%l:%c: %trror: %m'
+            - '%f:%l:%c: %tarning: %m'
+            - '%f:%l:%c: %tote: %m'
+        lint-stdin: false
+        root-markers:
+            - pyproject.toml
+            - setup.py
+    pug-lint: &pug-lint
+        lint-command: >-
+            npm x -- pug-lint --reporter=inline
+        lint-formats:
+            - '%f:%l %m'
+            - '%f:%l:%c %m'
+        lint-ignore-exit-code: true
+        lint-stdin: false
+        lint-severity: 3
+        require-marker: true
+        root-markers:
+            - .pug-lintrc.json
+            - package.json
+    rstcheck: &rstcheck
+        prefix: rstcheck
+        lint-command: >-
+            rstcheck --ignore-directives=automodule
+        lint-formats:
+            - '%f:%l: (%tRROR/%.%#) %m'
+            - '%f:%l: (%tARNING/%.%#) %m'
+            - '%f:%l: (%tNFO/%.%#) %m'
+            - '%f:%l: (SEVERE/%.%#) %m'
+        lint-stdin: false
+        lint-severity: 1
+        root-markers:
+            - README.rst
+            - .readthedocs.yml
+            - pyproject.toml
+    stylelint: &stylelint
+        prefix: stylelint
+        lint-command: >-
+            npm x -- stylelint -f compact --no-color
+            --stdin --stdin-filename '${INPUT}'
+        lint-formats:
+            - '%.%#: line %l, col %c, %trror - %m'
+            - '%.%#: line %l, col %c, %tarning - %m'
+        lint-stdin: true
+        format-command: >-
+            npm x -- stylelint --fix --stdin
+        format-stdin: true
+        root-markers:
+            - .stylelintrc.js
+            - .stylelintrc.json
+            - package.json
+    stylua: &stylua
+        format-command: >-
+            stylua ${--range-start:charStart} ${--range-end:charEnd}
+            --color Never --stdin-filepath '${INPUT}' -
+        format-can-range: true
+        format-stdin: true
+        require-marker: true
+        root-markers:
+            - .stylua.toml
+    tidy: &tidy
+        prefix: tidy
+        lint-command: >-
+            tidy -quiet -errors --gnu-emacs yes
+        lint-formats:
+            - 'line %l column %c - %rror: %m'
+            - 'line %l column %c - %tarning: %m'
+            - 'line %l column %c - %tnfo: %m'
+        lint-ignore-exit-code: true
+        lint-stdin: true
+        lint-severity: 4
+        format-command: >-
+            tidy --tidy-mark no -quiet -indent -wrap -
+        format-stdin: true
+    vint: &vint
+        prefix: vint
+        lint-command: >-
+            vint --enable-neovim --no-color -s -f
+            '{file_path}:{line_number}:{column_number}:
+            {severity}: {description} ({reference})' '${INPUT}'
+        lint-formats:
+            - '%f:%l:%c: %trror: %m'
+            - '%f:%l:%c: %tarning: %m'
+            - '%f:%l:%c: style_problem: %m'
+        lint-stdin: false
+        lint-severity: 3
+        lint-on-save: true
+        require-marker: true
+        root-markers:
+            - .vintrc
+            - init.vim
+    xmllint: &xmllint
+        format-command: xmllint --format -
+        format-stdin: true
+
+languages:
+    css: [{<<: *stylelint}]
+    html: [{<<: *tidy}]
+    htmldjango: [{<<: *djlint}]
+    less: [{<<: *stylelint}]
+    lua: [{<<: *stylua}]
+    pug: [{<<: *pug-lint}]
+    python: [{<<: *mypy}]
+    rst: [{<<: *rstcheck}]
+    scss: [{<<: *stylelint}]
+    # stylus: [{<<: *stylelint}]
+    svelte: [{<<: *stylelint}]
+    svg: [{<<: *xmllint}]
+    vim: [{<<: *vint}]
+    xml: [{<<: *xmllint}]

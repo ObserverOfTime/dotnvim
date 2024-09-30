@@ -8,8 +8,16 @@ indent_style = space
 insert_final_newline = true
 trim_trailing_whitespace = true
 
-[*.{lua,vim}]
+[*.vim]
 quote_type = single
+max_line_length = 120
+
+[*.lua]
+quote_type = single
+max_line_length = 120
+space_around_table_field_list = false
+space_before_closure_open_parenthesis = false
+space_around_concat_operator = false
 
 [*.scm]
 indent_size = 2

@@ -6,7 +6,6 @@ local fold_char = vim.opt.fillchars:get().fold or '-'
 return {
     {
         'luukvbaal/statuscol.nvim',
-        branch = '0.10',
         cond = c.in_term,
         config = function()
             local b = require 'statuscol.builtin'
@@ -75,7 +74,6 @@ return {
         opts = {char = '│'}
     },
     {
-        -- FIXME: anuvyklack/pretty-fold.nvim#41
         'bbjornstad/pretty-fold.nvim',
         cond = c.in_term,
         opts = {
@@ -89,6 +87,23 @@ return {
                     ' '..fold_char:rep(2)
                 }
             }
+        }
+    },
+    {
+        'prichrd/netrw.nvim',
+        cond = c.in_term,
+        ft = {'netrw'},
+        init = function()
+            vim.g.netrw_banner = 0
+            vim.g.netrw_winsize = 25
+            vim.g.netrw_liststyle = 3
+            vim.g.netrw_sizestyle = 'H'
+            vim.g.netrw_browse_split = 4
+            vim.g.netrw_home = vim.fn.stdpath('state')
+        end,
+        opts = {
+            -- TODO: add some mappings
+            mappings = {}
         }
     },
     {

@@ -4,7 +4,7 @@ return {
     end,
 
     not_mergetool = function()
-        return not vim.g._mergetool
+        return not vim.o.diff
     end,
 
     icons = {
@@ -43,12 +43,24 @@ return {
             }
         },
         cmp = {
-            async_path  = '󰝰',
-            buffer      = '',
-            git         = '',
-            nvim_lsp    = '',
-            omni        = '',
-            snippy      = '',
+            async_path = '󰝰',
+            buffer     = '',
+            git        = '',
+            nvim_lsp   = '',
+            omni       = '',
+            snippy     = '',
+        },
+        ---@format disable-next
+        tests = {
+            failed  = '',
+            passed  = '',
+            running = '',
+            skipped = '',
+            unknown = '',
+            running_animated = {
+                '⠋', '⠙', '⠹', '⠸', '⠼',
+                '⠴', '⠦', '⠧', '⠇', '⠏',
+            }
         },
         lsp = {
             kind = {

@@ -165,7 +165,7 @@ return {
                 }
             })
 
-            cmp.setup.filetype({'query', 'dap-repl'}, {
+            cmp.setup.filetype({'dap-repl'}, {
                 sources = {
                     {name = 'omni', priority = 2},
                     buffer
@@ -175,7 +175,7 @@ return {
             cmp.event:on('confirm_done', pairs.on_confirm_done())
         end,
         dependencies = {
-            'FelipeLema/cmp-async-path',
+            'cmp-async-path',
             'hrsh7th/cmp-buffer',
             'hrsh7th/cmp-nvim-lsp',
             'dcampos/cmp-snippy',
@@ -183,8 +183,13 @@ return {
         }
     },
     {
+        'FelipeLema/cmp-async-path',
+        lazy = true,
+        url = 'https://codeberg.org/FelipeLema/cmp-async-path'
+    },
+    {
         'wookayin/cmp-omni',
-        ft = {'query', 'dap-repl'},
+        ft = {'dap-repl'},
         branch = 'fix-return'
     },
     {
@@ -192,14 +197,29 @@ return {
         ft = {'gitcommit'},
         opts = {
             enableRemoteUrlRewrites = true,
-            trigger_actions = {{
-                debug_name = 'git_commits',
-                trigger_character = '/',
-                action = function(sources, trigger_char, callback, params)
-                    return sources.git:get_commits(callback, params, trigger_char)
-                end,
-            }}
-
+            trigger_actions = {
+                {
+                    debug_name = 'git_commits',
+                    trigger_character = '/',
+                    action = function(sources, trigger_char, callback, params)
+                        return sources.git:get_commits(callback, params, trigger_char)
+                    end
+                },
+                {
+                    debug_name = 'github_issues_and_pr',
+                    trigger_character = '#',
+                    action = function(sources, trigger_char, callback, _, git_info)
+                        return sources.github:get_issues_and_prs(callback, git_info, trigger_char)
+                    end
+                },
+                {
+                    debug_name = 'github_mentions',
+                    trigger_character = '@',
+                    action = function(sources, trigger_char, callback, _, git_info)
+                        return sources.github:get_mentions(callback, git_info, trigger_char)
+                    end
+                }
+            }
         },
         dependencies = {'plenary.nvim'}
     },

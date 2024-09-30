@@ -7,14 +7,22 @@ local langs = {
     cpp = {'cpp'},
     css = {'css'},
     diff = {},
-    editorconfig = {'editorconfig'},
+    desktop = {'desktop'},
+    disassembly = {'xxd'},
     dockerfile = {'dockerfile'},
+    doxygen = {},
+    editorconfig = {'editorconfig'},
+    git_config = {'gitconfig'},
     gitattributes = {'gitattributes'},
     gitcommit = {'gitcommit'},
     gitignore = {'gitignore'},
+    go = {'go'},
+    gomod = {'gomod'},
+    gpg = {'gpg'},
+    groovy = {'groovy'},
     hlsplaylist = {'hlsplaylist'},
     html = {'html'},
-    -- htmldjango = {'htmldjango'},
+    htmldjango = {'htmldjango'},
     http = {'http'},
     -- ini = {'confini', 'dosini'},
     java = {'java'},
@@ -22,6 +30,8 @@ local langs = {
     jsdoc = {},
     json = {'json'},
     jsonc = {'jsonc'},
+    jq = {'jq'},
+    kconfig = {'kconfig'},
     kotlin = {'kotlin'},
     latex = {'tex'},
     lua = {'lua'},
@@ -29,25 +39,42 @@ local langs = {
     -- make = {'make'},
     markdown = {'markdown', 'rmd'},
     markdown_inline = {},
+    meson = {'meson'},
+    -- nginx = {'nginx'},
+    pascal = {'pascal'},
+    pem = {'pem'},
     perl = {'perl'},
     po = {'po'},
+    powershell = {'powershell'},
+    printf = {},
+    properties = {'jproperties'},
+    pymanifest = {'pymanifest'},
     python = {'python'},
+    -- pug = {'pug'},
     query = {'query'},
     r = {'r'},
     readline = {'readline'},
     regex = {},
+    requirements = {'requirements'},
     rnoweb = {'rnoweb'},
     rst = {'rst'},
     rust = {'rust'},
     scss = {'scss'},
+    smali = {'smali'},
+    sql = {'sql'},
+    ssh_config = {'sshconfig'},
     svelte = {'svelte'},
+    swift = {'swift'},
     toml = {'toml'},
     typescript = {'typescript'},
+    udev = {'udevrules'},
     vim = {'vim'},
     vimdoc = {'help'},
+    xcompose = {'xcompose'},
     xml = {'xml'},
     yaml = {'yaml'},
-    zathurarc = {'zathurarc'}
+    zathurarc = {'zathurarc'},
+    zig = {'zig'},
 }
 
 ---@param buf number
@@ -169,14 +196,18 @@ return {
             }
             vim.opt.indentexpr = [[v:lua.require('nvim-treesitter').indentexpr()]]
             vim.api.nvim_create_autocmd('FileType', {
-              ---@diagnostic disable-next-line: deprecated
-              pattern = vim.tbl_flatten(vim.tbl_values(langs)),
-              ---@param args AutocmdArgs
-              callback = function(args)
-                if not hugefile('', args.buf) then
-                    vim.treesitter.start(args.buf)
+                pattern = vim.iter(langs):fold({}, function(acc, _, fts)
+                    for _, v in pairs(fts) do
+                        table.insert(acc, v)
+                    end
+                    return acc
+                end),
+                ---@param args vim.api.keyset.create_autocmd.callback_args
+                callback = function(args)
+                    if not hugefile('', args.buf) then
+                        vim.treesitter.start(args.buf)
+                    end
                 end
-              end
             })
         end,
         dependencies = {
